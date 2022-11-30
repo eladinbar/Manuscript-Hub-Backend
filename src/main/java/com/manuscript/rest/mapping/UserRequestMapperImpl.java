@@ -1,6 +1,7 @@
 package com.manuscript.rest.mapping;
 
-import com.manuscript.core.domain.user.model.UserModel;
+
+import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.rest.request.UserRequest;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
                 .uid(model.getUid())
                 .name(model.getName())
                 .phoneNumber(model.getPhoneNumber())
-                .userId(model.getUserId())
+                .userId(model.getId())
                 .build();
 
     }
@@ -23,8 +24,7 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
                 .uid(rest.getUid())
                 .name(rest.getName())
                 .phoneNumber(rest.getPhoneNumber())
-                .userId(rest.getUserId())
+                .id(rest.getUserId())
                 .build();
     }
-
 }

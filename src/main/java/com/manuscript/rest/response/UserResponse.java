@@ -10,9 +10,10 @@ import java.util.UUID;
 @SuperBuilder
 public class UserResponse {
 
+
     Date createdTime;
     Date updatedTime;
-    Long userId;
+    UUID userId;
     String email;
     String name;
     String phoneNumber;

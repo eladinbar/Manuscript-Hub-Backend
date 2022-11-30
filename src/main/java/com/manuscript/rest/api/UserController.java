@@ -1,28 +1,31 @@
 package com.manuscript.rest.api;
 
+
 import com.manuscript.rest.response.UserResponse;
-import com.manuscript.rest.service.IVideoUser;
+import com.manuscript.rest.service.IUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.UUID;
 
-import static com.manuscript.rest.common.Constants.RESOURCE_VIDEO;
+import static com.manuscript.rest.common.Constants.RESOURCE_USER;
+
 
 @RestController
-@RequestMapping(RESOURCE_VIDEO)
+@RequestMapping(RESOURCE_USER)
 @CrossOrigin("**")
 public class UserController {
-    private final IVideoUser userService;
+    private final IUserService userService;
 
-    public UserController(IVideoUser userService) {
+
+    public UserController(IUserService userService) {
         this.userService = userService;
+
     }
 
-
-    @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> result = userService.getAll();
+    @RequestMapping(value = "/getVideoById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
+        UserResponse result = userService.get(id);
         return ResponseEntity.ok(result);
     }
 

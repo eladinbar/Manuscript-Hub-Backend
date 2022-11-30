@@ -24,11 +24,11 @@ public class ScanAllUseCasesBeans {
     void genericApplicationContext(BeanDefinitionRegistry beanRegistry) {
         ClassPathBeanDefinitionScanner beanDefinitionScanner = new ClassPathBeanDefinitionScanner(beanRegistry);
         beanDefinitionScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
-        beanDefinitionScanner.scan("com.core.usecase.custom");
-        beanDefinitionScanner.scan("com.rest.service");
-        beanDefinitionScanner.scan("com.persistance.sql.service");
-        beanDefinitionScanner.scan("com.persistance.nosql.service");
-        beanDefinitionScanner.scan("com.infrastructure");
+        beanDefinitionScanner.scan("com.manuscript.core.usecase.custom");
+        beanDefinitionScanner.scan("com.manuscript.rest.service");
+        beanDefinitionScanner.scan("com.manuscript.persistance.sql.service");
+        beanDefinitionScanner.scan("com.manuscript.persistance.nosql.service");
+        beanDefinitionScanner.scan("com.manuscript.infrastructure");
     }
 
 

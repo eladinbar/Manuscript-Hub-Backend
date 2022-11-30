@@ -1,6 +1,5 @@
 package com.manuscript.core.domain.common.repository;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,7 +17,6 @@ public interface IBaseRepositoryService<M> {
     default List<M> saveAll(List<M> models) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
-
     void deleteAll();
 
     void deleteById(M model);
