@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+
+  mysql-development:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: manuscript2022
+      MYSQL_DATABASE: ManuscriptInfo
+    ports:
+      - "3306:3306"
+
