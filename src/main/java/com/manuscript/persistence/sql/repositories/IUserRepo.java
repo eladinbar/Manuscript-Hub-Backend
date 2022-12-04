@@ -1,6 +1,6 @@
-package com.manuscript.nosql.repositories;
+package com.manuscript.persistence.sql.repositories;
 
-import com.manuscript.nosql.entities.UserEntity;
+import com.manuscript.persistence.sql.entities.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

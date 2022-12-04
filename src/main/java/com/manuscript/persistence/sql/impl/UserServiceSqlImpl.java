@@ -1,11 +1,11 @@
-package com.manuscript.nosql.impl;
+package com.manuscript.persistence.sql.impl;
 
 
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.domain.user.repository.IUserRepositoryService;
-import com.manuscript.nosql.entities.UserEntity;
-import com.manuscript.nosql.mapping.IRepositoryEntityMapper;
-import com.manuscript.nosql.repositories.IUserRepo;
+import com.manuscript.persistence.sql.entities.UserEntity;
+import com.manuscript.persistence.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class UserServiceNoSqlImpl implements IUserRepositoryService {
+public class UserServiceSqlImpl implements IUserRepositoryService {
 
     private final IUserRepo repo;
     private final IRepositoryEntityMapper<UserModel, UserEntity> mapper;

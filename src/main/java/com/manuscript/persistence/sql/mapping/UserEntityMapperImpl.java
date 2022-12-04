@@ -1,8 +1,9 @@
-package com.manuscript.nosql.mapping;
+package com.manuscript.persistence.sql.mapping;
 
 
 import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.nosql.entities.UserEntity;
+import com.manuscript.persistence.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.persistence.sql.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
