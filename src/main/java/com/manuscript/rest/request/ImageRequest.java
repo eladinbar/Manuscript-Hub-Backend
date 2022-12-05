@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Value
 @SuperBuilder
-public class DocumentRequest {
+public class ImageRequest {
     @NotNull UUID documentId;
     @NotNull String fileName;
     byte[] data;

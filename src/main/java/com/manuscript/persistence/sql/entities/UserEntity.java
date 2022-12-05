@@ -1,6 +1,6 @@
 package com.manuscript.persistence.sql.entities;
 
-import com.manuscript.persistence.common.entities.BaseEntity;
+import com.manuscript.persistence.sql.common.entities.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

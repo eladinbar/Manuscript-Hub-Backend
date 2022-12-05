@@ -2,7 +2,7 @@ package com.manuscript.persistence.sql.mapping;
 
 
 import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.persistence.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.persistence.sql.entities.UserEntity;
 import org.springframework.stereotype.Service;
 

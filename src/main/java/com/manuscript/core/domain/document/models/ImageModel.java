@@ -12,7 +12,7 @@ import java.util.UUID;
 @SuperBuilder
 @Getter
 @Setter
-public class DocumentModel {
+public class ImageModel {
     private Date createdTime;
     private Date updatedTime;
     private UUID id;

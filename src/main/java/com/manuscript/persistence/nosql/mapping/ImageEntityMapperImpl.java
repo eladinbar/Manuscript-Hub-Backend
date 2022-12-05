@@ -1,21 +1,21 @@
 package com.manuscript.persistence.nosql.mapping;
 
 
-import com.manuscript.core.domain.document.models.DocumentModel;
-import com.manuscript.persistence.common.mapping.IRepositoryEntityMapper;
-import com.manuscript.persistence.nosql.entities.DocumentEntity;
+import com.manuscript.core.domain.document.models.ImageModel;
+import com.manuscript.persistence.sql.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.persistence.nosql.documents.ImageDocument;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class DocumentEntityMapperImpl implements IRepositoryEntityMapper<DocumentModel, DocumentEntity> {
+public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel, ImageDocument> {
     @Override
-    public DocumentEntity modelToEntity(DocumentModel model) {
+    public ImageDocument modelToEntity(ImageModel model) {
         if (model.getId() == null) {
             model.setId(UUID.randomUUID());
         }
-        return DocumentEntity.builder()
+        return ImageDocument.builder()
                 .id(model.getId())
                 .fileName(model.getFileName())
                 .data(model.getData())
@@ -23,11 +23,11 @@ public class DocumentEntityMapperImpl implements IRepositoryEntityMapper<Documen
     }
 
     @Override
-    public DocumentModel entityToModel(final DocumentEntity tEntity) {
+    public ImageModel entityToModel(final ImageDocument tEntity) {
         if (tEntity.getId() == null) {
             tEntity.setId(UUID.randomUUID());
         }
-        return DocumentModel.builder()
+        return ImageModel.builder()
                 .id(tEntity.getId())
                 .fileName(tEntity.getFileName())
                 .data(tEntity.getData())

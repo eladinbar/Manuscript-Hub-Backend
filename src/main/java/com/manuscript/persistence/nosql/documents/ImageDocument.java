@@ -1,16 +1,11 @@
-package com.manuscript.persistence.nosql.entities;
+package com.manuscript.persistence.nosql.documents;
 
-import com.manuscript.persistence.common.entities.BaseEntity;
+import com.manuscript.persistence.nosql.common.documents.BaseDocument;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import java.util.UUID;
 
-
-@Entity
 @Document(collection = "documents")
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -18,9 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 @Getter
-public class DocumentEntity extends BaseEntity {
-    @Id
-    private UUID id;
+public class ImageDocument extends BaseDocument {
     private String fileName;
     private byte[] data;
 }

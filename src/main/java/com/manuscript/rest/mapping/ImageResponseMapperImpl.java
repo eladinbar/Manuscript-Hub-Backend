@@ -1,13 +1,13 @@
 package com.manuscript.rest.mapping;
 
-import com.manuscript.core.domain.document.models.DocumentModel;
-import com.manuscript.rest.response.DocumentResponse;
+import com.manuscript.core.domain.document.models.ImageModel;
+import com.manuscript.rest.response.ImageResponse;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DocumentResponseMapperImpl implements IRestMapper<DocumentModel, DocumentResponse> {
-    public DocumentResponse modelToRest(DocumentModel model) {
-        return DocumentResponse.builder()
+public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageResponse> {
+    public ImageResponse modelToRest(ImageModel model) {
+        return ImageResponse.builder()
                 .documentId(model.getId())
                 .fileName(model.getFileName())
                 .data(model.getData())
@@ -15,8 +15,8 @@ public class DocumentResponseMapperImpl implements IRestMapper<DocumentModel, Do
 
     }
 
-    public DocumentModel restToModel(DocumentResponse rest) {
-        return DocumentModel.builder()
+    public ImageModel restToModel(ImageResponse rest) {
+        return ImageModel.builder()
                 .id(rest.getDocumentId())
                 .createdTime(rest.getCreatedTime())
                 .updatedTime(rest.getUpdatedTime())

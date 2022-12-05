@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Value
 @SuperBuilder
-public class DocumentResponse {
+public class ImageResponse {
 
     Date createdTime;
     Date updatedTime;
