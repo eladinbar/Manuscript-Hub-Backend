@@ -27,7 +27,7 @@ public class ImageController {
         documentService.save(document);
     }
 
-    @PostMapping("/documents")
+    @PutMapping("/documents")
     public void updateDocument(@RequestBody ImageRequest document) {
         documentService.update(document);
     }

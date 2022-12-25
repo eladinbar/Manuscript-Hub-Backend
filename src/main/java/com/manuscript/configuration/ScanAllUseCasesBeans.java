@@ -26,8 +26,8 @@ public class ScanAllUseCasesBeans {
         beanDefinitionScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
         beanDefinitionScanner.scan("com.manuscript.core.usecase.custom");
         beanDefinitionScanner.scan("com.manuscript.rest.service");
-        beanDefinitionScanner.scan("com.manuscript.persistance.sql.service");
-        beanDefinitionScanner.scan("com.manuscript.persistance.nosql.service");
+        beanDefinitionScanner.scan("com.manuscript.persistence.sql.service");
+        beanDefinitionScanner.scan("com.manuscript.persistence.nosql.service");
         beanDefinitionScanner.scan("com.manuscript.infrastructure");
     }
 
