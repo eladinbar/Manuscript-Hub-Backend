@@ -1,16 +1,18 @@
 package com.manuscript.rest.response;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
 public class UserResponse {
-
-
     Date createdTime;
     Date updatedTime;
     UUID userId;
@@ -18,6 +20,4 @@ public class UserResponse {
     String name;
     String phoneNumber;
     String uid;
-
-
 }

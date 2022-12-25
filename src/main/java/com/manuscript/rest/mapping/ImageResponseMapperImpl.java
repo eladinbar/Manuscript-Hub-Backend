@@ -12,7 +12,6 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
                 .fileName(model.getFileName())
                 .data(model.getData())
                 .build();
-
     }
 
     public ImageModel restToModel(ImageResponse rest) {
