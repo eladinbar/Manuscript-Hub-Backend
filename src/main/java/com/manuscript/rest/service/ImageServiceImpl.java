@@ -1,9 +1,11 @@
 package com.manuscript.rest.service;
 
 
-import com.manuscript.core.domain.document.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.usecase.common.IGetByIdUseCase;
-import com.manuscript.rest.mapping.IRestMapper;
+import com.manuscript.core.usecase.custom.image.ICreateImage;
+import com.manuscript.rest.mapping.ImageRequestMapperImpl;
+import com.manuscript.rest.mapping.ImageResponseMapperImpl;
 import com.manuscript.rest.request.ImageRequest;
 import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
@@ -14,18 +16,21 @@ import java.util.UUID;
 @AllArgsConstructor
 @Service
 public class ImageServiceImpl implements IImageService {
-    private final IRestMapper<ImageModel, ImageResponse> mapperResponseInfoModel;
+    private final ImageRequestMapperImpl imageRequestMapper;
+    private final ImageResponseMapperImpl imageResponseMapper;
+    private final ICreateImage createImageUseCase;
     private final IGetByIdUseCase<ImageModel> getByIdDocumentUseCase;
 
     @Override
     public ImageResponse getById(UUID id) {
-        return mapperResponseInfoModel.modelToRest(getByIdDocumentUseCase.getById(id).get());
+        return imageResponseMapper.modelToRest(getByIdDocumentUseCase.getById(id).get());
         //todo: need to change if represent
     }
 
     @Override
-    public void save(ImageRequest document) {
-
+    public void save(ImageRequest documentRequest) {
+        ImageModel model = imageRequestMapper.restToModel(documentRequest);
+        createImageUseCase.create(model);
     }
 
     @Override
@@ -37,6 +42,4 @@ public class ImageServiceImpl implements IImageService {
     public void update(ImageRequest document) {
 
     }
-
-
 }

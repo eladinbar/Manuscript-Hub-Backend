@@ -1,8 +1,7 @@
 package com.manuscript.persistence.nosql.impl;
 
-
-import com.manuscript.core.domain.document.models.ImageModel;
-import com.manuscript.core.domain.document.repository.IImageRepositoryService;
+import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.repository.IImageRepositoryService;
 import com.manuscript.persistence.nosql.documents.ImageDocument;
 import com.manuscript.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.persistence.nosql.repositories.IImageRepo;
@@ -17,26 +16,24 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class ImageServiceNoSqlImpl implements IImageRepositoryService {
-
     private final IImageRepo repo;
     private final IRepositoryEntityMapper<ImageModel, ImageDocument> mapper;
 
-    public List<ImageModel> getAllActiveVideosInfo() {
-        return null;
-    }
-
+    @Override
     public ImageModel save(ImageModel model) throws IllegalArgumentException {
         final ImageDocument toSave = mapper.modelToEntity(model);
         final ImageDocument result = repo.save(toSave);
         return mapper.entityToModel(result);
     }
 
+    @Override
     public List<ImageModel> getAll() {
         List<ImageModel> result = new ArrayList<>();
         repo.findAll().forEach(videoInfoEntity -> result.add(mapper.entityToModel(videoInfoEntity)));
         return result;
     }
 
+    @Override
     public Optional<ImageModel> getById(UUID id) throws IllegalArgumentException {
         return repo.findById(id).map(mapper::entityToModel);
     }
@@ -45,6 +42,7 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
         return repo.existsById(id);
     }
 
+    @Override
     public void deleteAll() {
         repo.deleteAll();
     }

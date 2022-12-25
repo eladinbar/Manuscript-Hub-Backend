@@ -1,4 +1,4 @@
-package com.manuscript.core.domain.document.models;
+package com.manuscript.core.domain.image.models;
 
 import lombok.Data;
 import lombok.Getter;

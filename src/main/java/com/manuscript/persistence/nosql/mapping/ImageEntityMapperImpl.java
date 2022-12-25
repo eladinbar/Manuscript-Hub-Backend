@@ -1,7 +1,7 @@
 package com.manuscript.persistence.nosql.mapping;
 
 
-import com.manuscript.core.domain.document.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.persistence.nosql.documents.ImageDocument;
 import org.springframework.stereotype.Service;

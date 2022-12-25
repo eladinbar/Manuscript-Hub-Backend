@@ -1,7 +1,6 @@
 package com.manuscript.rest.mapping;
 
-
-import com.manuscript.core.domain.document.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.rest.request.ImageRequest;
 import org.springframework.stereotype.Service;
 
