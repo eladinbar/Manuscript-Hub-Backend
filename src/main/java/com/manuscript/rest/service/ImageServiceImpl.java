@@ -28,8 +28,8 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public void save(ImageRequest documentRequest) {
-        ImageModel model = imageRequestMapper.restToModel(documentRequest);
+    public void save(ImageRequest imageRequest) {
+        ImageModel model = imageRequestMapper.restToModel(imageRequest);
         createImageUseCase.create(model);
     }
 
@@ -39,7 +39,7 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public void update(ImageRequest document) {
+    public void update(ImageRequest imageRequest) {
 
     }
 }

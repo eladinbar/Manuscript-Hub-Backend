@@ -13,7 +13,7 @@ public class CreateImageImpl extends CreateUseCaseImpl<ImageModel> implements IC
     }
 
     @Override
-    public ImageModel create(ImageModel model) throws IllegalArgumentException {
-        return _serviceRepo.save(model);
+    public ImageModel create(ImageModel imageModel) throws IllegalArgumentException {
+        return _serviceRepo.save(imageModel);
     }
 }

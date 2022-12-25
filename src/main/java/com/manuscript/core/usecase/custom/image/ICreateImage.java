@@ -6,5 +6,5 @@ import com.manuscript.core.usecase.common.ICreateUseCase;
 
 public interface ICreateImage extends ICreateUseCase<ImageModel> {
     @Override
-    ImageModel create(ImageModel model) throws IllegalArgumentException;
+    ImageModel create(ImageModel imageModel) throws IllegalArgumentException;
 }

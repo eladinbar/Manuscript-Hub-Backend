@@ -15,31 +15,31 @@ import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
 @RequestMapping(RESOURCE_IMAGE)
 @CrossOrigin("**")
 public class ImageController {
-    private final IImageService documentService;
+    private final IImageService imageService;
 
 
-    public ImageController(IImageService documentService) {
-        this.documentService = documentService;
+    public ImageController(IImageService imageService) {
+        this.imageService = imageService;
     }
 
     @PostMapping("/documents")
-    public void uploadDocument(@RequestBody ImageRequest document) {
-        documentService.save(document);
+    public void uploadDocument(@RequestBody ImageRequest imageRequest) {
+        imageService.save(imageRequest);
     }
 
     @PutMapping("/documents")
-    public void updateDocument(@RequestBody ImageRequest document) {
-        documentService.update(document);
+    public void updateDocument(@RequestBody ImageRequest imageRequest) {
+        imageService.update(imageRequest);
     }
 
     @DeleteMapping("/documents/{id}")
     public void deleteDocumentById(@PathVariable UUID id) {
-        documentService.deleteById(id);
+        imageService.deleteById(id);
     }
 
     @GetMapping("/documents/{id}")
     public ResponseEntity<ImageResponse> getDocumentById(@PathVariable UUID id) {
-        ImageResponse result = documentService.getById(id);
+        ImageResponse result = imageService.getById(id);
         return ResponseEntity.ok(result);
     }
 

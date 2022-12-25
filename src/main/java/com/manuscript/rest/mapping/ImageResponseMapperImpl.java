@@ -6,21 +6,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageResponse> {
-    public ImageResponse modelToRest(ImageModel model) {
+    public ImageResponse modelToRest(ImageModel imageModel) {
         return ImageResponse.builder()
-                .documentId(model.getId())
-                .fileName(model.getFileName())
-                .data(model.getData())
+                .documentId(imageModel.getId())
+                .fileName(imageModel.getFileName())
+                .data(imageModel.getData())
                 .build();
     }
 
-    public ImageModel restToModel(ImageResponse rest) {
+    public ImageModel restToModel(ImageResponse imageResponse) {
         return ImageModel.builder()
-                .id(rest.getDocumentId())
-                .createdTime(rest.getCreatedTime())
-                .updatedTime(rest.getUpdatedTime())
-                .fileName(rest.getFileName())
-                .data(rest.getData())
+                .id(imageResponse.getDocumentId())
+                .createdTime(imageResponse.getCreatedTime())
+                .updatedTime(imageResponse.getUpdatedTime())
+                .fileName(imageResponse.getFileName())
+                .data(imageResponse.getData())
                 .build();
     }
 }

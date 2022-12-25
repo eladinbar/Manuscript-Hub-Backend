@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public interface IImageService {
     ImageResponse getById(UUID id);
-    void save(ImageRequest document);
+    void save(ImageRequest imageRequest);
     void deleteById(UUID id);
-    void update(ImageRequest document);
+    void update(ImageRequest imageRequest);
 
 }

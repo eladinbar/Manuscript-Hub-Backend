@@ -10,30 +10,30 @@ import java.util.UUID;
 @Service
 public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel, ImageDocument> {
     @Override
-    public ImageDocument modelToEntity(ImageModel model) {
-        if (model.getId() == null) {
-            model.setId(UUID.randomUUID());
+    public ImageDocument modelToEntity(ImageModel imageModel) {
+        if (imageModel.getId() == null) {
+            imageModel.setId(UUID.randomUUID());
         }
         return ImageDocument.builder()
-                .id(model.getId())
-                .fileName(model.getFileName())
-                .data(model.getData())
-                .createdTime(model.getCreatedTime())
-                .updatedTime(model.getUpdatedTime())
+                .id(imageModel.getId())
+                .fileName(imageModel.getFileName())
+                .data(imageModel.getData())
+                .createdTime(imageModel.getCreatedTime())
+                .updatedTime(imageModel.getUpdatedTime())
                 .build();
     }
 
     @Override
-    public ImageModel entityToModel(final ImageDocument tEntity) {
-        if (tEntity.getId() == null) {
-            tEntity.setId(UUID.randomUUID());
+    public ImageModel entityToModel(final ImageDocument imageDocument) {
+        if (imageDocument.getId() == null) {
+            imageDocument.setId(UUID.randomUUID());
         }
         return ImageModel.builder()
-                .id(tEntity.getId())
-                .fileName(tEntity.getFileName())
-                .data(tEntity.getData())
-                .createdTime(tEntity.getCreatedTime())
-                .updatedTime(tEntity.getUpdatedTime())
+                .id(imageDocument.getId())
+                .fileName(imageDocument.getFileName())
+                .data(imageDocument.getData())
+                .createdTime(imageDocument.getCreatedTime())
+                .updatedTime(imageDocument.getUpdatedTime())
                 .build();
     }
 

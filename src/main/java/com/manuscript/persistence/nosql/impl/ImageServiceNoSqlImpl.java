@@ -20,8 +20,8 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
     private final IRepositoryEntityMapper<ImageModel, ImageDocument> mapper;
 
     @Override
-    public ImageModel save(ImageModel model) throws IllegalArgumentException {
-        final ImageDocument toSave = mapper.modelToEntity(model);
+    public ImageModel save(ImageModel imageModel) throws IllegalArgumentException {
+        final ImageDocument toSave = mapper.modelToEntity(imageModel);
         final ImageDocument result = repo.save(toSave);
         return mapper.entityToModel(result);
     }
