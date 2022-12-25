@@ -1,6 +1,5 @@
 package com.manuscript.persistence.nosql.mapping;
 
-
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.persistence.nosql.documents.ImageDocument;
@@ -19,6 +18,8 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
                 .id(model.getId())
                 .fileName(model.getFileName())
                 .data(model.getData())
+                .createdTime(model.getCreatedTime())
+                .updatedTime(model.getUpdatedTime())
                 .build();
     }
 
@@ -31,6 +32,8 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
                 .id(tEntity.getId())
                 .fileName(tEntity.getFileName())
                 .data(tEntity.getData())
+                .createdTime(tEntity.getCreatedTime())
+                .updatedTime(tEntity.getUpdatedTime())
                 .build();
     }
 

@@ -24,5 +24,4 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
                 .data(rest.getData())
                 .build();
     }
-
 }
