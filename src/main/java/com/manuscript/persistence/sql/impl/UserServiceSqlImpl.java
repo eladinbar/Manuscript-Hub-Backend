@@ -1,11 +1,11 @@
-package com.manuscript.sql.impl;
+package com.manuscript.persistence.sql.impl;
 
 
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.domain.user.repository.IUserRepositoryService;
-import com.manuscript.sql.entities.UserEntity;
-import com.manuscript.sql.mapping.IRepositoryEntityMapper;
-import com.manuscript.sql.repositories.IUserRepo;
+import com.manuscript.persistence.sql.entities.UserEntity;
+import com.manuscript.persistence.sql.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

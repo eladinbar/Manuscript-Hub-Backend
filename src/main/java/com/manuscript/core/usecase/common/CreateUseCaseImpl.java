@@ -1,6 +1,5 @@
 package com.manuscript.core.usecase.common;
 
-
 import com.manuscript.core.domain.common.repository.IBaseRepositoryService;
 import lombok.AllArgsConstructor;
 

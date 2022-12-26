@@ -12,10 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class UserRequest {
-    @NotNull UUID userId;
-    @NotNull String email;
-    @NotNull String name;
-    @NotNull String phoneNumber;
-    @NotNull String uid;
+public class ImageRequest {
+    @NotNull UUID documentId;
+    @NotNull String fileName;
+    byte[] data;
 }

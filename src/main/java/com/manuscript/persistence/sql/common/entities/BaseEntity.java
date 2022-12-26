@@ -1,4 +1,4 @@
-package com.manuscript.sql.entities;
+package com.manuscript.persistence.sql.common.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vladmihalcea.hibernate.type.json.JsonType;

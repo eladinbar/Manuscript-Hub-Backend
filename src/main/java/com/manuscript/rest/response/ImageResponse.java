@@ -12,12 +12,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class UserResponse {
+public class ImageResponse {
+
     Date createdTime;
     Date updatedTime;
-    UUID userId;
-    String email;
-    String name;
-    String phoneNumber;
-    String uid;
+    UUID documentId;
+    String fileName;
+    byte[] data;
 }

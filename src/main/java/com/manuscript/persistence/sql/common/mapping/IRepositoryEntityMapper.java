@@ -1,4 +1,4 @@
-package com.manuscript.sql.mapping;
+package com.manuscript.persistence.sql.common.mapping;
 
 public interface IRepositoryEntityMapper<M, TEntity> {
 
