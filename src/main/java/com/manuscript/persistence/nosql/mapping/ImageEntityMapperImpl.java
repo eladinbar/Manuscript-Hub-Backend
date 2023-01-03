@@ -1,14 +1,19 @@
 package com.manuscript.persistence.nosql.mapping;
 
 import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.persistence.nosql.service.IImageUtils;
 import com.manuscript.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.persistence.nosql.documents.ImageDocument;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel, ImageDocument> {
+
+    private final IImageUtils imageUtils;
     @Override
     public ImageDocument modelToEntity(ImageModel imageModel) {
         if (imageModel.getId() == null) {
@@ -17,9 +22,10 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
         return ImageDocument.builder()
                 .id(imageModel.getId())
                 .fileName(imageModel.getFileName())
-                .data(imageModel.getData())
+                .data(imageUtils.encodeBase64String(imageModel.getData()))
                 .createdTime(imageModel.getCreatedTime())
                 .updatedTime(imageModel.getUpdatedTime())
+                .status(imageModel.getStatus())
                 .build();
     }
 
@@ -31,9 +37,10 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
         return ImageModel.builder()
                 .id(imageDocument.getId())
                 .fileName(imageDocument.getFileName())
-                .data(imageDocument.getData())
+                .data(imageUtils.decodeBase64(imageDocument.getData()))
                 .createdTime(imageDocument.getCreatedTime())
                 .updatedTime(imageDocument.getUpdatedTime())
+                .status(imageDocument.getStatus())
                 .build();
     }
 

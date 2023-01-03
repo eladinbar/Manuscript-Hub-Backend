@@ -4,6 +4,8 @@ package com.manuscript.rest.service;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.usecase.common.IGetByIdUseCase;
 import com.manuscript.core.usecase.custom.image.ICreateImage;
+import com.manuscript.core.usecase.custom.image.IGetAllImage;
+import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.mapping.ImageRequestMapperImpl;
 import com.manuscript.rest.mapping.ImageResponseMapperImpl;
 import com.manuscript.rest.request.ImageRequest;
@@ -11,14 +13,17 @@ import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
 public class ImageServiceImpl implements IImageService {
     private final ImageRequestMapperImpl imageRequestMapper;
-    private final ImageResponseMapperImpl imageResponseMapper;
+    private final IRestMapper<ImageModel, ImageResponse> imageResponseMapper;
     private final ICreateImage createImageUseCase;
+    private final IGetAllImage getAllImagesUseCase;
     private final IGetByIdUseCase<ImageModel> getByIdDocumentUseCase;
 
     @Override
@@ -41,5 +46,10 @@ public class ImageServiceImpl implements IImageService {
     @Override
     public void update(ImageRequest imageRequest) {
 
+    }
+
+    @Override
+    public List<ImageResponse> getAll() {
+        return getAllImagesUseCase.getAll().stream().map(imageResponseMapper::modelToRest).collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package com.manuscript.core.domain.image.models;
 
+import com.manuscript.core.domain.common.enums.Status;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +19,6 @@ public class ImageModel {
     private UUID id;
     private String fileName;
     private byte[] data;
+    private Status status;
 
 }

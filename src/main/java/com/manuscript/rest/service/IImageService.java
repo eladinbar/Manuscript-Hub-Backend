@@ -3,6 +3,7 @@ package com.manuscript.rest.service;
 import com.manuscript.rest.request.ImageRequest;
 import com.manuscript.rest.response.ImageResponse;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface IImageService {
@@ -10,5 +11,5 @@ public interface IImageService {
     void save(ImageRequest imageRequest);
     void deleteById(UUID id);
     void update(ImageRequest imageRequest);
-
+    List<ImageResponse> getAll();
 }

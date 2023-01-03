@@ -1,5 +1,6 @@
 package com.manuscript.rest.response;
 
+import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class ImageResponse {
     Date updatedTime;
     UUID documentId;
     String fileName;
+    Status status;
     byte[] data;
 }

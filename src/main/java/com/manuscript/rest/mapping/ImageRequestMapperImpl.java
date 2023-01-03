@@ -13,6 +13,7 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
                 .fileName(imageModel.getFileName())
                 .data(imageModel.getData())
                 .documentId(imageModel.getId())
+                .status(imageModel.getStatus())
                 .build();
 
     }
@@ -24,6 +25,7 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
                 .id(imageRequest.getDocumentId())
                 .createdTime(new Date())
                 .updatedTime(new Date())
+                .status(imageRequest.getStatus())
                 .build();
     }
 }
