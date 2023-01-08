@@ -23,7 +23,7 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/getVideoById/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getUserDetails/{id}", method = RequestMethod.GET)
     public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
         UserResponse result = userService.get(id);
         return ResponseEntity.ok(result);
