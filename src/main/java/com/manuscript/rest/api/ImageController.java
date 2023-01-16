@@ -18,7 +18,7 @@ import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
 
 @RestController
 @RequestMapping(RESOURCE_IMAGE)
-@CrossOrigin("**")
+@CrossOrigin()
 public class ImageController {
     private final IImageService imageService;
 
@@ -51,7 +51,9 @@ public class ImageController {
 
     @GetMapping("/getAllDocuments")
     public ResponseEntity<List<ImageResponse>> getAllDocuments() {
+        System.err.println("sdasdas");
         List<ImageResponse> result = imageService.getAll();
+        System.err.println(result.size());
         return ResponseEntity.ok(result);
     }
 

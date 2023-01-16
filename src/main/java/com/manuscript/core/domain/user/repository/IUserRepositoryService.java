@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface IUserRepositoryService extends IBaseRepositoryService<UserModel> {
     List<UserModel> getAllActiveVideosInfo();
-    Optional<UserModel> getByUid(String uid);
+    Optional<UserModel> findUserByUid(String uid);
 
 }

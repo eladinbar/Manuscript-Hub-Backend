@@ -3,8 +3,8 @@ package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.domain.user.repository.IUserRepositoryService;
-import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,8 +25,14 @@ public class UserServiceSqlImpl implements IUserRepositoryService {
         return null;
     }
 
+
     @Override
-    public Optional<UserModel> getByUid(String uid) {
+    public Optional<UserModel> findUserByUid(String uid) {
+        Optional<UserEntity> userEntityOptional = repo.findByUid(uid);
+        if (userEntityOptional.isPresent()) {
+            UserModel userModel = mapper.entityToModel(userEntityOptional.get());
+            return Optional.of(userModel);
+        }
         return Optional.empty();
     }
 

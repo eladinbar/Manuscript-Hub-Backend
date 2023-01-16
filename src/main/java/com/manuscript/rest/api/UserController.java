@@ -13,7 +13,7 @@ import static com.manuscript.rest.common.Constants.RESOURCE_USER;
 
 @RestController
 @RequestMapping(RESOURCE_USER)
-@CrossOrigin("**")
+@CrossOrigin()
 public class UserController {
     private final IUserService userService;
 
