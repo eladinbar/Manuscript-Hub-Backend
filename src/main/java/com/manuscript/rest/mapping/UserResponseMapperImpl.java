@@ -15,6 +15,7 @@ public class UserResponseMapperImpl implements IRestMapper<UserModel, UserRespon
                 .uid(model.getUid())
                 .email(model.getEmail())
                 .name(model.getName())
+                .status(model.getStatus())
                 .phoneNumber(model.getPhoneNumber())
                 .build();
 
@@ -27,6 +28,7 @@ public class UserResponseMapperImpl implements IRestMapper<UserModel, UserRespon
                 .updatedTime(rest.getUpdatedTime())
                 .uid(rest.getUid())
                 .email(rest.getEmail())
+                .status(rest.getStatus())
                 .name(rest.getName())
                 .phoneNumber(rest.getPhoneNumber())
                 .build();

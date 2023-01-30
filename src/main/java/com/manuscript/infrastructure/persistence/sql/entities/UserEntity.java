@@ -1,5 +1,6 @@
 package com.manuscript.infrastructure.persistence.sql.entities;
 
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.infrastructure.persistence.sql.common.entities.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -25,6 +26,9 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "phoneNumber", columnDefinition = "TEXT")
     private String phoneNumber;
+
+    @Column(name = "status")
+    private String status;
 
     @Column(name = "uid", columnDefinition = "TEXT")
     private String uid;

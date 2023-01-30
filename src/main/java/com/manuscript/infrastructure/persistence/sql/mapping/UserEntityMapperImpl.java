@@ -23,6 +23,7 @@ public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, 
                 .name(model.getName())
                 .uid(model.getUid())
                 .phoneNumber(model.getPhoneNumber())
+                .status(model.getStatus())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, 
                 .updatedTime(tEntity.getUpdatedTime())
                 .email(tEntity.getEmail())
                 .name(tEntity.getName())
+                .status(tEntity.getStatus())
                 .uid(tEntity.getUid())
                 .phoneNumber(tEntity.getPhoneNumber())
                 .build();

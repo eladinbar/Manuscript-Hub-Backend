@@ -19,5 +19,6 @@ public class UserResponse {
     String email;
     String name;
     String phoneNumber;
+    String status;
     String uid;
 }

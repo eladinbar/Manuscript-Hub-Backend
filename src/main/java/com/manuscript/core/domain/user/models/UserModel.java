@@ -19,6 +19,7 @@ public class UserModel {
     private String email;
     private String name;
     private String phoneNumber;
+    private String status;
     private String uid;
 
 }
