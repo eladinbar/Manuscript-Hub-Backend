@@ -26,7 +26,8 @@ public class CorsConfiguration implements WebMvcConfigurer, Filter {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, HEAD, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, x-auth-token, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, x-auth-token, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, multipart/form-data");
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

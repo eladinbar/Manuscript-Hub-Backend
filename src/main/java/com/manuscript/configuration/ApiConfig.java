@@ -3,6 +3,8 @@ package com.manuscript.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 public class ApiConfig {
@@ -18,6 +20,13 @@ public class ApiConfig {
         String url = "http://" + System.getenv("WEB_API");
         return url;
     }
+
+//    @Bean
+//    public MultipartResolver multipartResolver() {
+//        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+//        resolver.setDefaultEncoding("utf-8");
+//        return resolver;
+//    }
 
 
 }
