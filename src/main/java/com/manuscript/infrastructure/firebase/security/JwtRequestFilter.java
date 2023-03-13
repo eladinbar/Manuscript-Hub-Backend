@@ -46,7 +46,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     try {
                         FirebaseToken firebaseToken = authService.verifyIdToken(idToken);
                         String uid = firebaseToken.getUid();
-                        if (uid != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+                        if (uid != null && SecurityContextHolder.getContext().getAuthentication() != null) {
                             UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
                             ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
                             userRecord.getCustomClaims().forEach((k, v) -> authorities.add(new SimpleGrantedAuthority(k)));
