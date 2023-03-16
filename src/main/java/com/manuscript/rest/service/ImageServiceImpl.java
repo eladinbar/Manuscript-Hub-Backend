@@ -7,7 +7,6 @@ import com.manuscript.core.usecase.custom.image.ICreateImage;
 import com.manuscript.core.usecase.custom.image.IGetAllImage;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.mapping.ImageRequestMapperImpl;
-import com.manuscript.rest.mapping.ImageResponseMapperImpl;
 import com.manuscript.rest.request.ImageRequest;
 import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
@@ -51,5 +50,13 @@ public class ImageServiceImpl implements IImageService {
     @Override
     public List<ImageResponse> getAll() {
         return getAllImagesUseCase.getAll().stream().map(imageResponseMapper::modelToRest).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ImageResponse> getAllByUid(String uid) {
+        return getAllImagesUseCase.getAll().stream().map(imageResponseMapper::modelToRest).collect(Collectors.toList()).stream()
+                .filter(image ->
+                        image.getUid().equals(uid)).collect(Collectors.toList());
+
     }
 }

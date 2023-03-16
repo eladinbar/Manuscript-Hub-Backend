@@ -37,41 +37,54 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         logger.info("Request received - path: " + request.getRequestURI() + ", host: " + request.getLocalAddr() + ", " + request.getRemoteAddr());
         String uri = request.getRequestURI();
         if (uri.startsWith("/api")) {
-            final String requestTokenHeader = request.getHeader("Authorization");
-            if (requestTokenHeader != null) {
-                String Bearer = requestTokenHeader.substring(0, 7);
-                if (Bearer.equals("Bearer ")) {
-                    String[] authToken = requestTokenHeader.split(" ");
-                    String idToken = authToken[1];
-                    try {
-                        FirebaseToken firebaseToken = authService.verifyIdToken(idToken);
-                        String uid = firebaseToken.getUid();
-                        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-                        if (uid != null && SecurityContextHolder.getContext().getAuthentication() != null) {
-                            UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
-                            ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                            userRecord.getCustomClaims().forEach((k, v) -> authorities.add(new SimpleGrantedAuthority(k)));
 
-                            SecurityContextHolder.getContext().setAuthentication(new UserAuthModel(uid, authorities));
-                            chain.doFilter(request, response);
+            if(uri.contains("registerNew")){
+                try{
 
-                        }
-                    } catch (FirebaseAuthException e) {
-                        logger.warn("FirebaseException: " + e + "id token: " + idToken);
-                        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                        Map<String, String> error = new HashMap<>();
-                        error.put("error", e.getMessage());
-                        error.put("errorCode", e.getErrorCode().toString());
-                        response.setContentType(APPLICATION_JSON_VALUE);
-                        new ObjectMapper().writeValue(response.getOutputStream(), error);
-                    }
-
-
-                } else {
-                    logger.warn("Auth token doesn't start with bearer");
+                    chain.doFilter(request, response);
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
                 }
-            } else {
-                logger.warn("Auth header cannot be empty");
+
+            }
+            else{
+                final String requestTokenHeader = request.getHeader("Authorization");
+                if (requestTokenHeader != null) {
+                    String Bearer = requestTokenHeader.substring(0, 7);
+                    if (Bearer.equals("Bearer ")) {
+                        String[] authToken = requestTokenHeader.split(" ");
+                        String idToken = authToken[1];
+                        try {
+                            FirebaseToken firebaseToken = authService.verifyIdToken(idToken);
+                            String uid = firebaseToken.getUid();
+                            System.out.println(SecurityContextHolder.getContext().getAuthentication());
+                            if (uid != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+                                UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
+                                ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                                userRecord.getCustomClaims().forEach((k, v) -> authorities.add(new SimpleGrantedAuthority(k)));
+
+                                SecurityContextHolder.getContext().setAuthentication(new UserAuthModel(uid, authorities));
+                                chain.doFilter(request, response);
+
+                            }
+                        } catch (FirebaseAuthException e) {
+                            logger.warn("FirebaseException: " + e + "id token: " + idToken);
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                            Map<String, String> error = new HashMap<>();
+                            error.put("error", e.getMessage());
+                            error.put("errorCode", e.getErrorCode().toString());
+                            response.setContentType(APPLICATION_JSON_VALUE);
+                            new ObjectMapper().writeValue(response.getOutputStream(), error);
+                        }
+
+
+                    } else {
+                        logger.warn("Auth token doesn't start with bearer");
+                    }
+                } else {
+
+                    logger.warn("Auth header cannot be empty");
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.manuscript.infrastructure.persistence.sql.entities;
 
+import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.infrastructure.persistence.sql.common.entities.BaseEntity;
 import lombok.*;
@@ -29,6 +30,10 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "status")
     private String status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
     @Column(name = "uid", columnDefinition = "TEXT")
     private String uid;

@@ -13,6 +13,7 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
                 .data(imageModel.getData())
                 .updatedTime(imageModel.getUpdatedTime())
                 .createdTime(imageModel.getCreatedTime())
+                .uid(imageModel.getUid())
                 .status(imageModel.getStatus())
                 .build();
     }
@@ -25,6 +26,7 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
                 .fileName(imageResponse.getFileName())
                 .data(imageResponse.getData())
                 .status(imageResponse.getStatus())
+                .uid(imageResponse.getUid())
                 .build();
     }
 }

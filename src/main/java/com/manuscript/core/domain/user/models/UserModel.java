@@ -1,5 +1,6 @@
 package com.manuscript.core.domain.user.models;
 
+import com.manuscript.core.domain.common.enums.Role;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +22,6 @@ public class UserModel {
     private String phoneNumber;
     private String status;
     private String uid;
+    private Role role;
 
 }

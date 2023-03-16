@@ -22,6 +22,7 @@ public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, 
                 .email(model.getEmail())
                 .name(model.getName())
                 .uid(model.getUid())
+                .role(model.getRole())
                 .phoneNumber(model.getPhoneNumber())
                 .status(model.getStatus())
                 .build();
@@ -40,6 +41,7 @@ public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, 
                 .name(tEntity.getName())
                 .status(tEntity.getStatus())
                 .uid(tEntity.getUid())
+                .role(tEntity.getRole())
                 .phoneNumber(tEntity.getPhoneNumber())
                 .build();
     }

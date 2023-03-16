@@ -12,4 +12,5 @@ public interface IImageService {
     void deleteById(UUID id);
     void update(ImageRequest imageRequest);
     List<ImageResponse> getAll();
+    List<ImageResponse> getAllByUid(String uid);
 }

@@ -1,16 +1,16 @@
 package com.manuscript.rest.api;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.domain.user.repository.IUserRepositoryService;
 import com.manuscript.core.exceptions.NoUserFoundException;
 import com.manuscript.infrastructure.firebase.security.Roles.RoleConstants;
 import com.manuscript.infrastructure.firebase.service.AuthenticationService;
 import com.manuscript.rest.mapping.IRestMapper;
+import com.manuscript.rest.request.UserRegistrationRequest;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.service.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +30,11 @@ public class AccountController {
     private final IUserRepositoryService getById;
     private final IRestMapper<UserModel, UserResponse> mapper;
 
+    private final IUserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse> login(@RequestBody UserRequest user) {
         Optional<UserModel> userByUidOpt = getById.findUserByUid(user.getUid());
         if (userByUidOpt.isPresent()) {
             UserModel userModel = userByUidOpt.get();
@@ -42,18 +44,19 @@ public class AccountController {
     }
 
     @PostMapping("/registerNew")
-    public ResponseEntity<UserRecord> registerNew(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<UserModel> registerNew(@RequestBody UserRegistrationRequest user) {
         try {
-            UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-                    .setEmail(email)
-                    .setPassword(password);
-            UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
-            System.out.println("Successfully created new user: " + userRecord.getUid());
-            return ResponseEntity.ok(userRecord);
+            return ResponseEntity.ok(this.userService.save(user));
+//            UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+//                    .setEmail(email)
+//                    .setPassword(password);
+//            UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
+//            System.out.println("Successfully created new user: " + userRecord.getUid());
+//            return ResponseEntity.ok(userRecord);
         } catch (Exception e) {
             System.err.println("Error creating new user: " + e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
     }
 
 

@@ -16,6 +16,7 @@ import java.util.UUID;
 public class ImageResponse {
 
     Date createdTime;
+    String uid;
     Date updatedTime;
     UUID documentId;
     String fileName;

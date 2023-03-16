@@ -18,7 +18,7 @@ import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
 
 @RestController
 @RequestMapping(RESOURCE_IMAGE)
-@CrossOrigin()
+@CrossOrigin("*")
 public class ImageController {
     private final IImageService imageService;
 
@@ -27,9 +27,9 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping("/uploadInputDocument")
-    public void uploadDocument(@RequestParam("file") MultipartFile file) throws IOException {
-        ImageRequest imageRequest = ImageRequest.builder().data(file.getBytes()).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
+    @PostMapping("/uploadInputDocument/{id}")
+    public void uploadDocument(@RequestParam("file") MultipartFile file, @PathVariable String uid) throws IOException {
+        ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(file.getBytes()).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
         imageService.save(imageRequest);
     }
 
@@ -49,8 +49,8 @@ public class ImageController {
         return ResponseEntity.ok(result.getData());
     }
 
-    @GetMapping("/getAllDocuments")
-    public ResponseEntity<List<ImageResponse>> getAllDocuments() {
+    @GetMapping("/getAllDocumentsByUid")
+    public ResponseEntity<List<ImageResponse>> getAllDocumentsByUid(@PathVariable String uid) {
         System.err.println("sdasdas");
         List<ImageResponse> result = imageService.getAll();
         System.err.println(result.size());

@@ -15,6 +15,7 @@ import java.util.UUID;
 @Setter
 public class ImageModel {
     private Date createdTime;
+    private String uid;
     private Date updatedTime;
     private UUID id;
     private String fileName;

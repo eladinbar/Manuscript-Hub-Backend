@@ -1,5 +1,6 @@
 package com.manuscript.rest.response;
 
+import com.manuscript.core.domain.common.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,5 @@ public class UserResponse {
     String phoneNumber;
     String status;
     String uid;
+    Role role;
 }
