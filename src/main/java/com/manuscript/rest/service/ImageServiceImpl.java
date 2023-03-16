@@ -56,7 +56,7 @@ public class ImageServiceImpl implements IImageService {
     public List<ImageResponse> getAllByUid(String uid) {
         return getAllImagesUseCase.getAll().stream().map(imageResponseMapper::modelToRest).collect(Collectors.toList()).stream()
                 .filter(image ->
-                        image.getUid().equals(uid)).collect(Collectors.toList());
+                       image.getUid() != null && image.getUid().equals(uid)).collect(Collectors.toList());
 
     }
 }

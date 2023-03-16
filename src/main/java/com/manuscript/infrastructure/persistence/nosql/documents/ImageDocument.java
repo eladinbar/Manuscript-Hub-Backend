@@ -17,5 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ImageDocument extends BaseDocument {
     private String fileName;
     private Status status;
+    private String uid;
     private String data;
 }

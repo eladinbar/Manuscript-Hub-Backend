@@ -26,6 +26,7 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
                 .createdTime(imageModel.getCreatedTime())
                 .updatedTime(imageModel.getUpdatedTime())
                 .status(imageModel.getStatus())
+                .uid(imageModel.getUid())
                 .build();
     }
 
@@ -41,6 +42,7 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
                 .createdTime(imageDocument.getCreatedTime())
                 .updatedTime(imageDocument.getUpdatedTime())
                 .status(imageDocument.getStatus())
+                .uid(imageDocument.getUid())
                 .build();
     }
 

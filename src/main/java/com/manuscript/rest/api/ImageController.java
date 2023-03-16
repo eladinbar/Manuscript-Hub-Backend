@@ -27,7 +27,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping("/uploadInputDocument/{id}")
+    @PostMapping("/uploadInputDocument/{uid}")
     public void uploadDocument(@RequestParam("file") MultipartFile file, @PathVariable String uid) throws IOException {
         ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(file.getBytes()).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
         imageService.save(imageRequest);
@@ -49,10 +49,10 @@ public class ImageController {
         return ResponseEntity.ok(result.getData());
     }
 
-    @GetMapping("/getAllDocumentsByUid")
+    @GetMapping("/getAllDocumentsByUid/{uid}")
     public ResponseEntity<List<ImageResponse>> getAllDocumentsByUid(@PathVariable String uid) {
         System.err.println("sdasdas");
-        List<ImageResponse> result = imageService.getAll();
+        List<ImageResponse> result = imageService.getAllByUid(uid);
         System.err.println(result.size());
         return ResponseEntity.ok(result);
     }
