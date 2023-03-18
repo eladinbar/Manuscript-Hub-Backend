@@ -4,9 +4,9 @@ import com.manuscript.core.domain.common.repository.IBaseRepositoryService;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.usecase.common.GetAllUseCaseImpl;
 
-public class GetAllImageImpl extends GetAllUseCaseImpl<ImageModel> implements IGetAllImage {
+public class GetAllImagesImpl extends GetAllUseCaseImpl<ImageModel> implements IGetAllImages {
 
-    public GetAllImageImpl(IBaseRepositoryService<ImageModel> _serviceRepo) {
+    public GetAllImagesImpl(IBaseRepositoryService<ImageModel> _serviceRepo) {
         super(_serviceRepo);
     }
 }

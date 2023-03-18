@@ -1,6 +1,5 @@
 package com.manuscript.infrastructure.persistence.sql.mapping;
 
-
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
@@ -11,39 +10,38 @@ import java.util.UUID;
 @Service
 public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, UserEntity> {
     @Override
-    public UserEntity modelToEntity(UserModel model) {
-        if (model.getId() == null) {
-            model.setId(UUID.randomUUID());
+    public UserEntity modelToEntity(UserModel userModel) {
+        if (userModel.getId() == null) {
+            userModel.setId(UUID.randomUUID());
         }
         return UserEntity.builder()
-                .id(model.getId())
-                .createdTime(model.getCreatedTime())
-                .updatedTime(model.getUpdatedTime())
-                .email(model.getEmail())
-                .name(model.getName())
-                .uid(model.getUid())
-                .role(model.getRole())
-                .phoneNumber(model.getPhoneNumber())
-                .status(model.getStatus())
+                .id(userModel.getId())
+                .createdTime(userModel.getCreatedTime())
+                .updatedTime(userModel.getUpdatedTime())
+                .email(userModel.getEmail())
+                .name(userModel.getName())
+                .uid(userModel.getUid())
+                .role(userModel.getRole())
+                .phoneNumber(userModel.getPhoneNumber())
+                .status(userModel.getStatus())
                 .build();
     }
 
     @Override
-    public UserModel entityToModel(final UserEntity tEntity) {
-        if (tEntity.getId() == null) {
-            tEntity.setId(UUID.randomUUID());
+    public UserModel entityToModel(final UserEntity userEntity) {
+        if (userEntity.getId() == null) {
+            userEntity.setId(UUID.randomUUID());
         }
         return UserModel.builder()
-                .id(tEntity.getId())
-                .createdTime(tEntity.getCreatedTime())
-                .updatedTime(tEntity.getUpdatedTime())
-                .email(tEntity.getEmail())
-                .name(tEntity.getName())
-                .status(tEntity.getStatus())
-                .uid(tEntity.getUid())
-                .role(tEntity.getRole())
-                .phoneNumber(tEntity.getPhoneNumber())
+                .id(userEntity.getId())
+                .createdTime(userEntity.getCreatedTime())
+                .updatedTime(userEntity.getUpdatedTime())
+                .email(userEntity.getEmail())
+                .name(userEntity.getName())
+                .status(userEntity.getStatus())
+                .uid(userEntity.getUid())
+                .role(userEntity.getRole())
+                .phoneNumber(userEntity.getPhoneNumber())
                 .build();
     }
-
 }

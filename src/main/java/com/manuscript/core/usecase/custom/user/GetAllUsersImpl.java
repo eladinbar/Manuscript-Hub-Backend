@@ -4,9 +4,9 @@ import com.manuscript.core.domain.common.repository.IBaseRepositoryService;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.usecase.common.GetAllUseCaseImpl;
 
-public class GetAllUserImpl extends GetAllUseCaseImpl<UserModel> implements IGetAllUser {
+public class GetAllUsersImpl extends GetAllUseCaseImpl<UserModel> implements IGetAllUsers {
 
-    public GetAllUserImpl(IBaseRepositoryService<UserModel> _serviceRepo) {
+    public GetAllUsersImpl(IBaseRepositoryService<UserModel> _serviceRepo) {
         super(_serviceRepo);
     }
 }
