@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserResponseMapperImpl implements IRestMapper<UserModel, UserResponse> {
+    @Override
     public UserResponse modelToRest(UserModel model) {
         return UserResponse.builder()
                 .userId(model.getId())
@@ -21,6 +22,7 @@ public class UserResponseMapperImpl implements IRestMapper<UserModel, UserRespon
 
     }
 
+    @Override
     public UserModel restToModel(UserResponse rest) {
         return UserModel.builder()
                 .id(rest.getUserId())

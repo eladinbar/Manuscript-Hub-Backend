@@ -20,8 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class AuthenticationService {
-
+public class AuthenticationService implements IAuthenticationService {
     FirebaseAuth auth;
     FirebaseApp firebaseApp;
 
@@ -36,6 +35,7 @@ public class AuthenticationService {
         auth = FirebaseAuth.getInstance();
     }
 
+    @Override
     public FirebaseApp getFirebaseApp() throws IOException {
 //        FileInputStream refreshToken = new FileInputStream(ClassLoader.getSystemResource("firebase/serviceAccount.json").getFile());
         InputStream refreshToken = accountPath.getInputStream();
@@ -46,12 +46,13 @@ public class AuthenticationService {
         return FirebaseApp.getInstance();
     }
 
+    @Override
     public FirebaseToken verifyIdToken(String idToken) throws FirebaseAuthException {
         return auth.verifyIdToken(idToken);
     }
 
+    @Override
     public void addRole(String uid, String role) throws FirebaseAuthException, RoleNotFoundException {
-
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         UserRecord user = firebaseAuth.getUser(uid);
         if (RoleConstants.isRole(role)) {
@@ -68,6 +69,7 @@ public class AuthenticationService {
         }
     }
 
+    @Override
     public void removeRole(String uid, String role) throws FirebaseAuthException, RoleNotFoundException {
         if (RoleConstants.isRole(role)) {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -81,8 +83,5 @@ public class AuthenticationService {
         } else {
             throw new RoleNotFoundException(role + "Is not a role");
         }
-
     }
-
-
 }
