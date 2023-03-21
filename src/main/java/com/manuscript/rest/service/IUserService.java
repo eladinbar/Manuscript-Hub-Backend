@@ -8,7 +8,8 @@ import com.manuscript.rest.response.UserResponse;
 import java.util.UUID;
 
 public interface IUserService {
-    UserResponse get(UUID id);
+    UserResponse getById(UUID id);
+    UserResponse getByUid(String uid);
     UserModel save(UserRegistrationRequest userRegistrationRequest);
 
 }

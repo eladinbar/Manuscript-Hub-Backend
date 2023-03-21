@@ -5,12 +5,12 @@ import com.manuscript.core.domain.common.repository.IBaseRepositoryService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class DeleteUseCaseImpl<M> implements IDeleteUseCase<M> {
+public class DeleteByIdUseCaseImpl<M> implements IDeleteByIdUseCase<M> {
 
     private final IBaseRepositoryService<M> _serviceRepo;
 
     @Override
-    public void delete(M model) throws IllegalArgumentException {
+    public void deleteById(M model) throws IllegalArgumentException {
         _serviceRepo.deleteById(model);
 
     }

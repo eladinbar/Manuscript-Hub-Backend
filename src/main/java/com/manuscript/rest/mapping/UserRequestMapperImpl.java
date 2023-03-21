@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest> {
+    @Override
     public UserRequest modelToRest(UserModel model) {
         return UserRequest.builder()
                 .email(model.getEmail())
@@ -17,6 +18,7 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
 
     }
 
+    @Override
     public UserModel restToModel(UserRequest rest) {
         return UserModel.builder()
                 .email(rest.getEmail())

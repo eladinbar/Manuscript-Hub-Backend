@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Service
 public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequest> {
+    @Override
     public ImageRequest modelToRest(ImageModel imageModel) {
         return ImageRequest.builder()
                 .fileName(imageModel.getFileName())
@@ -19,6 +20,7 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
 
     }
 
+    @Override
     public ImageModel restToModel(ImageRequest imageRequest) {
         return ImageModel.builder()
                 .fileName(imageRequest.getFileName())

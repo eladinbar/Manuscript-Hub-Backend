@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageResponse> {
+    @Override
     public ImageResponse modelToRest(ImageModel imageModel) {
         return ImageResponse.builder()
                 .documentId(imageModel.getId())
@@ -18,6 +19,7 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
                 .build();
     }
 
+    @Override
     public ImageModel restToModel(ImageResponse imageResponse) {
         return ImageModel.builder()
                 .id(imageResponse.getDocumentId())

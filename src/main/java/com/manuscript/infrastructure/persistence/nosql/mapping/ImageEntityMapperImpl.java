@@ -12,7 +12,6 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel, ImageDocument> {
-
     private final IImageUtils imageUtils;
     @Override
     public ImageDocument modelToEntity(ImageModel imageModel) {
@@ -45,5 +44,4 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
                 .uid(imageDocument.getUid())
                 .build();
     }
-
 }
