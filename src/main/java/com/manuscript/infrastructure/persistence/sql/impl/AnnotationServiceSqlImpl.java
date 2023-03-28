@@ -14,37 +14,39 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class AnnotationServiceSqlImplService implements IAnnotationRepositoryService {
+public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     private final IAnnotationRepo repo;
     private final IRepositoryEntityMapper<AnnotationModel, AnnotationEntity> mapper;
 
     @Override
     public AnnotationModel save(AnnotationModel model) throws IllegalArgumentException {
-        return null;
+        AnnotationEntity annotationEntity = mapper.modelToEntity(model);
+        annotationEntity = repo.save(annotationEntity);
+        return mapper.entityToModel(annotationEntity);
     }
 
     @Override
     public List<AnnotationModel> getAll() {
-        return null;
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
     public Optional<AnnotationModel> getById(UUID id) throws IllegalArgumentException {
-        return Optional.empty();
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
     public boolean isExists(UUID id) throws IllegalArgumentException {
-        return false;
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
     public void deleteAll() {
-
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
     public void deleteById(AnnotationModel model) {
-
+        throw new RuntimeException("Unimplemented");
     }
 }

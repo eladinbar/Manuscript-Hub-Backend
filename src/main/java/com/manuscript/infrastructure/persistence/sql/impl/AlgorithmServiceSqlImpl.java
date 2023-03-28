@@ -20,31 +20,33 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
 
     @Override
     public AlgorithmModel save(AlgorithmModel model) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
-    public List<AlgorithmModel> getAll() {
-        return null;
+        AlgorithmEntity algorithmEntity = mapper.modelToEntity(model);
+        algorithmEntity = repo.save(algorithmEntity);
+        return mapper.entityToModel(algorithmEntity);
     }
 
     @Override
     public Optional<AlgorithmModel> getById(UUID id) throws IllegalArgumentException {
-        return Optional.empty();
+        return repo.findById(id).map(mapper::entityToModel);
+    }
+
+    @Override
+    public List<AlgorithmModel> getAll() {
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
     public boolean isExists(UUID id) throws IllegalArgumentException {
-        return false;
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
     public void deleteAll() {
-
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
     public void deleteById(AlgorithmModel model) {
-
+        throw new RuntimeException("Unimplemented");
     }
 }
