@@ -1,9 +1,7 @@
 package com.manuscript.core.domain.common.enums;
 
 public enum Role {
-    ADMIN,
+    Admin,
     Developer,
     User,
-    Guest,
-
 }

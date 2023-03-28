@@ -14,12 +14,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class ImageResponse {
-
-    Date createdTime;
-    String uid;
-    Date updatedTime;
     UUID documentId;
+    UUID userId;
+    String uid;
     String fileName;
-    Status status;
     byte[] data;
+    Status status;
+    Date createdTime;
+    Date updatedTime;
 }
