@@ -4,15 +4,39 @@ import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.rest.request.AnnotationRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class AnnotationRequestMapperImpl implements IRestMapper<AnnotationModel, AnnotationRequest> {
     @Override
     public AnnotationRequest modelToRest(AnnotationModel annotationModel) {
-        throw new UnsupportedOperationException();
+        return AnnotationRequest.builder()
+                .annotationId(annotationModel.getAnnotationId())
+                .userId(annotationModel.getUserId())
+                .imageId(annotationModel.getImageId())
+                .algorithmId(annotationModel.getAlgorithmId())
+                .content(annotationModel.getContent())
+                .startX(annotationModel.getStartX())
+                .startY(annotationModel.getStartY())
+                .endX(annotationModel.getEndX())
+                .endY(annotationModel.getEndY())
+                .build();
     }
 
     @Override
     public AnnotationModel restToModel(AnnotationRequest annotationRequest) {
-        throw new UnsupportedOperationException();
+        return AnnotationModel.builder()
+                .annotationId(annotationRequest.getAnnotationId())
+                .userId(annotationRequest.getUserId())
+                .imageId(annotationRequest.getImageId())
+                .algorithmId(annotationRequest.getAlgorithmId())
+                .content(annotationRequest.getContent())
+                .startX(annotationRequest.getStartX())
+                .startY(annotationRequest.getStartY())
+                .endX(annotationRequest.getEndX())
+                .endY(annotationRequest.getEndY())
+                .createdTime(new Date())
+                .updatedTime(new Date())
+                .build();
     }
 }
