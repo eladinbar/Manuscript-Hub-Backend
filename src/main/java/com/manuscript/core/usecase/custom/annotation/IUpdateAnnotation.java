@@ -1,4 +1,7 @@
 package com.manuscript.core.usecase.custom.annotation;
 
-public interface IUpdateAnnotation {
+import com.manuscript.core.domain.annotation.models.AnnotationModel;
+import com.manuscript.core.usecase.common.IUpdateUseCase;
+
+public interface IUpdateAnnotation extends IUpdateUseCase<AnnotationModel> {
 }

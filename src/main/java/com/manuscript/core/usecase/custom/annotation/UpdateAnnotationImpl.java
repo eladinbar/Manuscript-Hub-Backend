@@ -1,5 +1,11 @@
 package com.manuscript.core.usecase.custom.annotation;
 
-public class UpdateAnnotationImpl implements IUpdateAnnotation {
+import com.manuscript.core.domain.annotation.models.AnnotationModel;
+import com.manuscript.core.domain.common.repository.IBaseRepositoryService;
+import com.manuscript.core.usecase.common.UpdateUseCaseImpl;
 
+public class UpdateAnnotationImpl extends UpdateUseCaseImpl<AnnotationModel> implements IUpdateAnnotation {
+    public UpdateAnnotationImpl(IBaseRepositoryService<AnnotationModel> serviceRepo) {
+        super(serviceRepo);
+    }
 }

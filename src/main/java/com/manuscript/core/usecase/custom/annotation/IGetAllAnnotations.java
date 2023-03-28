@@ -1,4 +1,7 @@
 package com.manuscript.core.usecase.custom.annotation;
 
-public interface IGetAllAnnotations {
+import com.manuscript.core.domain.annotation.models.AnnotationModel;
+import com.manuscript.core.usecase.common.IGetAllUseCase;
+
+public interface IGetAllAnnotations extends IGetAllUseCase<AnnotationModel> {
 }
