@@ -26,21 +26,25 @@ public class AnnotationController {
 
     @PatchMapping("/updateAnnotation")
     public ResponseEntity<AnnotationResponse> updateAnnotation(@RequestBody AnnotationRequest annotationRequest) {
-        throw new RuntimeException("Unimplemented");
+        AnnotationResponse result = annotationService.update(annotationRequest);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/getAnnotationsByDocumentId")
     public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByDocumentId(@RequestBody AnnotationRequest annotationRequest) {
+//        List<AnnotationResponse> annotationResponses = new ArrayList<>();
+//        AnnotationResponse result = annotationService.update(annotationRequest);
+//        return ResponseEntity.ok(result);
         throw new RuntimeException("Unimplemented");
     }
 
     @DeleteMapping ("/deleteAnnotation")
-    public ResponseEntity<AnnotationResponse> deleteAnnotation(@RequestBody AnnotationRequest annotationRequest) {
-        throw new RuntimeException("Unimplemented");
+    public void deleteAnnotation(@RequestBody AnnotationRequest annotationRequest) {
+        annotationService.delete(annotationRequest);
     }
 
     @DeleteMapping("/deleteAllAnnotationsByDocumentId")
-    public ResponseEntity<List<AnnotationResponse>> deleteAllAnnotationsByDocumentId(@RequestBody AnnotationRequest annotationRequest) {
+    public void deleteAllAnnotationsByDocumentId(@RequestBody AnnotationRequest annotationRequest) {
         throw new RuntimeException("Unimplemented");
     }
 }

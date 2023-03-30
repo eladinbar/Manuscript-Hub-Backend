@@ -38,7 +38,7 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
         return repo.findById(id).map(mapper::entityToModel);
     }
 
-    public boolean isExists(UUID id) throws IllegalArgumentException {
+    public boolean existsById(UUID id) throws IllegalArgumentException {
         return repo.existsById(id);
     }
 

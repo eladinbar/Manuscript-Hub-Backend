@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_ANNOTATION;
@@ -38,14 +37,12 @@ public class AlgorithmController {
     }
 
     @DeleteMapping("/deleteAlgorithm")
-    public ResponseEntity<AlgorithmResponse> deleteAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
-        AlgorithmResponse result = algorithmService.delete(algorithmRequest);
-        return ResponseEntity.ok(result);
+    public void deleteAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
+        algorithmService.delete(algorithmRequest);
     }
 
     @DeleteMapping("/deleteAllByUserIdAlgorithm")
-    public ResponseEntity<List<AlgorithmResponse>> deleteAllByUserIdAlgorithm(@RequestBody UUID userId) {
-        List<AlgorithmResponse> result = algorithmService.deleteAllByUserId(userId);
-        return ResponseEntity.ok(result);
+    public void deleteAllByUserIdAlgorithm(@RequestBody UUID userId) {
+        algorithmService.deleteAllByUserId(userId);
     }
 }

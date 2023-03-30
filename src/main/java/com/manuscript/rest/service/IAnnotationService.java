@@ -12,7 +12,7 @@ public interface IAnnotationService {
 
     AnnotationResponse get(AnnotationRequest annotationRequest);
 
-    AnnotationResponse delete(AnnotationRequest annotationRequest);
+    void delete(AnnotationRequest annotationRequest);
 
-    AnnotationResponse deleteAllByDocumentId(UUID documentId);
+    void deleteAllByDocumentId(UUID documentId);
 }

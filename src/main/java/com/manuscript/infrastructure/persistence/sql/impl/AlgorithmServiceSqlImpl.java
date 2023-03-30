@@ -26,6 +26,11 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
     }
 
     @Override
+    public boolean existsById(UUID id) throws IllegalArgumentException {
+        return repo.existsById(id);
+    }
+
+    @Override
     public Optional<AlgorithmModel> getById(UUID id) throws IllegalArgumentException {
         return repo.findById(id).map(mapper::entityToModel);
     }
@@ -36,17 +41,12 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
     }
 
     @Override
-    public boolean isExists(UUID id) throws IllegalArgumentException {
-        throw new RuntimeException("Unimplemented");
+    public void deleteById(AlgorithmModel model) {
+        repo.deleteById(model.getAlgorithmId());
     }
 
     @Override
     public void deleteAll() {
-        throw new RuntimeException("Unimplemented");
-    }
-
-    @Override
-    public void deleteById(AlgorithmModel model) {
         throw new RuntimeException("Unimplemented");
     }
 }

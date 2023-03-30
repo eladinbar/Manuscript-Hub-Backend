@@ -1,18 +1,20 @@
 package com.manuscript.rest.service;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
+import com.manuscript.core.exceptions.NoAnnotationFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
 import com.manuscript.core.usecase.custom.annotation.ICreateAnnotation;
+import com.manuscript.core.usecase.custom.annotation.IDeleteByIdAnnotation;
 import com.manuscript.core.usecase.custom.annotation.IGetByIdAnnotation;
 import com.manuscript.core.usecase.custom.annotation.IUpdateAnnotation;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.AnnotationRequest;
-import com.manuscript.rest.response.AlgorithmResponse;
 import com.manuscript.rest.response.AnnotationResponse;
 import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -28,6 +30,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
     private final ICreateAnnotation createAnnotationUseCase;
     private final IGetByIdAnnotation getByIdAnnotationUseCase;
     private final IUpdateAnnotation updateAnnotationUseCase;
+    private final IDeleteByIdAnnotation deleteByIdAnnotationUseCase;
 
     @Override
     public AnnotationResponse create(AnnotationRequest annotationRequest) {
@@ -45,23 +48,31 @@ public class AnnotationServiceImpl implements IAnnotationService {
         checkAlgorithmAvailability(annotationRequest.getAlgorithmId());
         //TODO ensure coordinates are within document bounds
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
-        annotationModel = createAnnotationUseCase.create(annotationModel);
+        annotationModel = updateAnnotationUseCase.update(annotationModel);
         return annotationResponseMapper.modelToRest(annotationModel);
     }
 
     @Override
     public AnnotationResponse get(AnnotationRequest annotationRequest) {
-        return null;
+        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUserId());
+        Optional<AnnotationModel> optionalAnnotation = getByIdAnnotationUseCase.getById(annotationRequest.getAnnotationId());
+        if(optionalAnnotation.isPresent()) {
+            AnnotationModel annotationModel = optionalAnnotation.get();
+            return annotationResponseMapper.modelToRest(annotationModel);
+        }
+        throw new NoAnnotationFoundException();
     }
 
     @Override
-    public AnnotationResponse delete(AnnotationRequest annotationRequest) {
-        return null;
+    public void delete(AnnotationRequest annotationRequest) {
+        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUserId());
+        AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
+        deleteByIdAnnotationUseCase.deleteById(annotationModel);
     }
 
     @Override
-    public AnnotationResponse deleteAllByDocumentId(UUID documentId) {
-        return null;
+    public void deleteAllByDocumentId(UUID documentId) {
+        throw new RuntimeException("Unimplemented");
     }
 
     private void verifyImagePermission(UUID imageId, UUID userId) {

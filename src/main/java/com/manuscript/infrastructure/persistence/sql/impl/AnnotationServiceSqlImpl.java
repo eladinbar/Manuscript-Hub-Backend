@@ -8,6 +8,7 @@ import com.manuscript.infrastructure.persistence.sql.repositories.IAnnotationRep
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,27 +27,55 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public List<AnnotationModel> getAll() {
-        throw new RuntimeException("Unimplemented");
+    public boolean existsById(UUID id) throws IllegalArgumentException {
+        return repo.existsById(id);
     }
 
     @Override
     public Optional<AnnotationModel> getById(UUID id) throws IllegalArgumentException {
+        Optional<AnnotationEntity> annotationEntityOptional = repo.findById(id);
+        if(annotationEntityOptional.isPresent()) {
+            AnnotationModel annotationModel = mapper.entityToModel(annotationEntityOptional.get());
+            return Optional.of(annotationModel);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Optional<AnnotationEntity>> getAllByDocumentId(UUID documentId) {
+//        List<AnnotationEntity> annotationEntities = new ArrayList<>();
+//        repo.findAllById().forEach(annotationEntities::add);
+//        List<AnnotationModel> annotationModels = new ArrayList<>();
+//        for (AnnotationEntity annotationEntity : annotationEntities) {
+//            annotationModels.add(mapper.entityToModel(annotationEntity));
+//        }
+//        return annotationModels;
         throw new RuntimeException("Unimplemented");
     }
 
     @Override
-    public boolean isExists(UUID id) throws IllegalArgumentException {
-        throw new RuntimeException("Unimplemented");
-    }
-
-    @Override
-    public void deleteAll() {
-        throw new RuntimeException("Unimplemented");
+    public List<AnnotationModel> getAll() {
+        List<AnnotationEntity> annotationEntities = new ArrayList<>();
+        repo.findAll().forEach(annotationEntities::add);
+        List<AnnotationModel> annotationModels = new ArrayList<>();
+        for (AnnotationEntity annotationEntity : annotationEntities) {
+            annotationModels.add(mapper.entityToModel(annotationEntity));
+        }
+        return annotationModels;
     }
 
     @Override
     public void deleteById(AnnotationModel model) {
+        repo.deleteById(model.getAnnotationId());
+    }
+
+    @Override
+    public void deleteAllByDocumentId(UUID documentId) {
+//        repo.delete();
+    }
+
+    @Override
+    public void deleteAll() {
         throw new RuntimeException("Unimplemented");
     }
 }
