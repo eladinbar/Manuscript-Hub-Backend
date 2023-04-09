@@ -13,7 +13,6 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
                 .email(model.getEmail())
                 .uid(model.getUid())
                 .name(model.getName())
-
                 .build();
 
     }

@@ -13,6 +13,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.CreateRequest;
 
 import javax.management.relation.RoleNotFoundException;
 
@@ -26,24 +29,30 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserRequest user) {
-        return ResponseEntity.ok(this.userService.getByUid(user.getUid()));
+        try{
+            return ResponseEntity.ok(this.userService.getByUid(user.getUid()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.ok(this.userService.save(user));
+        }
     }
 
     //TODO change PostMapping to "/register" ?
     @PostMapping("/registerNew")
-    public ResponseEntity<UserModel> register(@RequestBody UserRegistrationRequest user) {
+    public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
+        //TODO is user exist in userService
         try {
-            return ResponseEntity.ok(this.userService.save(user));
-//            UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-//                    .setEmail(email)
-//                    .setPassword(password);
-//            UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
-//            System.out.println("Successfully created new user: " + userRecord.getUid());
-//            return ResponseEntity.ok(userRecord);
-        } catch (Exception e) {
-            System.err.println("Error creating new user: " + e.getMessage());
+            UserResponse userResponse = this.userService.save(user);
+            System.out.println(" -------------------------------------------------- ");
+            System.out.println(user.getName());
+            System.out.println(user.getUid());
+            System.out.println(" -------------------------------------------------- ");
+            return ResponseEntity.ok(userResponse);
         }
-        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
+        catch (Exception e) {
+            System.err.println("Error creating new user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
+        }
     }
 
     @PatchMapping("/changeUserStatus/{id}/{status}")

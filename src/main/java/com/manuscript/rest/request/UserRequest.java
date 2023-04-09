@@ -1,5 +1,6 @@
 package com.manuscript.rest.request;
 
+import com.manuscript.core.domain.common.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,7 @@ public class UserRequest {
     @NotNull String email;
     @NotNull String name;
     @NotNull String uid;
+    @NotNull String phoneNumber;
+    @NotNull Role role;
     @NotNull boolean newUser;
 }

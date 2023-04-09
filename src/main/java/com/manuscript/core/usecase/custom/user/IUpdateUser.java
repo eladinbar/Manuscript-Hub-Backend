@@ -5,3 +5,4 @@ import com.manuscript.core.usecase.common.IUpdateUseCase;
 
 public interface IUpdateUser extends IUpdateUseCase<UserModel> {
 }
+
