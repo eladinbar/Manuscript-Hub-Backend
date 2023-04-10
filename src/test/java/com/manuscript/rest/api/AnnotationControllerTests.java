@@ -27,7 +27,7 @@ public class AnnotationControllerTests {
     public void addAnnotationSuccess() {
         //set up
         ////create an annotation request
-        UUID userId = UUID.randomUUID();
+        String userId = "uid";
         UUID imageId = UUID.randomUUID();
         UUID algorithmId = NIL;
         String content = "content";

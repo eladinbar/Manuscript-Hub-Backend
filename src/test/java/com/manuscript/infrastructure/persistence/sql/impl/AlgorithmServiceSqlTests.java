@@ -12,10 +12,10 @@ import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import java.util.UUID;
 
-@SpringBootTest
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {"spring.datasource.url=jdbc:mysql://localhost:3306/ManuscriptInfo"})
-@ContextConfiguration(locations = "/test-context.xml")
+@ContextConfiguration
 public class AlgorithmServiceSqlTests {
     @Autowired
     private AlgorithmServiceSqlImpl repoService;

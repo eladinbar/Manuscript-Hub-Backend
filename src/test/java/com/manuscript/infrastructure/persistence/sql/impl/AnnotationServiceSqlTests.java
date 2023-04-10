@@ -22,7 +22,7 @@ public class AnnotationServiceSqlTests {
         newAnnotation = AnnotationModel.builder()
                 .annotationId(UUID.randomUUID())
                 .algorithmId(UUID.randomUUID())
-                .userId(UUID.randomUUID())
+                .userId("uid")
                 .imageId(UUID.randomUUID())
                 .content("This is an annotation")
                 .startX(0).startY(0)
