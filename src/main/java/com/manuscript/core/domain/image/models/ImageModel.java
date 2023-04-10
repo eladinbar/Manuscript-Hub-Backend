@@ -14,12 +14,11 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ImageModel {
-    private Date createdTime;
-    private String uid;
-    private Date updatedTime;
     private UUID id;
+    private String uid;
     private String fileName;
     private byte[] data;
     private Status status;
-
+    private Date createdTime;
+    private Date updatedTime;
 }

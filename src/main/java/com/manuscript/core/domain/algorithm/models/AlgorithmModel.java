@@ -12,8 +12,8 @@ import java.util.UUID;
 @SuperBuilder
 @Getter
 public class AlgorithmModel {
-    @NotNull UUID algorithmId;
-    @NotNull UUID userId;
+    UUID algorithmId;
+    @NotNull String userId;
     String url;
     @NotNull Date createdTime;
     @NotNull Date updatedTime;

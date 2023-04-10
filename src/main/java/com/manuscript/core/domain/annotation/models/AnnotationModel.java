@@ -12,8 +12,8 @@ import java.util.UUID;
 @SuperBuilder
 @Getter
 public class AnnotationModel {
-    @NotNull UUID annotationId;
-    @NotNull UUID userId;
+    UUID annotationId;
+    @NotNull String userId;
     @NotNull UUID imageId;
     @NotNull UUID algorithmId;
     String content;
