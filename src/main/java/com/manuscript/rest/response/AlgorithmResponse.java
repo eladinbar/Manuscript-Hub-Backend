@@ -10,12 +10,11 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 public class AlgorithmResponse {
     @NotNull UUID algorithmId;
-    @NotNull UUID userId;
+    @NotNull String userId;
     String url;
     @NotNull Date createdTime;
     @NotNull Date updatedTime;

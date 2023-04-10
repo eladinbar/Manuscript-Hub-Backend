@@ -10,12 +10,11 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 public class AnnotationResponse {
     @NotNull UUID annotationId;
-    @NotNull UUID userId;
+    @NotNull String userId;
     @NotNull UUID imageId;
     @NotNull UUID algorithmId;
     String content;

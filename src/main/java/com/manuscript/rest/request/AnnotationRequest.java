@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class AnnotationRequest {
-    UUID annotationId;
-    UUID userId;
+    UUID id;
+    String userId;
     UUID imageId;
     UUID algorithmId;
     String content;

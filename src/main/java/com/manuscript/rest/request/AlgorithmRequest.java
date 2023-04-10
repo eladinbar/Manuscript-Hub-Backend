@@ -13,6 +13,7 @@ import java.util.UUID;
 @SuperBuilder
 public class AlgorithmRequest {
     UUID algorithmId;
-    UUID userId;
+    String userId;
+    UUID imageId;
     String url;
 }
