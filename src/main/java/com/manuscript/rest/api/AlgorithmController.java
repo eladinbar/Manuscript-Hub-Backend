@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.manuscript.rest.common.Constants.RESOURCE_ANNOTATION;
+import static com.manuscript.rest.common.Constants.RESOURCE_ALGORITHM;
 
 @RestController
-@RequestMapping(RESOURCE_ANNOTATION)
+@RequestMapping(RESOURCE_ALGORITHM)
 @CrossOrigin("*")
 @AllArgsConstructor
 public class AlgorithmController {
     private final IAlgorithmService algorithmService;
+
+    @PostMapping("/runAlgorithm")
+    public void runAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
+        algorithmService.run(algorithmRequest);
+    }
 
     @PostMapping("/uploadAlgorithm")
     public ResponseEntity<AlgorithmResponse> uploadAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
@@ -30,7 +35,7 @@ public class AlgorithmController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAlgorithm")
+    @GetMapping("/getAlgorithm/{algorithmId}")
     public ResponseEntity<AlgorithmResponse> getAlgorithm(@PathVariable UUID algorithmId) {
         AlgorithmResponse result = algorithmService.get(algorithmId);
         return ResponseEntity.ok(result);

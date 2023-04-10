@@ -11,6 +11,7 @@ import com.manuscript.core.usecase.custom.algorithm.IUpdateAlgorithm;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.AlgorithmRequest;
 import com.manuscript.rest.response.AlgorithmResponse;
+import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,27 @@ import java.util.UUID;
 public class AlgorithmServiceImpl implements IAlgorithmService {
     // Algorithm service is expected to use user service to ensure sufficient developer role
     private final IUserService userService;
+    private final IImageService imageService;
+//    private final IAnnotationService annotationService;
     private final IRestMapper<AlgorithmModel, AlgorithmRequest> algorithmRequestMapper;
     private final IRestMapper<AlgorithmModel, AlgorithmResponse> algorithmResponseMapper;
     private final ICreateAlgorithm createAlgorithmUseCase;
     private final IUpdateAlgorithm updateAlgorithmUseCase;
     private final IGetByIdAlgorithm getByIdAlgorithmUseCase;
     private final IDeleteByIdAlgorithm deleteByIdAlgorithmUseCase;
+
+    @Override
+    public void run(AlgorithmRequest algorithmRequest) {
+        verifyImagePermission(algorithmRequest.getImageId(), algorithmRequest.getUserId());
+        Optional<AlgorithmModel> optionalModel = getByIdAlgorithmUseCase.getById(algorithmRequest.getAlgorithmId());
+        if(optionalModel.isPresent()) {
+            AlgorithmModel algorithmModel = optionalModel.get();
+            //TODO establish connection with algorithm via algorithmModel.url
+            //TODO place results within a variable
+            //TODO call 'addAnnotation' or 'updateAnnotation' accordingly
+        }
+        throw new NoAlgorithmFoundException();
+    }
 
     @Override
     public AlgorithmResponse create(AlgorithmRequest algorithmRequest) {
@@ -69,8 +85,8 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         throw new RuntimeException("Unimplemented");
     }
 
-    private void verifyUserDeveloperRole(UUID userId) {
-        if(userService.getById(userId).getRole().equals(Role.User))
+    private void verifyUserDeveloperRole(String userId) {
+        if(userService.getByUid(userId).getRole().equals(Role.User))
             throw new UnauthorizedException("User does not have sufficient authorization to upload an algorithm");
     }
 
@@ -89,7 +105,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         getByIdAlgorithmUseCase.getById(algorithmId);
     }
 
-    private void verifyAlgorithmAuthorization(UUID algorithmId, UUID userId) {
+    private void verifyAlgorithmAuthorization(UUID algorithmId, String userId) {
         Optional<AlgorithmModel> optionalAlgorithm = getByIdAlgorithmUseCase.getById(algorithmId);
         if(optionalAlgorithm.isPresent()) {
             AlgorithmModel algorithmModel = optionalAlgorithm.get();
@@ -97,5 +113,12 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                 return;
         }
         throw new UnauthorizedException();
+    }
+
+    private void verifyImagePermission(UUID imageId, String userId) {
+        //TODO when workspace sharing is added, permission verification needs to be modified
+        ImageResponse image = imageService.getById(imageId);
+        if(!image.getUserId().equals(userId))
+            throw new UnauthorizedException();
     }
 }
