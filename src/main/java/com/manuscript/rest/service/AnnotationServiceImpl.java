@@ -55,7 +55,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
     @Override
     public AnnotationResponse get(AnnotationRequest annotationRequest) {
         verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUserId());
-        Optional<AnnotationModel> optionalAnnotation = getByIdAnnotationUseCase.getById(annotationRequest.getAnnotationId());
+        Optional<AnnotationModel> optionalAnnotation = getByIdAnnotationUseCase.getById(annotationRequest.getId());
         if(optionalAnnotation.isPresent()) {
             AnnotationModel annotationModel = optionalAnnotation.get();
             return annotationResponseMapper.modelToRest(annotationModel);
@@ -75,10 +75,10 @@ public class AnnotationServiceImpl implements IAnnotationService {
         throw new RuntimeException("Unimplemented");
     }
 
-    private void verifyImagePermission(UUID imageId, UUID userId) {
+    private void verifyImagePermission(UUID imageId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
         ImageResponse image = imageService.getById(imageId);
-        if(!image.getUserId().equals(userId))
+        if(!image.getUid().equals(uid))
             throw new UnauthorizedException();
     }
 

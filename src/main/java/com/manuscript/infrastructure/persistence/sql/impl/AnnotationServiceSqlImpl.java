@@ -2,6 +2,7 @@ package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.domain.annotation.repository.IAnnotationRepositoryService;
+import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.entities.AnnotationEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IAnnotationRepo;
@@ -16,12 +17,17 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
+    private final UserServiceSqlImpl userServiceRepo;
     private final IAnnotationRepo repo;
     private final IRepositoryEntityMapper<AnnotationModel, AnnotationEntity> mapper;
 
     @Override
     public AnnotationModel save(AnnotationModel model) throws IllegalArgumentException {
         AnnotationEntity annotationEntity = mapper.modelToEntity(model);
+        Optional<UserModel> user = userServiceRepo.getByUid(annotationEntity.getUser().getUid());
+        if(!user.isPresent())
+            throw new UnsupportedOperationException("This should not happen, please contact an administrator.");
+        annotationEntity.getUser().setId(user.get().getId());
         annotationEntity = repo.save(annotationEntity);
         return mapper.entityToModel(annotationEntity);
     }
