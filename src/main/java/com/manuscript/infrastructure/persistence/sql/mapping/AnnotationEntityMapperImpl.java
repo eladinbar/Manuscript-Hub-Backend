@@ -8,15 +8,18 @@ import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<AnnotationModel, AnnotationEntity> {
+    private final UUID NIL = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
     @Override
     public AnnotationEntity modelToEntity(AnnotationModel annotationModel) {
         AnnotationEntity annotationEntity = AnnotationEntity.builder()
                 .user(new UserEntity())
                 .imageId(annotationModel.getImageId())
-                .algorithm(new AlgorithmEntity())
+                .algorithm(null)
                 .content(annotationModel.getContent())
                 .startX(annotationModel.getStartX())
                 .startY(annotationModel.getStartY())
@@ -25,8 +28,11 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .build();
-        annotationEntity.getUser().setId(annotationModel.getUserId());
-        annotationEntity.getAlgorithm().setId(annotationModel.getAlgorithmId());
+        annotationEntity.getUser().setUid(annotationModel.getUserId());
+        if(!annotationModel.getAlgorithmId().equals(NIL)) {
+            annotationEntity.setAlgorithm(new AlgorithmEntity());
+            annotationEntity.getAlgorithm().setId(annotationModel.getAlgorithmId());
+        }
         return annotationEntity;
     }
 
@@ -40,8 +46,8 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
                 .startY(annotationModel.getStartY())
                 .endX(annotationModel.getEndX())
                 .endY(annotationModel.getEndY())
-                .createdTime(new Date())
-                .updatedTime(new Date())
+                .createdTime(annotationModel.getCreatedTime())
+                .updatedTime(annotationModel.getUpdatedTime())
                 .build();
     }
 
@@ -49,16 +55,16 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
     public AnnotationModel entityToModel(AnnotationEntity annotationEntity) {
         return AnnotationModel.builder()
                 .annotationId(annotationEntity.getId())
-                .userId(annotationEntity.getUser().getId())
+                .userId(annotationEntity.getUser().getUid())
                 .imageId(annotationEntity.getImageId())
-                .algorithmId(annotationEntity.getAlgorithm().getId())
+                .algorithmId(annotationEntity.getAlgorithm() != null ? annotationEntity.getAlgorithm().getId() : NIL)
                 .content(annotationEntity.getContent())
                 .startX(annotationEntity.getStartX())
                 .startY(annotationEntity.getStartY())
                 .endX(annotationEntity.getEndX())
                 .endY(annotationEntity.getEndY())
-                .createdTime(new Date())
-                .updatedTime(new Date())
+                .createdTime(annotationEntity.getCreatedTime())
+                .updatedTime(annotationEntity.getUpdatedTime())
                 .build();
     }
 }

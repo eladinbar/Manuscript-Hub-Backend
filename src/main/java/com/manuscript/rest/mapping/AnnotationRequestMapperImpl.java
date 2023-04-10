@@ -11,7 +11,7 @@ public class AnnotationRequestMapperImpl implements IRestMapper<AnnotationModel,
     @Override
     public AnnotationRequest modelToRest(AnnotationModel annotationModel) {
         return AnnotationRequest.builder()
-                .annotationId(annotationModel.getAnnotationId())
+                .id(annotationModel.getAnnotationId())
                 .userId(annotationModel.getUserId())
                 .imageId(annotationModel.getImageId())
                 .algorithmId(annotationModel.getAlgorithmId())
@@ -26,7 +26,7 @@ public class AnnotationRequestMapperImpl implements IRestMapper<AnnotationModel,
     @Override
     public AnnotationModel restToModel(AnnotationRequest annotationRequest) {
         return AnnotationModel.builder()
-                .annotationId(annotationRequest.getAnnotationId())
+                .annotationId(annotationRequest.getId())
                 .userId(annotationRequest.getUserId())
                 .imageId(annotationRequest.getImageId())
                 .algorithmId(annotationRequest.getAlgorithmId())

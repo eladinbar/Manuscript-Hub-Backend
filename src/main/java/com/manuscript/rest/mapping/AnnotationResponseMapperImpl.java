@@ -20,6 +20,8 @@ public class AnnotationResponseMapperImpl implements IRestMapper<AnnotationModel
                 .startY(annotationModel.getStartY())
                 .endX(annotationModel.getEndX())
                 .endY(annotationModel.getEndY())
+                .createdTime(annotationModel.getCreatedTime())
+                .updatedTime(annotationModel.getUpdatedTime())
                 .build();
     }
 
@@ -35,8 +37,8 @@ public class AnnotationResponseMapperImpl implements IRestMapper<AnnotationModel
                 .startY(annotationResponse.getStartY())
                 .endX(annotationResponse.getEndX())
                 .endY(annotationResponse.getEndY())
-                .createdTime(new Date())
-                .updatedTime(new Date())
+                .createdTime(annotationResponse.getCreatedTime())
+                .updatedTime(annotationResponse.getUpdatedTime())
                 .build();
     }
 }

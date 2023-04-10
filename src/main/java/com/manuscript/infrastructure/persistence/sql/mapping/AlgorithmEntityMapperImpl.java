@@ -15,10 +15,10 @@ public class AlgorithmEntityMapperImpl implements IRepositoryEntityMapper<Algori
         AlgorithmEntity algorithmEntity = AlgorithmEntity.builder()
                 .user(new UserEntity())
                 .url(algorithmModel.getUrl())
-                .createdTime(new Date())
-                .updatedTime(new Date())
+                .createdTime(algorithmModel.getCreatedTime())
+                .updatedTime(algorithmModel.getUpdatedTime())
                 .build();
-        algorithmEntity.getUser().setId(algorithmModel.getUserId());
+        algorithmEntity.getUser().setUid(algorithmModel.getUserId());
         return algorithmEntity;
     }
 
@@ -35,10 +35,10 @@ public class AlgorithmEntityMapperImpl implements IRepositoryEntityMapper<Algori
     public AlgorithmModel entityToModel(AlgorithmEntity algorithmEntity) {
         return AlgorithmModel.builder()
                 .algorithmId(algorithmEntity.getId())
-                .userId(algorithmEntity.getUser().getId())
+                .userId(algorithmEntity.getUser().getUid())
                 .url(algorithmEntity.getUrl())
-                .createdTime(new Date())
-                .updatedTime(new Date())
+                .createdTime(algorithmEntity.getCreatedTime())
+                .updatedTime(algorithmEntity.getUpdatedTime())
                 .build();
     }
 }

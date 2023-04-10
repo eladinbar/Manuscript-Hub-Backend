@@ -14,6 +14,8 @@ public class AlgorithmResponseMapperImpl implements IRestMapper<AlgorithmModel, 
                 .algorithmId(algorithmModel.getAlgorithmId())
                 .userId(algorithmModel.getUserId())
                 .url(algorithmModel.getUrl())
+                .createdTime(algorithmModel.getCreatedTime())
+                .updatedTime(algorithmModel.getUpdatedTime())
                 .build();
     }
 
@@ -23,8 +25,8 @@ public class AlgorithmResponseMapperImpl implements IRestMapper<AlgorithmModel, 
                 .algorithmId(algorithmResponse.getAlgorithmId())
                 .userId(algorithmResponse.getUserId())
                 .url(algorithmResponse.getUrl())
-                .createdTime(new Date())
-                .updatedTime(new Date())
+                .createdTime(algorithmResponse.getCreatedTime())
+                .updatedTime(algorithmResponse.getUpdatedTime())
                 .build();
     }
 }
