@@ -3,24 +3,22 @@ package com.manuscript.rest.service;
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.exceptions.NoAnnotationFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
-import com.manuscript.core.usecase.custom.annotation.ICreateAnnotation;
-import com.manuscript.core.usecase.custom.annotation.IDeleteByIdAnnotation;
-import com.manuscript.core.usecase.custom.annotation.IGetByIdAnnotation;
-import com.manuscript.core.usecase.custom.annotation.IUpdateAnnotation;
+import com.manuscript.core.usecase.custom.annotation.*;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.AnnotationRequest;
 import com.manuscript.rest.response.AnnotationResponse;
 import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
 public class AnnotationServiceImpl implements IAnnotationService {
     private final UUID NIL = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
     // Annotation service is expected to use image service for its various function needs
     // (e.g. get or verify existence of a specific image)
     private final IImageService imageService;
@@ -29,12 +27,13 @@ public class AnnotationServiceImpl implements IAnnotationService {
     private final IRestMapper<AnnotationModel, AnnotationResponse> annotationResponseMapper;
     private final ICreateAnnotation createAnnotationUseCase;
     private final IGetByIdAnnotation getByIdAnnotationUseCase;
+    private final IGetAllByImageIdAnnotations getAllByImageIdAnnotationsUseCase;
     private final IUpdateAnnotation updateAnnotationUseCase;
     private final IDeleteByIdAnnotation deleteByIdAnnotationUseCase;
 
     @Override
     public AnnotationResponse create(AnnotationRequest annotationRequest) {
-        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUserId());
+        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
         checkAlgorithmAvailability(annotationRequest.getAlgorithmId());
         //TODO ensure coordinates are within document bounds
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
@@ -44,7 +43,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
 
     @Override
     public AnnotationResponse update(AnnotationRequest annotationRequest) {
-        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUserId());
+        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
         checkAlgorithmAvailability(annotationRequest.getAlgorithmId());
         //TODO ensure coordinates are within document bounds
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
@@ -54,7 +53,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
 
     @Override
     public AnnotationResponse get(AnnotationRequest annotationRequest) {
-        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUserId());
+        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
         Optional<AnnotationModel> optionalAnnotation = getByIdAnnotationUseCase.getById(annotationRequest.getId());
         if(optionalAnnotation.isPresent()) {
             AnnotationModel annotationModel = optionalAnnotation.get();
@@ -64,14 +63,28 @@ public class AnnotationServiceImpl implements IAnnotationService {
     }
 
     @Override
-    public void delete(AnnotationRequest annotationRequest) {
-        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUserId());
-        AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
-        deleteByIdAnnotationUseCase.deleteById(annotationModel);
+    public List<AnnotationResponse> getAllByImageId(UUID imageId, String uid) {
+        verifyImagePermission(imageId, uid);
+        List<AnnotationModel> annotationModels = getAllByImageIdAnnotationsUseCase.getAllByImageId(imageId);
+        if(!annotationModels.isEmpty()) {
+            List<AnnotationResponse> annotationResponses = new ArrayList<>();
+            for(AnnotationModel annotationModel : annotationModels) {
+                AnnotationResponse annotationResponse = annotationResponseMapper.modelToRest(annotationModel);
+                annotationResponses.add(annotationResponse);
+            }
+            return annotationResponses;
+        }
+        throw new NoAnnotationFoundException();
     }
 
     @Override
-    public void deleteAllByDocumentId(UUID documentId) {
+    public void delete(UUID annotationId, UUID documentId, String uid) {
+        verifyImagePermission(documentId, uid);
+        deleteByIdAnnotationUseCase.deleteById(annotationId);
+    }
+
+    @Override
+    public void deleteAllByDocumentId(UUID documentId, String uid) {
         throw new RuntimeException("Unimplemented");
     }
 

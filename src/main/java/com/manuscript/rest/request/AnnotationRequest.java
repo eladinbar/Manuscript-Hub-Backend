@@ -13,7 +13,7 @@ import java.util.UUID;
 @SuperBuilder
 public class AnnotationRequest {
     UUID id;
-    String userId;
+    String uid;
     UUID imageId;
     UUID algorithmId;
     String content;

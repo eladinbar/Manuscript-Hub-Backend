@@ -9,10 +9,7 @@ import com.manuscript.infrastructure.persistence.sql.repositories.IAnnotationRep
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +30,23 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
+    public AnnotationModel update(AnnotationModel model) throws UnsupportedOperationException {
+        Optional<AnnotationEntity> oldAnnotation = repo.findById(model.getAnnotationId());
+        if(!oldAnnotation.isPresent())
+            throw new UnsupportedOperationException("No old annotation found.\n" +
+                    "This should not happen, please contact an administrator.");
+        AnnotationEntity annotationEntity = oldAnnotation.get();
+        annotationEntity.setContent(model.getContent());
+        annotationEntity.setStartX(model.getStartX());
+        annotationEntity.setStartY(model.getStartY());
+        annotationEntity.setEndX(model.getEndX());
+        annotationEntity.setEndY(model.getEndY());
+        annotationEntity.setUpdatedTime(new Date());
+        annotationEntity = repo.save(annotationEntity);
+        return mapper.entityToModel(annotationEntity);
+    }
+
+    @Override
     public boolean existsById(UUID id) throws IllegalArgumentException {
         return repo.existsById(id);
     }
@@ -48,15 +62,13 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public List<Optional<AnnotationEntity>> getAllByDocumentId(UUID documentId) {
-//        List<AnnotationEntity> annotationEntities = new ArrayList<>();
-//        repo.findAllById().forEach(annotationEntities::add);
-//        List<AnnotationModel> annotationModels = new ArrayList<>();
-//        for (AnnotationEntity annotationEntity : annotationEntities) {
-//            annotationModels.add(mapper.entityToModel(annotationEntity));
-//        }
-//        return annotationModels;
-        throw new RuntimeException("Unimplemented");
+    public List<AnnotationModel> getAllByImageId(UUID imageId) {
+        List<AnnotationEntity> annotationEntities = repo.findAllByImageId(imageId);
+        List<AnnotationModel> annotationModels = new ArrayList<>();
+        for (AnnotationEntity annotationEntity : annotationEntities) {
+            annotationModels.add(mapper.entityToModel(annotationEntity));
+        }
+        return annotationModels;
     }
 
     @Override
@@ -71,8 +83,8 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public void deleteById(AnnotationModel model) {
-        repo.deleteById(model.getAnnotationId());
+    public void deleteById(UUID id) {
+        repo.deleteById(id);
     }
 
     @Override

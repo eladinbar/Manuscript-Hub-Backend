@@ -13,6 +13,6 @@ public class UpdateUseCaseImpl<M> implements IUpdateUseCase<M> {
 
     @Override
     public M update(M model) throws IllegalArgumentException {
-        return _serviceRepo.save(model);
+        return _serviceRepo.update(model);
     }
 }

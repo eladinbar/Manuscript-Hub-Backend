@@ -4,15 +4,13 @@ import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.rest.response.AnnotationResponse;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 public class AnnotationResponseMapperImpl implements IRestMapper<AnnotationModel, AnnotationResponse> {
     @Override
     public AnnotationResponse modelToRest(AnnotationModel annotationModel) {
         return AnnotationResponse.builder()
-                .annotationId(annotationModel.getAnnotationId())
-                .userId(annotationModel.getUserId())
+                .id(annotationModel.getAnnotationId())
+                .uid(annotationModel.getUserId())
                 .imageId(annotationModel.getImageId())
                 .algorithmId(annotationModel.getAlgorithmId())
                 .content(annotationModel.getContent())
@@ -28,8 +26,8 @@ public class AnnotationResponseMapperImpl implements IRestMapper<AnnotationModel
     @Override
     public AnnotationModel restToModel(AnnotationResponse annotationResponse) {
         return AnnotationModel.builder()
-                .annotationId(annotationResponse.getAnnotationId())
-                .userId(annotationResponse.getUserId())
+                .annotationId(annotationResponse.getId())
+                .userId(annotationResponse.getUid())
                 .imageId(annotationResponse.getImageId())
                 .algorithmId(annotationResponse.getAlgorithmId())
                 .content(annotationResponse.getContent())

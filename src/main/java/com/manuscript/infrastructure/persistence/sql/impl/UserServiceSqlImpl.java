@@ -60,7 +60,7 @@ public class UserServiceSqlImpl implements IUserRepositoryService {
     }
 
     @Override
-    public void deleteById(UserModel model) {
+    public void deleteById(UUID id) {
 
     }
 }

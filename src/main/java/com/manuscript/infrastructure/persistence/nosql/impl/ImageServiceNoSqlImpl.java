@@ -48,7 +48,7 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
     }
 
     @Override
-    public void deleteById(ImageModel model) {
+    public void deleteById(UUID id) {
 
     }
 }

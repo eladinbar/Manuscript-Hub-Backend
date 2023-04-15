@@ -41,9 +41,9 @@ public class AlgorithmController {
         return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping("/deleteAlgorithm")
-    public void deleteAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
-        algorithmService.delete(algorithmRequest);
+    @DeleteMapping("/deleteAlgorithm/{algorithmId}/{uid}")
+    public void deleteAlgorithm(@PathVariable UUID algorithmId, @PathVariable String uid) {
+        algorithmService.delete(algorithmId, uid);
     }
 
     @DeleteMapping("/deleteAllByUserIdAlgorithm")

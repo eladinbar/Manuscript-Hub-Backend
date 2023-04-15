@@ -4,13 +4,10 @@ import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
 import com.manuscript.core.domain.common.repository.IBaseRepositoryService;
 import com.manuscript.core.usecase.common.DeleteByIdUseCaseImpl;
 
+import java.util.UUID;
+
 public class DeleteByIdAlgorithm extends DeleteByIdUseCaseImpl<AlgorithmModel> implements IDeleteByIdAlgorithm {
     public DeleteByIdAlgorithm(IBaseRepositoryService<AlgorithmModel> _serviceRepo) {
         super(_serviceRepo);
-    }
-
-    @Override
-    public void deleteById(AlgorithmModel model) throws IllegalArgumentException {
-        super.deleteById(model);
     }
 }

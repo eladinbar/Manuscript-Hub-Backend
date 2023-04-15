@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_ANNOTATION;
 
@@ -30,17 +31,15 @@ public class AnnotationController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAnnotationsByDocumentId")
-    public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByDocumentId(@RequestBody AnnotationRequest annotationRequest) {
-//        List<AnnotationResponse> annotationResponses = new ArrayList<>();
-//        AnnotationResponse result = annotationService.update(annotationRequest);
-//        return ResponseEntity.ok(result);
-        throw new RuntimeException("Unimplemented");
+    @GetMapping("/getAnnotationsByDocumentId/{documentId}/{uid}")
+    public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByDocumentId(@PathVariable UUID documentId, @PathVariable String uid) {
+        List<AnnotationResponse> result = annotationService.getAllByImageId(documentId, uid);
+        return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping ("/deleteAnnotation")
-    public void deleteAnnotation(@RequestBody AnnotationRequest annotationRequest) {
-        annotationService.delete(annotationRequest);
+    @DeleteMapping ("/deleteAnnotation/{annotationId}/{documentId}/{uid}")
+    public void deleteAnnotation(@PathVariable UUID annotationId, @PathVariable UUID documentId, @PathVariable String uid) {
+        annotationService.delete(annotationId, documentId, uid);
     }
 
     @DeleteMapping("/deleteAllAnnotationsByDocumentId")

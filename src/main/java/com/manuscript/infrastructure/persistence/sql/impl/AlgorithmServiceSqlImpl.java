@@ -41,8 +41,8 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
     }
 
     @Override
-    public void deleteById(AlgorithmModel model) {
-        repo.deleteById(model.getAlgorithmId());
+    public void deleteById(UUID id) {
+        repo.deleteById(id);
     }
 
     @Override

@@ -73,11 +73,10 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public void delete(AlgorithmRequest algorithmRequest) {
-        verifyUserDeveloperRole(algorithmRequest.getUserId());
-        verifyAlgorithmAuthorization(algorithmRequest.getAlgorithmId(), algorithmRequest.getUserId());
-        AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
-        deleteByIdAlgorithmUseCase.deleteById(algorithmModel);
+    public void delete(UUID id, String uid) {
+        verifyUserDeveloperRole(uid);
+        verifyAlgorithmAuthorization(id, uid);
+        deleteByIdAlgorithmUseCase.deleteById(id);
     }
 
     @Override

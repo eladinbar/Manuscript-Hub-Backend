@@ -10,6 +10,6 @@ public interface IAlgorithmService {
     AlgorithmResponse create(AlgorithmRequest algorithmRequest);
     AlgorithmResponse update(AlgorithmRequest algorithmRequest);
     AlgorithmResponse get(UUID algorithmId);
-    void delete(AlgorithmRequest algorithmRequest);
+    void delete(UUID id, String uid);
     void deleteAllByUserId(UUID userId);
 }

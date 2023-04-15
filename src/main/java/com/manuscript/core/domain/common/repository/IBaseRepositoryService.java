@@ -7,6 +7,10 @@ import java.util.UUID;
 public interface IBaseRepositoryService<M> {
     M save(M model) throws IllegalArgumentException;
 
+    default M update(M model) throws UnsupportedOperationException {
+        return this.save(model);
+    }
+
     default List<M> saveAll(List<M> models) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -17,7 +21,7 @@ public interface IBaseRepositoryService<M> {
 
     List<M> getAll();
 
-    void deleteById(M model);
+    void deleteById(UUID id);
 
     void deleteAll();
 }

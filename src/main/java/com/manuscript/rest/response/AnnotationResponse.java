@@ -2,7 +2,6 @@ package com.manuscript.rest.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class AnnotationResponse {
-    @NotNull UUID annotationId;
-    @NotNull String userId;
+    @NotNull UUID id;
+    @NotNull String uid;
     @NotNull UUID imageId;
     @NotNull UUID algorithmId;
     String content;
