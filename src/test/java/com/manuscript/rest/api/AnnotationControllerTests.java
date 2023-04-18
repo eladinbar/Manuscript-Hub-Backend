@@ -12,9 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.any;
@@ -36,10 +34,8 @@ public class AnnotationControllerTests {
     private final int endY = 5;
     private Date createdTime;
     private Date updatedTime;
-    private final AnnotationRequest validNewAnnotationRequest = new AnnotationRequest(null, userId, imageId, manualAlgorithmId,
-            content, startX, startY, endX, endY);
-    private final AnnotationRequest validAnnotationRequest = new AnnotationRequest(id, userId, imageId, manualAlgorithmId,
-            content, startX, startY, endX, endY);
+    private AnnotationRequest newAnnotationRequest;
+    private AnnotationRequest annotationRequest;
 
     @BeforeAll
     public void setUp() {
@@ -59,7 +55,10 @@ public class AnnotationControllerTests {
 
     @BeforeEach
     public void beforeEach() {
-
+        this.newAnnotationRequest = new AnnotationRequest(null, userId, imageId, manualAlgorithmId,
+                content, startX, startY, endX, endY);
+        this.annotationRequest = new AnnotationRequest(id, userId, imageId, manualAlgorithmId,
+                content, startX, startY, endX, endY);
     }
 
     ////--------------------------------------- addAnnotation tests
@@ -67,13 +66,14 @@ public class AnnotationControllerTests {
     @Test
     public void addAnnotationSuccess() {
         //set up
-        ////mock service
         AnnotationResponse newAnnotation = new AnnotationResponse(id, userId, imageId, manualAlgorithmId,
                 content, startX, startY, endX, endY, createdTime, updatedTime);
+
+        ////mock service
         when(annotationService.create(any())).thenReturn(newAnnotation);
 
         //act
-        ResponseEntity<AnnotationResponse> response = annotationController.addAnnotation(validNewAnnotationRequest);
+        ResponseEntity<AnnotationResponse> response = annotationController.addAnnotation(newAnnotationRequest);
 
         //assert
         assertTrue(response.hasBody());
@@ -94,22 +94,42 @@ public class AnnotationControllerTests {
 
     @Test
     public void addAnnotationNullUid() {
+        //set up
+        newAnnotationRequest.setUid(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
     }
 
     @Test
     public void addAnnotationNullDocumentId() {
+        //set up
+        newAnnotationRequest.setImageId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
     }
 
     @Test
     public void addAnnotationNullAlgorithmId() {
+        //set up
+        newAnnotationRequest.setAlgorithmId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
     }
 
     @Test
     public void addAnnotationNullContent() {
+        //set up
+        newAnnotationRequest.setContent(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
     }
 
     @ParameterizedTest
@@ -118,39 +138,95 @@ public class AnnotationControllerTests {
             "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
             "-1, -1, -1, -1"})
     public void addAnnotationNegativeCoordinates(int startX, int startY, int endX, int endY) {
+        //set up
+        newAnnotationRequest.setStartX(startX);
+        newAnnotationRequest.setStartY(startY);
+        newAnnotationRequest.setEndX(endX);
+        newAnnotationRequest.setEndY(endY);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
     }
 
     ////--------------------------------------- updateAnnotation tests
 
     @Test
     public void updateAnnotationSuccess() {
+        //set up
+        AnnotationResponse updatedAnnotation = new AnnotationResponse(id, userId, imageId, manualAlgorithmId,
+                content, startX, startY, endX, endY, createdTime, updatedTime);
 
+        ////mock service
+        when(annotationService.update(any())).thenReturn(updatedAnnotation);
+
+        //act
+        ResponseEntity<AnnotationResponse> response = annotationController.updateAnnotation(annotationRequest);
+
+        //assert
+        assertTrue(response.hasBody());
+        AnnotationResponse annotationResponse = response.getBody();
+        assertNotNull(annotationResponse);
+        assertEquals(userId, annotationResponse.getUid());
+        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
+        assertEquals(content, annotationResponse.getContent());
+        assertEquals(startX, annotationResponse.getStartX());
+        assertEquals(startY, annotationResponse.getStartY());
+        assertEquals(endX, annotationResponse.getEndX());
+        assertEquals(endY, annotationResponse.getEndY());
+        assertTrue(annotationResponse.getCreatedTime().before(new Date()));
+        assertTrue(annotationResponse.getUpdatedTime().after(createdTime));
     }
 
     @Test
     public void updateAnnotationNullId() {
+        //set up
+        annotationRequest.setId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
     @Test
     public void updateAnnotationNullUid() {
+        //set up
+        annotationRequest.setUid(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
     @Test
     public void updateAnnotationNullDocumentId() {
+        //set up
+        annotationRequest.setImageId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
     @Test
     public void updateAnnotationNullAlgorithmId() {
+        //set up
+        annotationRequest.setAlgorithmId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
     @Test
     public void updateAnnotationNullContent() {
+        //set up
+        annotationRequest.setContent(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
     @ParameterizedTest
@@ -159,45 +235,100 @@ public class AnnotationControllerTests {
             "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
             "-1, -1, -1, -1"})
     public void updateAnnotationNegativeCoordinates(int startX, int startY, int endX, int endY) {
+        //set up
+        annotationRequest.setStartX(startX);
+        annotationRequest.setStartY(startY);
+        annotationRequest.setEndX(endX);
+        annotationRequest.setEndY(endY);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
     ////--------------------------------------- getAllAnnotationsByDocumentId tests
 
     @Test
     public void getAllAnnotationsByDocumentIdSuccess() {
+        //set up
+        List<AnnotationResponse> annotationResponses = new ArrayList<>();
 
+        ////mock service
+        when(annotationService.getAllByImageId(any(UUID.class), any(String.class))).thenReturn(annotationResponses);
+
+        //act
+        ResponseEntity<List<AnnotationResponse>> responses =
+                annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageId(), annotationRequest.getUid());
+
+        //assert
+        assertTrue(responses.hasBody());
+        annotationResponses = responses.getBody();
+        assertNotNull(annotationResponses);
     }
 
     @Test
     public void getAllAnnotationsByDocumentIdNullUid() {
+        //set up
+        annotationRequest.setUid(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class,
+                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageId(), annotationRequest.getUid()));
     }
 
     @Test
     public void getAllAnnotationsByDocumentIdNullDocumentId() {
+        //set up
+        annotationRequest.setImageId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class,
+                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageId(), annotationRequest.getUid()));
     }
 
     ////--------------------------------------- deleteAnnotation tests
 
     @Test
     public void deleteAnnotationSuccess() {
-
+        //act
+        annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(), annotationRequest.getUid());
     }
 
     @Test
     public void deleteAnnotationNullId() {
+        //set up
+        annotationRequest.setId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () ->
+                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(),
+                        annotationRequest.getUid()));
     }
 
     @Test
     public void deleteAnnotationNullUid() {
+        //set up
+        annotationRequest.setUid(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () ->
+                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(),
+                        annotationRequest.getUid()));
     }
 
     @Test
     public void deleteAnnotationNullDocumentId() {
+        //set up
+        annotationRequest.setImageId(null);
 
+        //act
+        //assert
+        assertThrows(IllegalArgumentException.class, () ->
+                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(),
+                        annotationRequest.getUid()));
     }
 }
