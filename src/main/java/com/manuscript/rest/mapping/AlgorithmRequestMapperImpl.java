@@ -12,7 +12,7 @@ public class AlgorithmRequestMapperImpl implements IRestMapper<AlgorithmModel, A
     public AlgorithmRequest modelToRest(AlgorithmModel algorithmModel) {
         return AlgorithmRequest.builder()
                 .algorithmId(algorithmModel.getAlgorithmId())
-                .userId(algorithmModel.getUserId())
+                .userId(algorithmModel.getUid())
                 .url(algorithmModel.getUrl())
                 .build();
     }
@@ -21,7 +21,7 @@ public class AlgorithmRequestMapperImpl implements IRestMapper<AlgorithmModel, A
     public AlgorithmModel restToModel(AlgorithmRequest algorithmRequest) {
         return AlgorithmModel.builder()
                 .algorithmId(algorithmRequest.getAlgorithmId())
-                .userId(algorithmRequest.getUserId())
+                .uid(algorithmRequest.getUserId())
                 .url(algorithmRequest.getUrl())
                 .createdTime(new Date())
                 .updatedTime(new Date())

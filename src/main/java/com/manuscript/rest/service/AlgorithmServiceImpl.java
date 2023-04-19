@@ -63,7 +63,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public AlgorithmResponse get(UUID algorithmId) {
+    public AlgorithmResponse getById(UUID algorithmId) {
         Optional<AlgorithmModel> optionalModel = getByIdAlgorithmUseCase.getById(algorithmId);
         if(optionalModel.isPresent()) {
             AlgorithmModel algorithmModel = optionalModel.get();
@@ -108,7 +108,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         Optional<AlgorithmModel> optionalAlgorithm = getByIdAlgorithmUseCase.getById(algorithmId);
         if(optionalAlgorithm.isPresent()) {
             AlgorithmModel algorithmModel = optionalAlgorithm.get();
-            if(algorithmModel.getUserId().equals(userId))
+            if(algorithmModel.getUid().equals(userId))
                 return;
         }
         throw new UnauthorizedException();

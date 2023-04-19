@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 public class AlgorithmModel {
     UUID algorithmId;
-    @NotNull String userId;
+    @NotNull String uid;
     String url;
     @NotNull Date createdTime;
     @NotNull Date updatedTime;

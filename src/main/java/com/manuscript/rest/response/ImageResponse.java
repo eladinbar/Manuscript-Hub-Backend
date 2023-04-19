@@ -15,7 +15,7 @@ import java.util.UUID;
 @SuperBuilder
 public class ImageResponse {
     UUID documentId;
-    String userId;
+    UUID userId;
     String uid;
     String fileName;
     byte[] data;

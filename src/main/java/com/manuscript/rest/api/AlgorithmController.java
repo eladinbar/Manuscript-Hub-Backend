@@ -37,7 +37,7 @@ public class AlgorithmController {
 
     @GetMapping("/getAlgorithm/{algorithmId}")
     public ResponseEntity<AlgorithmResponse> getAlgorithm(@PathVariable UUID algorithmId) {
-        AlgorithmResponse result = algorithmService.get(algorithmId);
+        AlgorithmResponse result = algorithmService.getById(algorithmId);
         return ResponseEntity.ok(result);
     }
 

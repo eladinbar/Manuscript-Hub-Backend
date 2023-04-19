@@ -9,7 +9,7 @@ public interface IAlgorithmService {
     void run(AlgorithmRequest algorithmRequest);
     AlgorithmResponse create(AlgorithmRequest algorithmRequest);
     AlgorithmResponse update(AlgorithmRequest algorithmRequest);
-    AlgorithmResponse get(UUID algorithmId);
+    AlgorithmResponse getById(UUID algorithmId);
     void delete(UUID id, String uid);
     void deleteAllByUserId(UUID userId);
 }
