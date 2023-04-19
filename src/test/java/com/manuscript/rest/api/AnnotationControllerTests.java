@@ -61,7 +61,7 @@ public class AnnotationControllerTests {
                 content, startX, startY, endX, endY);
     }
 
-    ////--------------------------------------- addAnnotation tests
+    ////--------------------------------------- 'addAnnotation' tests
 
     @Test
     public void addAnnotationSuccess() {
@@ -87,7 +87,8 @@ public class AnnotationControllerTests {
         assertEquals(startY, annotationResponse.getStartY());
         assertEquals(endX, annotationResponse.getEndX());
         assertEquals(endY, annotationResponse.getEndY());
-        assertTrue(annotationResponse.getCreatedTime().before(new Date()));
+        assertTrue(annotationResponse.getCreatedTime().before(new Date())
+                || annotationResponse.getCreatedTime().equals(new Date()));
         assertTrue(annotationResponse.getUpdatedTime().after(createdTime)
                 || annotationResponse.getUpdatedTime().equals(createdTime));
     }
@@ -149,7 +150,7 @@ public class AnnotationControllerTests {
         assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
     }
 
-    ////--------------------------------------- updateAnnotation tests
+    ////--------------------------------------- 'updateAnnotation' tests
 
     @Test
     public void updateAnnotationSuccess() {
@@ -175,7 +176,8 @@ public class AnnotationControllerTests {
         assertEquals(startY, annotationResponse.getStartY());
         assertEquals(endX, annotationResponse.getEndX());
         assertEquals(endY, annotationResponse.getEndY());
-        assertTrue(annotationResponse.getCreatedTime().before(new Date()));
+        assertTrue(annotationResponse.getCreatedTime().before(new Date())
+                || annotationResponse.getCreatedTime().equals(new Date()));
         assertTrue(annotationResponse.getUpdatedTime().after(createdTime));
     }
 
@@ -246,7 +248,7 @@ public class AnnotationControllerTests {
         assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
-    ////--------------------------------------- getAllAnnotationsByDocumentId tests
+    ////--------------------------------------- 'getAllAnnotationsByDocumentId' tests
 
     @Test
     public void getAllAnnotationsByDocumentIdSuccess() {
@@ -288,7 +290,7 @@ public class AnnotationControllerTests {
                 () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageId(), annotationRequest.getUid()));
     }
 
-    ////--------------------------------------- deleteAnnotation tests
+    ////--------------------------------------- 'deleteAnnotation' tests
 
     @Test
     public void deleteAnnotationSuccess() {

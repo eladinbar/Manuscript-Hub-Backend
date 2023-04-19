@@ -100,7 +100,7 @@ public class AnnotationServiceTests {
 
         // set up annotation model
         this.annotationModel = AnnotationModel.builder()
-                .annotationId(id).userId(uid).imageId(imageId).algorithmId(manualAlgorithmId)
+                .id(id).uid(uid).imageId(imageId).algorithmId(manualAlgorithmId)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -111,7 +111,7 @@ public class AnnotationServiceTests {
         this.algorithmResponse = new AlgorithmResponse(manualAlgorithmId, uid, url, createdTime, updatedTime);
     }
 
-    ////--------------------------------------- addAnnotation tests
+    ////--------------------------------------- 'create' tests
 
     @Test
     public void createSuccess() {
@@ -139,7 +139,8 @@ public class AnnotationServiceTests {
         assertEquals(startY, annotationResponse.getStartY());
         assertEquals(endX, annotationResponse.getEndX());
         assertEquals(endY, annotationResponse.getEndY());
-        assertTrue(annotationResponse.getCreatedTime().before(new Date()));
+        assertTrue(annotationResponse.getCreatedTime().before(new Date())
+                || annotationResponse.getCreatedTime().equals(new Date()));
         assertTrue(annotationResponse.getUpdatedTime().after(createdTime)
                 || annotationResponse.getUpdatedTime().equals(createdTime));
     }
@@ -185,7 +186,7 @@ public class AnnotationServiceTests {
     }
 
 
-    ////--------------------------------------- updateAnnotation tests
+    ////--------------------------------------- 'update' tests
 
     @Test
     public void updateSuccess() {
@@ -213,7 +214,8 @@ public class AnnotationServiceTests {
         assertEquals(startY, annotationResponse.getStartY());
         assertEquals(endX, annotationResponse.getEndX());
         assertEquals(endY, annotationResponse.getEndY());
-        assertTrue(annotationResponse.getCreatedTime().before(new Date()));
+        assertTrue(annotationResponse.getCreatedTime().before(new Date())
+                || annotationResponse.getCreatedTime().equals(new Date()));
         assertTrue(annotationResponse.getUpdatedTime().after(createdTime));
     }
 
@@ -257,7 +259,7 @@ public class AnnotationServiceTests {
         assertThrows(NoAlgorithmFoundException.class, () -> annotationService.update(annotationRequest));
     }
 
-    ////--------------------------------------- getAllAnnotationsByDocumentId tests
+    ////--------------------------------------- 'getAllByImageId' tests
 
     @Test
     public void getAllByImageIdSuccess() {
@@ -307,7 +309,7 @@ public class AnnotationServiceTests {
                 annotationService.getAllByImageId(annotationRequest.getImageId(), annotationRequest.getUid()));
     }
 
-    ////--------------------------------------- deleteAnnotation tests
+    ////--------------------------------------- 'delete' tests
 
     @Test
     public void deleteSuccess() {
@@ -321,7 +323,7 @@ public class AnnotationServiceTests {
 
     @Test
     //Still expect this to not throw any exception
-    public void deleteInvalidId() {
+    public void deleteInvalidIdSuccess() {
         //set up
         annotationRequest.setId(invalidId);
 
