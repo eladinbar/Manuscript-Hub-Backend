@@ -28,7 +28,7 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .build();
-        annotationEntity.getUser().setUid(annotationModel.getUserId());
+        annotationEntity.getUser().setUid(annotationModel.getUid());
         if(!annotationModel.getAlgorithmId().equals(NIL)) {
             annotationEntity.setAlgorithm(new AlgorithmEntity());
             annotationEntity.getAlgorithm().setId(annotationModel.getAlgorithmId());
@@ -53,9 +53,11 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
 
     @Override
     public AnnotationModel entityToModel(AnnotationEntity annotationEntity) {
+        if(annotationEntity.getId() == null)
+            throw new IllegalArgumentException("Annotation Entity's ID must not be null.");
         return AnnotationModel.builder()
-                .annotationId(annotationEntity.getId())
-                .userId(annotationEntity.getUser().getUid())
+                .id(annotationEntity.getId())
+                .uid(annotationEntity.getUser().getUid())
                 .imageId(annotationEntity.getImageId())
                 .algorithmId(annotationEntity.getAlgorithm() != null ? annotationEntity.getAlgorithm().getId() : NIL)
                 .content(annotationEntity.getContent())

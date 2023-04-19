@@ -31,7 +31,7 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
 
     @Override
     public AnnotationModel update(AnnotationModel model) throws UnsupportedOperationException {
-        Optional<AnnotationEntity> oldAnnotation = repo.findById(model.getAnnotationId());
+        Optional<AnnotationEntity> oldAnnotation = repo.findById(model.getId());
         if(!oldAnnotation.isPresent())
             throw new UnsupportedOperationException("No old annotation found.\n" +
                     "This should not happen, please contact an administrator.");

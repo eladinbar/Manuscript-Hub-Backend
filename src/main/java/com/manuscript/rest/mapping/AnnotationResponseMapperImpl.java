@@ -9,8 +9,8 @@ public class AnnotationResponseMapperImpl implements IRestMapper<AnnotationModel
     @Override
     public AnnotationResponse modelToRest(AnnotationModel annotationModel) {
         return AnnotationResponse.builder()
-                .id(annotationModel.getAnnotationId())
-                .uid(annotationModel.getUserId())
+                .id(annotationModel.getId())
+                .uid(annotationModel.getUid())
                 .imageId(annotationModel.getImageId())
                 .algorithmId(annotationModel.getAlgorithmId())
                 .content(annotationModel.getContent())
@@ -26,8 +26,8 @@ public class AnnotationResponseMapperImpl implements IRestMapper<AnnotationModel
     @Override
     public AnnotationModel restToModel(AnnotationResponse annotationResponse) {
         return AnnotationModel.builder()
-                .annotationId(annotationResponse.getId())
-                .userId(annotationResponse.getUid())
+                .id(annotationResponse.getId())
+                .uid(annotationResponse.getUid())
                 .imageId(annotationResponse.getImageId())
                 .algorithmId(annotationResponse.getAlgorithmId())
                 .content(annotationResponse.getContent())

@@ -9,8 +9,8 @@ public class AlgorithmResponseMapperImpl implements IRestMapper<AlgorithmModel, 
     @Override
     public AlgorithmResponse modelToRest(AlgorithmModel algorithmModel) {
         return AlgorithmResponse.builder()
-                .algorithmId(algorithmModel.getAlgorithmId())
-                .userId(algorithmModel.getUid())
+                .id(algorithmModel.getId())
+                .uid(algorithmModel.getUid())
                 .url(algorithmModel.getUrl())
                 .createdTime(algorithmModel.getCreatedTime())
                 .updatedTime(algorithmModel.getUpdatedTime())
@@ -20,8 +20,8 @@ public class AlgorithmResponseMapperImpl implements IRestMapper<AlgorithmModel, 
     @Override
     public AlgorithmModel restToModel(AlgorithmResponse algorithmResponse) {
         return AlgorithmModel.builder()
-                .algorithmId(algorithmResponse.getAlgorithmId())
-                .uid(algorithmResponse.getUserId())
+                .id(algorithmResponse.getId())
+                .uid(algorithmResponse.getUid())
                 .url(algorithmResponse.getUrl())
                 .createdTime(algorithmResponse.getCreatedTime())
                 .updatedTime(algorithmResponse.getUpdatedTime())

@@ -33,8 +33,10 @@ public class AlgorithmEntityMapperImpl implements IRepositoryEntityMapper<Algori
 
     @Override
     public AlgorithmModel entityToModel(AlgorithmEntity algorithmEntity) {
+        if(algorithmEntity.getId() == null)
+            throw new IllegalArgumentException("Algorithm Entity's ID must not be null.");
         return AlgorithmModel.builder()
-                .algorithmId(algorithmEntity.getId())
+                .id(algorithmEntity.getId())
                 .uid(algorithmEntity.getUser().getUid())
                 .url(algorithmEntity.getUrl())
                 .createdTime(algorithmEntity.getCreatedTime())

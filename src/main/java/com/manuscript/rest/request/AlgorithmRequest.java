@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class AlgorithmRequest {
-    UUID algorithmId;
-    String userId;
+    UUID id;
+    String uid;
     UUID imageId;
     String url;
 }

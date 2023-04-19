@@ -12,7 +12,7 @@ import java.util.UUID;
 @SuperBuilder
 @Getter
 public class AlgorithmModel {
-    UUID algorithmId;
+    UUID id;
     @NotNull String uid;
     String url;
     @NotNull Date createdTime;

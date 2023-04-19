@@ -34,8 +34,8 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public void run(AlgorithmRequest algorithmRequest) {
-        verifyImagePermission(algorithmRequest.getImageId(), algorithmRequest.getUserId());
-        Optional<AlgorithmModel> optionalModel = getByIdAlgorithmUseCase.getById(algorithmRequest.getAlgorithmId());
+        verifyImagePermission(algorithmRequest.getImageId(), algorithmRequest.getUid());
+        Optional<AlgorithmModel> optionalModel = getByIdAlgorithmUseCase.getById(algorithmRequest.getId());
         if(optionalModel.isPresent()) {
             AlgorithmModel algorithmModel = optionalModel.get();
             //TODO establish connection with algorithm via algorithmModel.url
@@ -47,7 +47,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public AlgorithmResponse create(AlgorithmRequest algorithmRequest) {
-        verifyUserDeveloperRole(algorithmRequest.getUserId());
+        verifyUserDeveloperRole(algorithmRequest.getUid());
         AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
         algorithmModel = createAlgorithmUseCase.create(algorithmModel);
         return algorithmResponseMapper.modelToRest(algorithmModel);
@@ -55,8 +55,8 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public AlgorithmResponse update(AlgorithmRequest algorithmRequest) {
-        verifyUserDeveloperRole(algorithmRequest.getUserId());
-        verifyAlgorithmAuthorization(algorithmRequest.getAlgorithmId(), algorithmRequest.getUserId());
+        verifyUserDeveloperRole(algorithmRequest.getUid());
+        verifyAlgorithmAuthorization(algorithmRequest.getId(), algorithmRequest.getUid());
         AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
         algorithmModel = updateAlgorithmUseCase.update(algorithmModel);
         return algorithmResponseMapper.modelToRest(algorithmModel);
