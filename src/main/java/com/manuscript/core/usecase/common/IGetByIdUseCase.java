@@ -6,4 +6,3 @@ import java.util.UUID;
 public interface IGetByIdUseCase<M> {
     Optional<M> getById(UUID id) throws IllegalArgumentException;
 }
-//

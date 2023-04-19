@@ -14,6 +14,5 @@ public class DeleteByIdUseCaseImpl<M> implements IDeleteByIdUseCase<M> {
     @Override
     public void deleteById(UUID id) throws IllegalArgumentException {
         _serviceRepo.deleteById(id);
-
     }
 }
