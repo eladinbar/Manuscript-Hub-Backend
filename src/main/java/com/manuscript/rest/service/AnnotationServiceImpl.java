@@ -1,6 +1,7 @@
 package com.manuscript.rest.service;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.exceptions.NoAnnotationFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
 import com.manuscript.core.usecase.custom.annotation.*;
@@ -10,7 +11,6 @@ import com.manuscript.rest.response.AnnotationResponse;
 import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
@@ -66,15 +66,12 @@ public class AnnotationServiceImpl implements IAnnotationService {
     public List<AnnotationResponse> getAllByImageId(UUID imageId, String uid) {
         verifyImagePermission(imageId, uid);
         List<AnnotationModel> annotationModels = getAllByImageIdAnnotationsUseCase.getAllByImageId(imageId);
-        if(!annotationModels.isEmpty()) {
-            List<AnnotationResponse> annotationResponses = new ArrayList<>();
-            for(AnnotationModel annotationModel : annotationModels) {
-                AnnotationResponse annotationResponse = annotationResponseMapper.modelToRest(annotationModel);
-                annotationResponses.add(annotationResponse);
-            }
-            return annotationResponses;
+        List<AnnotationResponse> annotationResponses = new ArrayList<>();
+        for(AnnotationModel annotationModel : annotationModels) {
+            AnnotationResponse annotationResponse = annotationResponseMapper.modelToRest(annotationModel);
+            annotationResponses.add(annotationResponse);
         }
-        throw new NoAnnotationFoundException();
+        return annotationResponses;
     }
 
     @Override
@@ -91,7 +88,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
     private void verifyImagePermission(UUID imageId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
         ImageResponse image = imageService.getById(imageId);
-        if(!image.getUid().equals(uid))
+        if(!image.getUid().equals(uid) || image.getStatus().equals(Status.inactive))
             throw new UnauthorizedException();
     }
 
@@ -99,6 +96,6 @@ public class AnnotationServiceImpl implements IAnnotationService {
         if(algorithmId.equals(NIL))
             return;
         // If no algorithm is found, an exception is thrown
-        algorithmService.get(algorithmId);
+        algorithmService.getById(algorithmId);
     }
 }
