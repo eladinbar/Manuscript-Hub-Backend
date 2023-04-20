@@ -104,20 +104,21 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         getByIdAlgorithmUseCase.getById(algorithmId);
     }
 
-    private void verifyAlgorithmAuthorization(UUID algorithmId, String userId) {
+    private void verifyAlgorithmAuthorization(UUID algorithmId, String uid) {
         Optional<AlgorithmModel> optionalAlgorithm = getByIdAlgorithmUseCase.getById(algorithmId);
         if(optionalAlgorithm.isPresent()) {
             AlgorithmModel algorithmModel = optionalAlgorithm.get();
-            if(algorithmModel.getUid().equals(userId))
+            if(algorithmModel.getUid().equals(uid))
                 return;
+            throw new UnauthorizedException("User has no authorization to modify this algorithm.");
         }
-        throw new UnauthorizedException();
+        throw new IllegalArgumentException("No algorithm with the given ID exists.");
     }
 
-    private void verifyImagePermission(UUID imageId, String userId) {
+    private void verifyImagePermission(UUID imageId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
         ImageResponse image = imageService.getById(imageId);
-        if(!image.getUserId().equals(userId))
+        if(!image.getUid().equals(uid))
             throw new UnauthorizedException();
     }
 }
