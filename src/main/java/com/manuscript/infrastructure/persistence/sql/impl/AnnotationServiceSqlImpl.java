@@ -3,6 +3,7 @@ package com.manuscript.infrastructure.persistence.sql.impl;
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.domain.annotation.repository.IAnnotationRepositoryService;
 import com.manuscript.core.domain.user.models.UserModel;
+import com.manuscript.core.domain.user.repository.IUserRepositoryService;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.entities.AnnotationEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IAnnotationRepo;
@@ -14,7 +15,7 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
-    private final UserServiceSqlImpl userServiceRepo;
+    private final IUserRepositoryService userServiceRepo;
     private final IAnnotationRepo repo;
     private final IRepositoryEntityMapper<AnnotationModel, AnnotationEntity> mapper;
 
@@ -23,17 +24,18 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
         AnnotationEntity annotationEntity = mapper.modelToEntity(model);
         Optional<UserModel> user = userServiceRepo.getByUid(annotationEntity.getUser().getUid());
         if(!user.isPresent())
-            throw new UnsupportedOperationException("This should not happen, please contact an administrator.");
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
         annotationEntity.getUser().setId(user.get().getId());
         annotationEntity = repo.save(annotationEntity);
         return mapper.entityToModel(annotationEntity);
     }
 
     @Override
-    public AnnotationModel update(AnnotationModel model) throws UnsupportedOperationException {
+    public AnnotationModel update(AnnotationModel model) throws IllegalArgumentException {
         Optional<AnnotationEntity> oldAnnotation = repo.findById(model.getId());
         if(!oldAnnotation.isPresent())
-            throw new UnsupportedOperationException("No old annotation found.\n" +
+            throw new IllegalArgumentException("No old annotation found.\n" +
                     "This should not happen, please contact an administrator.");
         AnnotationEntity annotationEntity = oldAnnotation.get();
         annotationEntity.setContent(model.getContent());
@@ -83,7 +85,7 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(UUID id) throws IllegalArgumentException {
         repo.deleteById(id);
     }
 
