@@ -29,6 +29,7 @@ public class AlgorithmControllerTests {
     private final String url = "url";
     private Date createdTime;
     private Date updatedTime;
+    private AlgorithmRequest newAlgorithmRequest;
     private AlgorithmRequest algorithmRequest;
 
     @BeforeAll
@@ -50,6 +51,7 @@ public class AlgorithmControllerTests {
     @BeforeEach
     public void beforeEach() {
         this.algorithmRequest = new AlgorithmRequest(id, uid, imageId, url);
+        this.newAlgorithmRequest = new AlgorithmRequest(null, uid, imageId, url);
     }
 
     ////--------------------------------------- 'uploadAlgorithm' tests
@@ -63,7 +65,7 @@ public class AlgorithmControllerTests {
         when(algorithmService.create(any())).thenReturn(newAlgorithm);
 
         //act
-        ResponseEntity<AlgorithmResponse> response = algorithmController.uploadAlgorithm(algorithmRequest);
+        ResponseEntity<AlgorithmResponse> response = algorithmController.uploadAlgorithm(newAlgorithmRequest);
 
         //assert
         assertTrue(response.hasBody());
@@ -78,43 +80,33 @@ public class AlgorithmControllerTests {
     }
 
     @Test
-    public void uploadAlgorithmNullId() {
-        //set up
-        algorithmRequest.setId(null);
-
-        //act
-        //assert
-        assertThrows(IllegalArgumentException.class, () -> algorithmController.uploadAlgorithm(algorithmRequest));
-    }
-
-    @Test
     public void uploadAlgorithmNullUid() {
         //set up
-        algorithmRequest.setUid(null);
+        newAlgorithmRequest.setUid(null);
 
         //act
         //assert
-        assertThrows(IllegalArgumentException.class, () -> algorithmController.uploadAlgorithm(algorithmRequest));
+        assertThrows(IllegalArgumentException.class, () -> algorithmController.uploadAlgorithm(newAlgorithmRequest));
     }
 
     @Test
     public void uploadAlgorithmNullDocumentId() {
         //set up
-        algorithmRequest.setImageId(null);
+        newAlgorithmRequest.setImageId(null);
 
         //act
         //assert
-        assertThrows(IllegalArgumentException.class, () -> algorithmController.uploadAlgorithm(algorithmRequest));
+        assertThrows(IllegalArgumentException.class, () -> algorithmController.uploadAlgorithm(newAlgorithmRequest));
     }
 
     @Test
     public void uploadAlgorithmNullUrl() {
         //set up
-        algorithmRequest.setUrl(null);
+        newAlgorithmRequest.setUrl(null);
 
         //act
         //assert
-        assertThrows(IllegalArgumentException.class, () -> algorithmController.uploadAlgorithm(algorithmRequest));
+        assertThrows(IllegalArgumentException.class, () -> algorithmController.uploadAlgorithm(newAlgorithmRequest));
     }
 
     ////--------------------------------------- 'updateAlgorithm' tests
