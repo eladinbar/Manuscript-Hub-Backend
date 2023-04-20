@@ -22,20 +22,20 @@ public class AlgorithmController {
 
     @PostMapping("/runAlgorithm")
     public void runAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
-        checkNotNull(algorithmRequest);
+        checkNotNull(algorithmRequest, false);
         algorithmService.run(algorithmRequest);
     }
 
     @PostMapping("/uploadAlgorithm")
     public ResponseEntity<AlgorithmResponse> uploadAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
-        checkNotNull(algorithmRequest);
+        checkNotNull(algorithmRequest, true);
         AlgorithmResponse result = algorithmService.create(algorithmRequest);
         return ResponseEntity.ok(result);
     }
 
     @PutMapping("/updateAlgorithm")
     public ResponseEntity<AlgorithmResponse> updateAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
-        checkNotNull(algorithmRequest);
+        checkNotNull(algorithmRequest, false);
         AlgorithmResponse result = algorithmService.update(algorithmRequest);
         return ResponseEntity.ok(result);
     }
@@ -60,8 +60,13 @@ public class AlgorithmController {
         algorithmService.deleteAllByUserId(userId);
     }
 
-    private void checkNotNull(AlgorithmRequest algorithmRequest) {
-        if(Stream.of(algorithmRequest.getId(), algorithmRequest.getUid(), algorithmRequest.getImageId(),
+    private void checkNotNull(AlgorithmRequest algorithmRequest, boolean newRequest) {
+        if(newRequest) {
+            if(Stream.of(algorithmRequest.getUid(), algorithmRequest.getImageId(),
+                    algorithmRequest.getUrl()).anyMatch(Objects::isNull))
+                throw new IllegalArgumentException("Algorithm request's fields must not be null.");
+        }
+        else if(Stream.of(algorithmRequest.getId(), algorithmRequest.getUid(), algorithmRequest.getImageId(),
                         algorithmRequest.getUrl()).anyMatch(Objects::isNull))
             throw new IllegalArgumentException("Algorithm request's fields must not be null.");
     }
