@@ -28,14 +28,16 @@ public class ImageController {
     }
 
     @PostMapping("/uploadInputDocument/{uid}")
-    public void uploadDocument(@RequestParam("file") MultipartFile file, @PathVariable String uid) throws IOException {
+    public ResponseEntity<ImageResponse> uploadDocument(@RequestParam("file") MultipartFile file, @PathVariable String uid) throws IOException {
         ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(file.getBytes()).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
-        imageService.save(imageRequest);
+        ImageResponse imageResponse = imageService.save(imageRequest);
+        return ResponseEntity.ok(imageResponse);
     }
 
     @PutMapping("/documents")
-    public void updateDocument(@RequestBody ImageRequest imageRequest) {
-        imageService.update(imageRequest);
+    public ResponseEntity<ImageResponse> updateDocument(@RequestBody ImageRequest imageRequest) {
+        ImageResponse imageResponse = imageService.update(imageRequest);
+        return ResponseEntity.ok(imageResponse);
     }
 
     @DeleteMapping("/deleteDocumentById/{id}")
@@ -44,6 +46,7 @@ public class ImageController {
     }
 
     @GetMapping("/getDocumentById/{id}")
+    //TODO change to return response entity
     public ResponseEntity<byte[]> getDocumentById(@PathVariable UUID id) {
         ImageResponse result = imageService.getById(id);
         return ResponseEntity.ok(result.getData());

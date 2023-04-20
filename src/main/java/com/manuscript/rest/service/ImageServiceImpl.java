@@ -4,10 +4,12 @@ import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.usecase.custom.image.ICreateImage;
 import com.manuscript.core.usecase.custom.image.IGetAllImages;
 import com.manuscript.core.usecase.custom.image.IGetByIdImage;
+import com.manuscript.core.usecase.custom.image.IUpdateImage;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.ImageRequest;
 import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +24,13 @@ public class ImageServiceImpl implements IImageService {
     private final ICreateImage createImageUseCase;
     private final IGetAllImages getAllImagesUseCase;
     private final IGetByIdImage getByIdImageUseCase;
+    private final IUpdateImage updateImageUseCase;
 
     @Override
-    public void save(ImageRequest imageRequest) {
-        ImageModel model = imageRequestMapper.restToModel(imageRequest);
-        createImageUseCase.create(model);
+    public ImageResponse save(ImageRequest imageRequest) {
+        ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
+        imageModel = createImageUseCase.create(imageModel);
+        return imageResponseMapper.modelToRest(imageModel);
     }
 
     @Override
@@ -41,8 +45,10 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public void update(ImageRequest imageRequest) {
-
+    public ImageResponse update(ImageRequest imageRequest) {
+        ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
+        imageModel = updateImageUseCase.update(imageModel);
+        return imageResponseMapper.modelToRest(imageModel);
     }
 
     @Override
