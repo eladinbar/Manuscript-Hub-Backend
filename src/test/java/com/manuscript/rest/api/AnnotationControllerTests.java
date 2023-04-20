@@ -24,7 +24,7 @@ public class AnnotationControllerTests {
     private IAnnotationService annotationService;
     private AnnotationController annotationController;
     private final UUID id = UUID.randomUUID();
-    private final String userId = "uid";
+    private final String uid = "uid";
     private final UUID imageId = UUID.randomUUID();
     private final UUID manualAlgorithmId = NIL;
     private final String content = "content";
@@ -55,9 +55,9 @@ public class AnnotationControllerTests {
 
     @BeforeEach
     public void beforeEach() {
-        this.newAnnotationRequest = new AnnotationRequest(null, userId, imageId, manualAlgorithmId,
+        this.newAnnotationRequest = new AnnotationRequest(null, uid, imageId, manualAlgorithmId,
                 content, startX, startY, endX, endY);
-        this.annotationRequest = new AnnotationRequest(id, userId, imageId, manualAlgorithmId,
+        this.annotationRequest = new AnnotationRequest(id, uid, imageId, manualAlgorithmId,
                 content, startX, startY, endX, endY);
     }
 
@@ -66,7 +66,7 @@ public class AnnotationControllerTests {
     @Test
     public void addAnnotationSuccess() {
         //set up
-        AnnotationResponse newAnnotation = new AnnotationResponse(id, userId, imageId, manualAlgorithmId,
+        AnnotationResponse newAnnotation = new AnnotationResponse(id, uid, imageId, manualAlgorithmId,
                 content, startX, startY, endX, endY, createdTime, updatedTime);
 
         ////mock service
@@ -79,7 +79,7 @@ public class AnnotationControllerTests {
         assertTrue(response.hasBody());
         AnnotationResponse annotationResponse = response.getBody();
         assertNotNull(annotationResponse);
-        assertEquals(userId, annotationResponse.getUid());
+        assertEquals(uid, annotationResponse.getUid());
         assertEquals(imageId, annotationResponse.getImageId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
@@ -155,7 +155,7 @@ public class AnnotationControllerTests {
     @Test
     public void updateAnnotationSuccess() {
         //set up
-        AnnotationResponse updatedAnnotation = new AnnotationResponse(id, userId, imageId, manualAlgorithmId,
+        AnnotationResponse updatedAnnotation = new AnnotationResponse(id, uid, imageId, manualAlgorithmId,
                 content, startX, startY, endX, endY, createdTime, updatedTime);
 
         ////mock service
@@ -168,7 +168,7 @@ public class AnnotationControllerTests {
         assertTrue(response.hasBody());
         AnnotationResponse annotationResponse = response.getBody();
         assertNotNull(annotationResponse);
-        assertEquals(userId, annotationResponse.getUid());
+        assertEquals(uid, annotationResponse.getUid());
         assertEquals(imageId, annotationResponse.getImageId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
