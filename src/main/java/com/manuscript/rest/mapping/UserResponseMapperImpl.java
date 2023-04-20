@@ -18,6 +18,7 @@ public class UserResponseMapperImpl implements IRestMapper<UserModel, UserRespon
                 .name(model.getName())
                 .status(model.getStatus())
                 .phoneNumber(model.getPhoneNumber())
+                .role(model.getRole())
                 .build();
 
     }
@@ -33,6 +34,7 @@ public class UserResponseMapperImpl implements IRestMapper<UserModel, UserRespon
                 .status(rest.getStatus())
                 .name(rest.getName())
                 .phoneNumber(rest.getPhoneNumber())
+                .role(rest.getRole())
                 .build();
     }
 

@@ -13,6 +13,9 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
                 .email(model.getEmail())
                 .uid(model.getUid())
                 .name(model.getName())
+                .phoneNumber(model.getPhoneNumber())
+                .role(model.getRole())
+                .newUser(false)
                 .build();
 
     }
@@ -23,6 +26,8 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
                 .email(rest.getEmail())
                 .uid(rest.getUid())
                 .name(rest.getName())
+                .phoneNumber(rest.getPhoneNumber())
+                .role(rest.getRole())
                 .build();
     }
 }

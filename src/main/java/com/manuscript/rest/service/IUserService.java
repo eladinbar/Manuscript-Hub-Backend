@@ -1,9 +1,6 @@
 package com.manuscript.rest.service;
 
 
-import com.manuscript.core.domain.common.enums.Role;
-import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.rest.request.UserRegistrationRequest;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
 

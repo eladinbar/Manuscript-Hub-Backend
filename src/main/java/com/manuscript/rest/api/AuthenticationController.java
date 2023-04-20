@@ -2,10 +2,8 @@ package com.manuscript.rest.api;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.manuscript.core.domain.common.enums.Status;
-import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.infrastructure.firebase.security.Roles.RoleConstants;
 import com.manuscript.infrastructure.firebase.service.IAuthenticationService;
-import com.manuscript.rest.request.UserRegistrationRequest;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
 import com.manuscript.rest.service.IUserService;
@@ -13,9 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserRecord;
-import com.google.firebase.auth.UserRecord.CreateRequest;
 
 import javax.management.relation.RoleNotFoundException;
 
@@ -33,6 +28,7 @@ public class AuthenticationController {
             return ResponseEntity.ok(this.userService.getByUid(user.getUid()));
         }
         catch (Exception e) {
+            // if in firebase but not in backend
             return ResponseEntity.ok(this.userService.save(user));
         }
     }
@@ -43,10 +39,6 @@ public class AuthenticationController {
         //TODO is user exist in userService
         try {
             UserResponse userResponse = this.userService.save(user);
-            System.out.println(" -------------------------------------------------- ");
-            System.out.println(user.getName());
-            System.out.println(user.getUid());
-            System.out.println(" -------------------------------------------------- ");
             return ResponseEntity.ok(userResponse);
         }
         catch (Exception e) {

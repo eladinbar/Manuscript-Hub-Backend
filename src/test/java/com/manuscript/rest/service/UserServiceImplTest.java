@@ -5,7 +5,6 @@ import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.exceptions.NoUserFoundException;
 import com.manuscript.core.usecase.custom.user.*;
 import com.manuscript.rest.mapping.IRestMapper;
-import com.manuscript.rest.request.UserRegistrationRequest;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
