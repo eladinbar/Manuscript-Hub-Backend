@@ -61,16 +61,14 @@ public class AnnotationController {
 
     private void checkNotNull(AnnotationRequest annotationRequest, boolean newRequest) {
         if(newRequest) {
-            if (Stream.of(annotationRequest.getUid(), annotationRequest.getImageId(), annotationRequest.getImageId(),
+            if (Stream.of(annotationRequest.getUid(),  annotationRequest.getImageId(),
                     annotationRequest.getAlgorithmId(), annotationRequest.getContent()).anyMatch(Objects::isNull))
                 throw new IllegalArgumentException("Annotation request's fields must not be null.");
         }
 
         else if(Stream.of(annotationRequest.getId(), annotationRequest.getUid(), annotationRequest.getImageId(),
-                            annotationRequest.getImageId(), annotationRequest.getAlgorithmId(), annotationRequest.getContent())
-                    .anyMatch(Objects::isNull))
+                        annotationRequest.getAlgorithmId(), annotationRequest.getContent()).anyMatch(Objects::isNull))
                 throw new IllegalArgumentException("Annotation request's fields must not be null.");
-
     }
 
     private void checkCoordinates(int startX, int startY, int endX, int endY) {
