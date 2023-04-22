@@ -35,7 +35,6 @@ public class AnnotationServiceImpl implements IAnnotationService {
     public AnnotationResponse create(AnnotationRequest annotationRequest) {
         verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
         checkAlgorithmAvailability(annotationRequest.getAlgorithmId());
-        //TODO ensure coordinates are within document bounds
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
         annotationModel = createAnnotationUseCase.create(annotationModel);
         return annotationResponseMapper.modelToRest(annotationModel);
@@ -45,12 +44,12 @@ public class AnnotationServiceImpl implements IAnnotationService {
     public AnnotationResponse update(AnnotationRequest annotationRequest) {
         verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
         checkAlgorithmAvailability(annotationRequest.getAlgorithmId());
-        //TODO ensure coordinates are within document bounds
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
         annotationModel = updateAnnotationUseCase.update(annotationModel);
         return annotationResponseMapper.modelToRest(annotationModel);
     }
 
+    //Currently not in use
     @Override
     public AnnotationResponse get(AnnotationRequest annotationRequest) {
         verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());

@@ -112,7 +112,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                 return;
             throw new UnauthorizedException("User has no authorization to modify this algorithm.");
         }
-        throw new IllegalArgumentException("No algorithm with the given ID exists.");
+        throw new NoAlgorithmFoundException("No algorithm with the given ID exists.");
     }
 
     private void verifyImagePermission(UUID imageId, String uid) {
