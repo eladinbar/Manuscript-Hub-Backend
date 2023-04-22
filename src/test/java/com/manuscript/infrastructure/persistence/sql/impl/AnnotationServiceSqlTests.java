@@ -185,7 +185,7 @@ public class AnnotationServiceSqlTests {
 
         Optional<UserModel> optUserModel = Optional.empty();
 
-        ////mock image service
+        ////mock mapper and user repo service
         when(mapper.modelToEntity(any(AnnotationModel.class))).thenReturn(newAnnotation);
         when(userRepoService.getByUid(any(String.class))).thenReturn(optUserModel);
 
@@ -208,7 +208,7 @@ public class AnnotationServiceSqlTests {
 
         Optional<UserModel> optUserModel = Optional.of(userModel);
 
-        ////mock image service
+        ////mock user repo service and repo
         when(mapper.modelToEntity(any(AnnotationModel.class))).thenReturn(newAnnotation);
         when(userRepoService.getByUid(any(String.class))).thenReturn(optUserModel);
         when(repo.save(any(AnnotationEntity.class))).thenThrow(DataIntegrityViolationException.class);
@@ -276,18 +276,11 @@ public class AnnotationServiceSqlTests {
     @Test
     public void updateInvalidId() {
         //set up
-        AnnotationEntity newAnnotation = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
-                .content(content)
-                .startX(startX).startY(startY).endX(endX).endY(endY)
-                .createdTime(createdTime).updatedTime(updatedTime)
-                .build();
-
         annotationModel.setId(invalidId);
 
         Optional<AnnotationEntity> optAnnotationEntity = Optional.empty();
 
-        ////mock image service
+        ////mock repo
         when(repo.findById(any(UUID.class))).thenReturn(optAnnotationEntity);
 
         //act
@@ -299,18 +292,11 @@ public class AnnotationServiceSqlTests {
     @Test
     public void updateInvalidAlgorithmId() {
         //set up
-        AnnotationEntity newAnnotation = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
-                .content(content)
-                .startX(startX).startY(startY).endX(endX).endY(endY)
-                .createdTime(createdTime).updatedTime(updatedTime)
-                .build();
-
         annotationModel.setAlgorithmId(invalidAlgorithmId);
 
         Optional<AnnotationEntity> optAnnotationEntity = Optional.of(annotationEntity);
 
-        ////mock image service
+        ////mock repo
         when(repo.findById(any(UUID.class))).thenReturn(optAnnotationEntity);
         when(repo.save(any(AnnotationEntity.class))).thenThrow(DataIntegrityViolationException.class);
 
