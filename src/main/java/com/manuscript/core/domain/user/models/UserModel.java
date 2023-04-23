@@ -14,14 +14,14 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UserModel {
-    private Date createdTime;
-    private Date updatedTime;
+
     private UUID id;
+    private String uid;
     private String email;
     private String name;
-    private String phoneNumber;
-    private String status;
-    private String uid;
     private Role role;
-
+    private String status;
+    private String phoneNumber;
+    private Date createdTime;
+    private Date updatedTime;
 }

@@ -13,9 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_USER;
+import static lombok.Lombok.checkNotNull;
 
 @RestController
 @RequestMapping(RESOURCE_USER)
@@ -27,25 +30,33 @@ public class UserController {
     }
 
     @RequestMapping(value = "/getUserDetails/{id}", method = RequestMethod.GET)
-    public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id)  {
+        if (id == null){ throw new IllegalArgumentException(); }
         UserResponse result = userService.getById(id);
         return ResponseEntity.ok(result);
     }
 
     @PatchMapping("/updateUser/{id}")
     public ResponseEntity<UserResponse> update(@RequestBody UserRequest user, @PathVariable UUID id) {
+        checkNotNull(user, true);
         try {
             return ResponseEntity.ok(this.userService.updateUser(user));
         } catch (Exception e) {
             System.err.println("Error updating this user: " + e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
-
     }
 
     @DeleteMapping("/deleteUser/{id}")
     public void deleteUser(@PathVariable UUID id){
+        if (id == null){ throw new IllegalArgumentException(); }
         userService.deleteUser(id);
-        //TODO Maybe return an answer
     }
+
+    private void checkNotNull(UserRequest userRequest, boolean newRequest) {
+        if (Stream.of(userRequest.getUid(),  userRequest.getRole(),
+                userRequest.getEmail(), userRequest.getName(), userRequest.getPhoneNumber()).anyMatch(Objects::isNull))
+            throw new IllegalArgumentException("User request's fields must not be null.");
+    }
+
 }

@@ -14,10 +14,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class UserRequest {
+    @NotNull String uid;
     @NotNull String email;
     @NotNull String name;
-    @NotNull String uid;
-    @NotNull String phoneNumber;
     @NotNull Role role;
+    @NotNull String phoneNumber;
     @NotNull boolean newUser;
 }

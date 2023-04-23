@@ -3,7 +3,10 @@ package com.manuscript.rest.service;
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.exceptions.NoUserFoundException;
+import com.manuscript.core.exceptions.UserAlreadyExistException;
 import com.manuscript.core.usecase.custom.user.*;
+import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
@@ -22,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
     private UserServiceImpl userService;
@@ -31,6 +35,8 @@ public class UserServiceImplTest {
     private IRestMapper<UserModel, UserResponse> userResponseMapper;
     @Mock
     private IRestMapper<UserModel, UserRequest> userRequestMapper;
+    @Mock
+    private IRepositoryEntityMapper<UserModel, UserEntity> mapper;
     @Mock
     private IGetByIdUser getByIdUserUseCase;
     @Mock
@@ -184,7 +190,7 @@ public class UserServiceImplTest {
         assertEquals(userModel.getPhoneNumber(), actual.getPhoneNumber());
     }
     @Test
-    public void saveTest_Success() { // Arrange
+    public void saveTest_Success() {
         UserRequest userRequest = UserRequest.builder()
                 .email("oz123@gmail.com")
                 .name("Oz MAD")
@@ -202,16 +208,56 @@ public class UserServiceImplTest {
                 .updatedTime(new Date())
                 .role(userRequest.getRole()).build();
 
+        UserResponse userResponse = UserResponse.builder()
+                .email(userRequest.getEmail())
+                .uid(userRequest.getUid())
+                .name(userRequest.getName())
+                .phoneNumber(userRequest.getPhoneNumber())
+                .role(userRequest.getRole()).build();
+
+        Mockito.when(getByUidUserUseCase.getByUid(any(String.class))).thenReturn(Optional.empty());
+        Mockito.when(getByEmailUser.getByEmail(any(String.class))).thenReturn(Optional.empty());
+        Mockito.when(userRequestMapper.restToModel(any(UserRequest.class))).thenReturn(userModel);
+        Mockito.when(userResponseMapper.modelToRest(any(UserModel.class))).thenReturn(userResponse);
         Mockito.when(createUserUseCase.create(any(UserModel.class))).thenReturn(userModel);
-        assertEquals(userModel, userService.save(userRequest));
+        assertEquals(userResponse, userService.save(userRequest));
     }
     @Test
-    public void updateUserTest_Success() { // Arrange
+    public void saveTestSameUser_Fail() { // Arrange
+        UserRequest userRequest = UserRequest.builder()
+                .email("oz123@gmail.com")
+                .name("Oz MAD")
+                .uid("1234")
+                .role(Role.User)
+                .phoneNumber("030123012").build();
+
+        UserModel userModel = UserModel.builder()
+                .email(userRequest.getEmail())
+                .uid(userRequest.getUid())
+                .name(userRequest.getName())
+                .id(UUID.randomUUID())
+                .status("active")
+                .createdTime(new Date())
+                .updatedTime(new Date())
+                .role(userRequest.getRole()).build();
+
+        Optional<UserModel> optUserModel = Optional.of(userModel);
+
+        when(getByUidUserUseCase.getByUid(any(String.class))).thenReturn(optUserModel);
+
+        //act
+        //assert
+        assertThrows(UserAlreadyExistException.class, () -> userService.save(userRequest));
+
+    }
+    @Test
+    public void updateUserTest_Success() {
         UserRequest userReq = UserRequest.builder()
                 .email("oz123@gmail.com")
                 .name("Oz MAD")
                 .uid("1234")
                 .phoneNumber("030123012")
+                .role(Role.User)
                 .newUser(false).build();
 
 
@@ -220,25 +266,86 @@ public class UserServiceImplTest {
                 .uid(userReq.getUid())
                 .name(userReq.getName())
                 .id(UUID.randomUUID())
+                .phoneNumber(userReq.getPhoneNumber())
+                .status("active")
+                .role(userReq.getRole())
+                .createdTime(new Date())
                 .updatedTime(new Date()).build();
 
-        Mockito.when(updateUserUseCase.update(any(UserModel.class))).thenReturn(userModel);
-        assertEquals(userModel, userService.updateUser(userReq));
+        UserResponse userResponse = UserResponse.builder()
+                .email(userReq.getEmail())
+                .uid(userReq.getUid())
+                .name(userReq.getName())
+                .phoneNumber(userReq.getPhoneNumber())
+                .role(userReq.getRole()).build();
+
+        Mockito.when(userRequestMapper.restToModel(any(UserRequest.class))).thenReturn(userModel);
+        Mockito.when(createUserUseCase.create(any(UserModel.class))).thenReturn(userModel);
+        Mockito.when(userResponseMapper.modelToRest(any(UserModel.class))).thenReturn(userResponse);
+
+        //act
+        UserResponse userRes = userService.updateUser(userReq);
+
+        //assert
+        assertNotNull(userRes);
+        assertEquals(userReq.getPhoneNumber(), userRes.getPhoneNumber());
+        assertEquals(userReq.getName(), userRes.getName());
+        assertEquals(userReq.getUid(), userRes.getUid());
+        assertEquals(userReq.getRole(), userRes.getRole());
+        assertEquals(userReq.getEmail(), userRes.getEmail());
     }
     @Test
-    public void deleteUserTest(){
-        UserModel userModel = UserModel.builder()
-                .email("ozsderoti@gmail.com")
-                .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
-                .name("Oz")
-                .status("active")
-                .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
-                .role(Role.User).build();
+    public void deleteUserTest_Success(){
+        UserRequest userRequest = UserRequest.builder()
+                .email("oz123@gmail.com")
+                .name("Oz MAD")
+                .uid("1234")
+                .role(Role.User)
+                .phoneNumber("030123012").build();
 
-        Mockito.doNothing().when(deleteUserById).deleteById(any(UserModel.class));
-        Mockito.when(getByIdUserUseCase.getById(any(UUID.class))).thenReturn(Optional.of(userModel));
-        userService.deleteUser(userModel.getId());
-        assertNull(getByIdUserUseCase.getById(userModel.getId()));
-        //TODO its a unit test, cant use real repo to check if deleted.
+        UserModel userModel = UserModel.builder()
+                .email(userRequest.getEmail())
+                .uid(userRequest.getUid())
+                .name(userRequest.getName())
+                .id(UUID.randomUUID())
+                .status("active")
+                .createdTime(new Date())
+                .updatedTime(new Date())
+                .role(userRequest.getRole()).build();
+
+        Optional<UserModel> optUserModel = Optional.of(userModel);
+
+        Mockito.when(getByIdUserUseCase.getById(any(UUID.class))).thenReturn(optUserModel);
+        doNothing().when(deleteUserById).deleteById(userModel);
+        //act
+        //assert
+        assertDoesNotThrow(() -> userService.deleteUser(userModel.getId()));
+    }
+
+    @Test
+    public void deleteUserTest_Fail(){
+        UserRequest userRequest = UserRequest.builder()
+                .email("oz123@gmail.com")
+                .name("Oz MAD")
+                .uid("1234")
+                .role(Role.User)
+                .phoneNumber("030123012").build();
+
+        UserModel userModel = UserModel.builder()
+                .email(userRequest.getEmail())
+                .uid(userRequest.getUid())
+                .name(userRequest.getName())
+                .id(UUID.randomUUID())
+                .status("active")
+                .createdTime(new Date())
+                .updatedTime(new Date())
+                .role(userRequest.getRole()).build();
+
+        Optional<UserModel> optUserModel = Optional.of(userModel);
+
+        Mockito.when(getByIdUserUseCase.getById(any(UUID.class))).thenReturn(Optional.empty());
+        //act
+        //assert
+        assertThrows(NoUserFoundException.class, () -> userService.deleteUser(userModel.getId()));
     }
 }
