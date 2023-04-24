@@ -13,11 +13,11 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
     @Override
     public UserRequest modelToRest(UserModel model) {
         return UserRequest.builder()
-                .email(model.getEmail())
                 .uid(model.getUid())
+                .email(model.getEmail())
                 .name(model.getName())
-                .phoneNumber(model.getPhoneNumber())
                 .role(model.getRole())
+                .phoneNumber(model.getPhoneNumber())
                 .newUser(false)
                 .build();
 
@@ -26,15 +26,15 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
     @Override
     public UserModel restToModel(UserRequest rest) {
         return UserModel.builder()
-                .email(rest.getEmail())
+                .id(rest.getId())
                 .uid(rest.getUid())
-                .id(UUID.randomUUID())
-                .createdTime(new Date())
-                .updatedTime(new Date())
+                .email(rest.getEmail())
                 .name(rest.getName())
-                .phoneNumber(rest.getPhoneNumber())
                 .role(rest.getRole())
                 .status("active")
+                .phoneNumber(rest.getPhoneNumber())
+                .createdTime(new Date())
+                .updatedTime(new Date())
                 .build();
     }
 }

@@ -14,13 +14,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class UserResponse {
-    Date createdTime;
-    Date updatedTime;
-    UUID userId;
+
+    UUID id;
+    String uid;
     String email;
     String name;
-    String phoneNumber;
-    String status;
-    String uid;
     Role role;
+    String status;
+    String phoneNumber;
+    Date createdTime;
+    Date updatedTime;
 }

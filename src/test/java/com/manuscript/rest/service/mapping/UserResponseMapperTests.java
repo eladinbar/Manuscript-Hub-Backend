@@ -2,7 +2,6 @@ package com.manuscript.rest.service.mapping;
 
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.rest.mapping.UserRequestMapperImpl;
 import com.manuscript.rest.mapping.UserResponseMapperImpl;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
@@ -51,7 +50,7 @@ public class UserResponseMapperTests {
     public void beforeEach() {
         // set up user response
         this.userResponse = UserResponse.builder()
-                .userId(userId)
+                .id(userId)
                 .role(Role.User)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
@@ -84,7 +83,7 @@ public class UserResponseMapperTests {
 
         //assert
         assertNotNull(uResponse);
-        assertEquals(userId, uResponse.getUserId());
+        assertEquals(userId, uResponse.getId());
         assertEquals(name, uResponse.getName());
         assertEquals(email, uResponse.getEmail());
         assertEquals(uid, uResponse.getUid());
@@ -110,7 +109,7 @@ public class UserResponseMapperTests {
 
         //assert
         assertNotNull(userResponse1);
-        assertNotEquals(userId, userResponse1.getUserId());
+        assertNotEquals(userId, userResponse1.getId());
         assertEquals(name, userResponse1.getName());
         assertEquals(email, userResponse1.getEmail());
         assertEquals(uid, userResponse1.getUid());
@@ -159,7 +158,7 @@ public class UserResponseMapperTests {
 
         //assert
         assertNotNull(userResponse1);
-        assertNotEquals(userId, userResponse1.getUserId());
+        assertNotEquals(userId, userResponse1.getId());
         assertEquals(name, userResponse1.getName());
         assertEquals(email, userResponse1.getEmail());
         assertEquals(uid, userResponse1.getUid());

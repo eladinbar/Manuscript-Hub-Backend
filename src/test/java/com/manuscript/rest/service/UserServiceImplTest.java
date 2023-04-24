@@ -79,7 +79,7 @@ public class UserServiceImplTest {
         UserResponse userResponse = UserResponse.builder()
                 .email("ozsderoti@gmail.com")
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
-                .userId(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
+                .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .name("Oz")
                 .status("active")
                 .role(Role.User).build();
@@ -94,7 +94,7 @@ public class UserServiceImplTest {
         assertEquals(userModel.getName(), actual.getName());
         assertEquals(userModel.getUpdatedTime(), actual.getUpdatedTime());
         assertEquals(userModel.getCreatedTime(), actual.getCreatedTime());
-        assertEquals(userModel.getId(), actual.getUserId());
+        assertEquals(userModel.getId(), actual.getId());
         assertEquals(userModel.getPhoneNumber(), actual.getPhoneNumber());
     }
     @Test
@@ -125,7 +125,7 @@ public class UserServiceImplTest {
         UserResponse userResponse = UserResponse.builder()
                 .email("ozsderoti@gmail.com")
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
-                .userId(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
+                .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .name("Oz")
                 .status("active")
                 .role(Role.User).build();
@@ -140,7 +140,7 @@ public class UserServiceImplTest {
         assertEquals(userModel.getName(), actual.getName());
         assertEquals(userModel.getUpdatedTime(), actual.getUpdatedTime());
         assertEquals(userModel.getCreatedTime(), actual.getCreatedTime());
-        assertEquals(userModel.getId(), actual.getUserId());
+        assertEquals(userModel.getId(), actual.getId());
         assertEquals(userModel.getPhoneNumber(), actual.getPhoneNumber());
     }
     @Test
@@ -171,7 +171,7 @@ public class UserServiceImplTest {
         UserResponse userResponse = UserResponse.builder()
                 .email("ozsderoti@gmail.com")
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
-                .userId(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
+                .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .name("Oz")
                 .status("active")
                 .role(Role.User).build();
@@ -186,7 +186,7 @@ public class UserServiceImplTest {
         assertEquals(userModel.getName(), actual.getName());
         assertEquals(userModel.getUpdatedTime(), actual.getUpdatedTime());
         assertEquals(userModel.getCreatedTime(), actual.getCreatedTime());
-        assertEquals(userModel.getId(), actual.getUserId());
+        assertEquals(userModel.getId(), actual.getId());
         assertEquals(userModel.getPhoneNumber(), actual.getPhoneNumber());
     }
     @Test

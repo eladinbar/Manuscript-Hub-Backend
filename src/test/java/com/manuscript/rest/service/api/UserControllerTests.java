@@ -11,11 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -64,7 +60,7 @@ public class UserControllerTests {
     public void beforeEach() {
         // create user response
         this.userResponse = UserResponse.builder()
-                .userId(userId)
+                .id(userId)
                 .role(Role.User)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
@@ -94,7 +90,7 @@ public class UserControllerTests {
         //assert
         assertTrue(response.hasBody());
         UserResponse returnedResponse = response.getBody();
-        assertEquals(userResponse.getUserId(), returnedResponse.getUserId());
+        assertEquals(userResponse.getId(), returnedResponse.getId());
         assertEquals(userResponse.getRole(), returnedResponse.getRole());
         assertEquals(userResponse.getName(), returnedResponse.getName());
         assertEquals(userResponse.getUid(), returnedResponse.getUid());
@@ -126,7 +122,7 @@ public class UserControllerTests {
         //assert
         assertTrue(response.hasBody());
         UserResponse returnedResponse = response.getBody();
-        assertEquals(userResponse.getUserId(), returnedResponse.getUserId());
+        assertEquals(userResponse.getId(), returnedResponse.getId());
         assertEquals(userResponse.getRole(), returnedResponse.getRole());
         assertEquals(userResponse.getName(), returnedResponse.getName());
         assertEquals(userResponse.getUid(), returnedResponse.getUid());
