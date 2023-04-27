@@ -12,6 +12,7 @@ public class GetAllAlgorithmsImpl extends GetAllUseCaseImpl<AlgorithmModel> impl
         super(serviceRepo);
     }
 
+    //TODO
     public List<AlgorithmModel> getAllByUserId(UUID userId) {
         throw new RuntimeException("Unimplemented");
     }

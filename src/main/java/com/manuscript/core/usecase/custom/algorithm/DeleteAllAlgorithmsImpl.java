@@ -11,6 +11,7 @@ public class DeleteAllAlgorithmsImpl extends DeleteAllUseCaseImpl<AlgorithmModel
         super(_serviceRepo);
     }
 
+    //TODO
     public void deleteAllByUserId(UUID userId) {
         throw new RuntimeException("Unimplemented");
     }
