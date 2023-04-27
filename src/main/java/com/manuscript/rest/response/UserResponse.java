@@ -1,6 +1,7 @@
 package com.manuscript.rest.response;
 
 import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class UserResponse {
     String email;
     String name;
     Role role;
-    String status;
+    Status status;
     String phoneNumber;
     Date createdTime;
     Date updatedTime;

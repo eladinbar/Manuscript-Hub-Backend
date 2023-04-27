@@ -1,6 +1,7 @@
 package com.manuscript.rest.service.mapping;
 
 import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.rest.mapping.UserRequestMapperImpl;
 import com.manuscript.rest.request.UserRequest;
@@ -25,9 +26,9 @@ public class UserRequestMapperTests {
     private final String invalidEmail = "emailgmail.com";
     private String name = "asd";
     private String phoneNumber = "234234";
-    private String status = "active";
     private String uid = "5555888";
     private Role role = Role.User;
+    private Status status = Status.active;
     private Date createdTime;
     private Date updatedTime;
     private UserResponse userResponse;

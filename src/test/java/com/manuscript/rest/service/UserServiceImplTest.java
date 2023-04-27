@@ -1,6 +1,7 @@
 package com.manuscript.rest.service;
 
 import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.exceptions.NoUserFoundException;
 import com.manuscript.core.exceptions.UserAlreadyExistException;
@@ -58,7 +59,7 @@ public class UserServiceImplTest {
                 .uid("123123")
                 .name("UidCheck")
                 .id(UUID.randomUUID())
-                .status("active")
+                .status(Status.active)
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .role(Role.User).build();
@@ -72,7 +73,7 @@ public class UserServiceImplTest {
                 .email("ozsderoti@gmail.com")
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
                 .name("Oz")
-                .status("active")
+                .status(Status.active)
                 .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .role(Role.User).build();
 
@@ -81,7 +82,7 @@ public class UserServiceImplTest {
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
                 .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .name("Oz")
-                .status("active")
+                .status(Status.active)
                 .role(Role.User).build();
         Optional<UserModel> opt = Optional.of(userModel);
         Mockito.when(getByEmailUser.getByEmail(any(String.class))).thenReturn(opt);
@@ -104,7 +105,7 @@ public class UserServiceImplTest {
                 .uid("123123")
                 .name("UidCheck")
                 .id(UUID.randomUUID())
-                .status("active")
+                .status(Status.active)
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .role(Role.User).build();
@@ -118,7 +119,7 @@ public class UserServiceImplTest {
                 .email("ozsderoti@gmail.com")
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
                 .name("Oz")
-                .status("active")
+                .status(Status.active)
                 .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .role(Role.User).build();
 
@@ -127,7 +128,7 @@ public class UserServiceImplTest {
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
                 .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .name("Oz")
-                .status("active")
+                .status(Status.active)
                 .role(Role.User).build();
         Optional<UserModel> opt = Optional.of(userModel);
         Mockito.when(getByIdUserUseCase.getById(any(UUID.class))).thenReturn(opt);
@@ -150,7 +151,7 @@ public class UserServiceImplTest {
                 .uid("123123")
                 .name("UidCheck")
                 .id(UUID.randomUUID())
-                .status("active")
+                .status(Status.active)
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .role(Role.User).build();
@@ -164,7 +165,7 @@ public class UserServiceImplTest {
                 .email("ozsderoti@gmail.com")
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
                 .name("Oz")
-                .status("active")
+                .status(Status.active)
                 .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .role(Role.User).build();
 
@@ -173,7 +174,7 @@ public class UserServiceImplTest {
                 .uid("Y082I9QTRIddAXWYkKXKw9DVfeC3")
                 .id(UUID.fromString("711b19f4-104e-4aeb-9439-df29aa2d2dc4"))
                 .name("Oz")
-                .status("active")
+                .status(Status.active)
                 .role(Role.User).build();
         Optional<UserModel> opt = Optional.of(userModel);
         Mockito.when(getByUidUserUseCase.getByUid(any(String.class))).thenReturn(opt);
@@ -203,7 +204,7 @@ public class UserServiceImplTest {
                 .uid(userRequest.getUid())
                 .name(userRequest.getName())
                 .id(UUID.randomUUID())
-                .status("active")
+                .status(Status.active)
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .role(userRequest.getRole()).build();
@@ -236,7 +237,7 @@ public class UserServiceImplTest {
                 .uid(userRequest.getUid())
                 .name(userRequest.getName())
                 .id(UUID.randomUUID())
-                .status("active")
+                .status(Status.active)
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .role(userRequest.getRole()).build();
@@ -267,7 +268,7 @@ public class UserServiceImplTest {
                 .name(userReq.getName())
                 .id(UUID.randomUUID())
                 .phoneNumber(userReq.getPhoneNumber())
-                .status("active")
+                .status(Status.active)
                 .role(userReq.getRole())
                 .createdTime(new Date())
                 .updatedTime(new Date()).build();
@@ -308,7 +309,7 @@ public class UserServiceImplTest {
                 .uid(userRequest.getUid())
                 .name(userRequest.getName())
                 .id(UUID.randomUUID())
-                .status("active")
+                .status(Status.active)
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .role(userRequest.getRole()).build();
@@ -336,7 +337,7 @@ public class UserServiceImplTest {
                 .uid(userRequest.getUid())
                 .name(userRequest.getName())
                 .id(UUID.randomUUID())
-                .status("active")
+                .status(Status.active)
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .role(userRequest.getRole()).build();

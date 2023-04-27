@@ -2,6 +2,7 @@ package com.manuscript.infrastructure.persistence.sql.mapping;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.infrastructure.persistence.sql.entities.AlgorithmEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.AnnotationEntity;
@@ -29,7 +30,7 @@ public class UserEntityMapperTests {
     private final String invalidEmail = "emailgmail.com";
     private String name = "asd";
     private String phoneNumber = "234234";
-    private String status = "active";
+    private Status status = Status.active;
     private String uid = "5555888";
     private Role role = Role.User;
     private Date createdTime;

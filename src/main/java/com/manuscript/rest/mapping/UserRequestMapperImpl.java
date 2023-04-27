@@ -1,6 +1,7 @@
 package com.manuscript.rest.mapping;
 
 
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.rest.request.UserRequest;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
                 .email(rest.getEmail())
                 .name(rest.getName())
                 .role(rest.getRole())
-                .status("active")
+                .status(Status.active)
                 .phoneNumber(rest.getPhoneNumber())
                 .createdTime(new Date())
                 .updatedTime(new Date())

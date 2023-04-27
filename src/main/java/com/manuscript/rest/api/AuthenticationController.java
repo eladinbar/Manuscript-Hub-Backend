@@ -33,8 +33,7 @@ public class AuthenticationController {
         }
     }
 
-    //TODO change PostMapping to "/register" ?
-    @PostMapping("/registerNew")
+    @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
         //TODO is user exist in userService
         try {
