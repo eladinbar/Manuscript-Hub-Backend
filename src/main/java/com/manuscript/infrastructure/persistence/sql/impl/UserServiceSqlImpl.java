@@ -48,6 +48,15 @@ public class UserServiceSqlImpl implements IUserRepositoryService {
         }
         return Optional.empty();
     }
+    @Override
+    public Optional<UserModel> getByEmail(String email) {
+        Optional<UserEntity> userEntityOptional = repo.findByEmail(email);
+        if (userEntityOptional.isPresent()) {
+            UserModel userModel = mapper.entityToModel(userEntityOptional.get());
+            return Optional.of(userModel);
+        }
+        return Optional.empty();
+    }
 
     @Override
     public boolean existsById(UUID id) throws IllegalArgumentException {
@@ -61,6 +70,6 @@ public class UserServiceSqlImpl implements IUserRepositoryService {
 
     @Override
     public void deleteById(UUID id) {
-
+        repo.deleteById(id);
     }
 }

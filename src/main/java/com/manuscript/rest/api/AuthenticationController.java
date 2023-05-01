@@ -2,10 +2,8 @@ package com.manuscript.rest.api;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.manuscript.core.domain.common.enums.Status;
-import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.infrastructure.firebase.security.Roles.RoleConstants;
 import com.manuscript.infrastructure.firebase.service.IAuthenticationService;
-import com.manuscript.rest.request.UserRegistrationRequest;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
 import com.manuscript.rest.service.IUserService;
@@ -26,24 +24,26 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserRequest user) {
-        return ResponseEntity.ok(this.userService.getByUid(user.getUid()));
+        try{
+            return ResponseEntity.ok(this.userService.getByUid(user.getUid()));
+        }
+        catch (Exception e) {
+            // if in firebase but not in backend
+            return ResponseEntity.ok(this.userService.save(user));
+        }
     }
 
-    //TODO change PostMapping to "/register" ?
-    @PostMapping("/registerNew")
-    public ResponseEntity<UserModel> register(@RequestBody UserRegistrationRequest user) {
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
+        //TODO is user exist in userService
         try {
-            return ResponseEntity.ok(this.userService.save(user));
-//            UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-//                    .setEmail(email)
-//                    .setPassword(password);
-//            UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
-//            System.out.println("Successfully created new user: " + userRecord.getUid());
-//            return ResponseEntity.ok(userRecord);
-        } catch (Exception e) {
-            System.err.println("Error creating new user: " + e.getMessage());
+            UserResponse userResponse = this.userService.save(user);
+            return ResponseEntity.ok(userResponse);
         }
-        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
+        catch (Exception e) {
+            System.err.println("Error creating new user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
+        }
     }
 
     @PatchMapping("/changeUserStatus/{id}/{status}")

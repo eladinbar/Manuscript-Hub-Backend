@@ -10,12 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 public class UserRequest {
-    @NotNull String email;
-    @NotNull String name;
-    @NotNull String uid;
-    @NotNull Role role;
-    @NotNull boolean newUser;
+    UUID id;
+    String uid;
+    String email;
+    String name;
+    Role role;
+    String phoneNumber;
+    boolean newUser;
 }

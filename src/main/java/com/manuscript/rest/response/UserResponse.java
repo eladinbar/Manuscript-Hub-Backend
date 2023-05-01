@@ -1,6 +1,7 @@
 package com.manuscript.rest.response;
 
 import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class UserResponse {
-    Date createdTime;
-    Date updatedTime;
-    UUID userId;
+
+    UUID id;
+    String uid;
     String email;
     String name;
-    String phoneNumber;
-    String status;
-    String uid;
     Role role;
+    Status status;
+    String phoneNumber;
+    Date createdTime;
+    Date updatedTime;
 }

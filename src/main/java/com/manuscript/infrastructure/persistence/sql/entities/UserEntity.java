@@ -28,8 +28,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "phoneNumber", columnDefinition = "TEXT")
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private Status status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
