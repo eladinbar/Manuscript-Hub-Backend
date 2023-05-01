@@ -10,4 +10,5 @@ public class UpdateUserImpl extends UpdateUseCaseImpl<UserModel> implements IUpd
     public UpdateUserImpl(IBaseRepositoryService<UserModel> _serviceRepo) {
         super(_serviceRepo);
     }
+
 }

@@ -5,19 +5,23 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IBaseRepositoryService<M> {
-
     M save(M model) throws IllegalArgumentException;
 
-    List<M> getAll();
-
-    Optional<M> getById(UUID id) throws IllegalArgumentException;
-
-    boolean isExists(UUID id) throws IllegalArgumentException;
+    default M update(M model) throws UnsupportedOperationException {
+        return this.save(model);
+    }
 
     default List<M> saveAll(List<M> models) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
-    void deleteAll();
 
-    void deleteById(M model);
+    boolean existsById(UUID id) throws IllegalArgumentException;
+
+    Optional<M> getById(UUID id) throws IllegalArgumentException;
+
+    List<M> getAll();
+
+    void deleteById(UUID id);
+
+    void deleteAll();
 }

@@ -1,5 +1,6 @@
 package com.manuscript.rest.request;
 
+import com.manuscript.core.domain.common.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class UserRequest {
-    @NotNull UUID userId;
-    @NotNull String email;
-    @NotNull String name;
-    @NotNull String phoneNumber;
-    @NotNull String uid;
+    UUID id;
+    String uid;
+    String email;
+    String name;
+    Role role;
+    String phoneNumber;
+    boolean newUser;
 }

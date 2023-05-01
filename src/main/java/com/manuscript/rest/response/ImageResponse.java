@@ -1,5 +1,6 @@
 package com.manuscript.rest.response;
 
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,11 +15,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class ImageResponse {
-
+    UUID documentId;
+    UUID userId;
+    String uid;
+    String fileName;
+    byte[] data;
+    Status status;
+    Privacy privacy;
     Date createdTime;
     Date updatedTime;
-    UUID documentId;
-    String fileName;
-    Status status;
-    byte[] data;
 }

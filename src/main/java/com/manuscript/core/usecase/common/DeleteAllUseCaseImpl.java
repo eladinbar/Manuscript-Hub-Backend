@@ -12,6 +12,5 @@ public class DeleteAllUseCaseImpl<M> implements IDeleteAllUseCase<M> {
     @Override
     public void deleteAll() throws IllegalArgumentException {
         _serviceRepo.deleteAll();
-
     }
 }

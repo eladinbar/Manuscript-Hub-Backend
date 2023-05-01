@@ -12,5 +12,4 @@ public class CreateUseCaseImpl<M> implements ICreateUseCase<M> {
     public M create(M model) throws IllegalArgumentException {
         return _serviceRepo.save(model);
     }
-
 }
