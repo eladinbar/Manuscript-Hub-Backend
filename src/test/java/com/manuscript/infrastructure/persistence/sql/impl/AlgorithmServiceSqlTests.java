@@ -1,7 +1,7 @@
 package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
-import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.*;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.domain.user.repository.IUserRepositoryService;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
@@ -45,7 +45,7 @@ public class AlgorithmServiceSqlTests {
     private final String email = "email@gmail.com";
     private final String name = "name";
     private final String phoneNumber = "0541234567";
-    private final String status = "active";
+    private final Status status = Status.active;
     private final Role role = Role.User;
     private UserEntity user;
     private UserModel userModel;

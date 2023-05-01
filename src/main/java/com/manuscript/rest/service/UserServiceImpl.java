@@ -67,7 +67,7 @@ public class UserServiceImpl implements IUserService {
     public void deleteUser(UUID id) throws NoUserFoundException {
         Optional<UserModel> userToDelete = getByIdUserUseCase.getById(id);
         if (userToDelete.isPresent()) {
-            deleteUserById.deleteById(userToDelete.get());
+            deleteUserById.deleteById(userToDelete.get().getId());
         }
         else {throw new NoUserFoundException();}
     }

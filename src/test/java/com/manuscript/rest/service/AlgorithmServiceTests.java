@@ -2,6 +2,7 @@ package com.manuscript.rest.service;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
 import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.exceptions.NoAlgorithmFoundException;
 import com.manuscript.core.exceptions.NoUserFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
@@ -57,7 +58,7 @@ public class AlgorithmServiceTests {
     private final String email = "email@gmail.com";
     private final String name = "bob";
     private final String phoneNumber = "0541234567";
-    private final String status = "active";
+    private final Status status = Status.active;
     private final Role userRole = Role.User;
     private final Role developerRole = Role.Developer;
     private UserResponse userResponse;
@@ -110,9 +111,9 @@ public class AlgorithmServiceTests {
                 .build();
 
         // set up user responses
-        this.userResponse = new UserResponse(id, uid, email, name, phoneNumber, status, userRole,
+        this.userResponse = new UserResponse(id, uid, email, name, userRole, status, phoneNumber,
                 createdTime, updatedTime);
-        this.developerUserResponse = new UserResponse(id, uid, email, name, phoneNumber, status, developerRole,
+        this.developerUserResponse = new UserResponse(id, uid, email, name, developerRole, status, phoneNumber,
                 createdTime, updatedTime);
     }
 

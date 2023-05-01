@@ -1,6 +1,7 @@
 package com.manuscript.rest.service;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.exceptions.NoAlgorithmFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
@@ -106,7 +107,7 @@ public class AnnotationServiceTests {
                 .build();
 
         // set up image and algorithm responses
-        this.imageResponse = new ImageResponse(imageId, userId, uid, fileName, data, Status.active, createdTime, updatedTime);
+        this.imageResponse = new ImageResponse(imageId, userId, uid, fileName, data, Status.active, Privacy.Public,createdTime, updatedTime);
         this.algorithmResponse = new AlgorithmResponse(manualAlgorithmId, uid, url, createdTime, updatedTime);
     }
 

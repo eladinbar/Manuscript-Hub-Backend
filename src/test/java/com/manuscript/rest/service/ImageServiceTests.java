@@ -33,23 +33,10 @@ public class ImageServiceTests {
     private ImageModel imageModel;
 
     //test data
-    private
-    private
-    private
-    private
-    private
-    private
-    private
-    private
-    private
-    private
-    private
-    private
-    private
-    private
 
 
     @BeforeAll
+    @SuppressWarnings("unchecked")
     public void setup(){
         //service setup
         imageRequestMapper = (IRestMapper<ImageModel, ImageRequest>) Mockito.mock(IRestMapper.class);
@@ -68,9 +55,9 @@ public class ImageServiceTests {
         cal.set(Calendar.YEAR, 2023);
         cal.set(Calendar.MONTH, Calendar.JANUARY);
         cal.set(Calendar.DAY_OF_MONTH, 1);
-        createdTime = cal.getTime();
+        Date createdTime = cal.getTime();
         cal.set(Calendar.DAY_OF_MONTH, 3);
-        updatedTime = cal.getTime();
+        Date updatedTime = cal.getTime();
 
         //failcase data setup
 
@@ -93,17 +80,17 @@ public class ImageServiceTests {
         when(getAllPublicImages.getAllPublicImages()).thenReturn(listImageModel);
     }
 
-    @BeforeEach
-    public void beforeEach() {
-        //test model setup
-        imageModel = new ImageModel(imageId,uid,fileName,status,data);
-
-        //test request setup
-        imageRequest = new ImageResponse(imageId,userId,uid,fileName,data,status,createdTime,updatedTime);
-
-        //test response setup
-        imageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,createdTime,updatedTime);
-    }
+//    @BeforeEach
+//    public void beforeEach() {
+//        //test model setup
+//        imageModel = new ImageModel(imageId,uid,fileName,status,data);
+//
+//        //test request setup
+//        imageRequest = new ImageResponse(imageId,userId,uid,fileName,data,status,createdTime,updatedTime);
+//
+//        //test response setup
+//        imageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,createdTime,updatedTime);
+//    }
 
     @Test
     public void uploadDocument_Success() {}

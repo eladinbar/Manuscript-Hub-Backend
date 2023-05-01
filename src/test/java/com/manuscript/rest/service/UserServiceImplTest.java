@@ -317,7 +317,7 @@ public class UserServiceImplTest {
         Optional<UserModel> optUserModel = Optional.of(userModel);
 
         Mockito.when(getByIdUserUseCase.getById(any(UUID.class))).thenReturn(optUserModel);
-        doNothing().when(deleteUserById).deleteById(userModel);
+        doNothing().when(deleteUserById).deleteById(userModel.getId());
         //act
         //assert
         assertDoesNotThrow(() -> userService.deleteUser(userModel.getId()));
