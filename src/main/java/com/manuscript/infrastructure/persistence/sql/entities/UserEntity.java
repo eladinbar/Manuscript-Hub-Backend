@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "User")
 @Data
@@ -18,7 +17,6 @@ import javax.persistence.*;
 @SuperBuilder
 @Getter
 public class UserEntity extends BaseEntity {
-
     @Column(name = "uid", columnDefinition = "TEXT")
     private String uid;
     @Column(name = "email", columnDefinition = "TEXT")
@@ -33,9 +31,4 @@ public class UserEntity extends BaseEntity {
     private Status status;
     @Column(name = "phoneNumber", columnDefinition = "TEXT")
     private String phoneNumber;
-
-
-
-
-
 }

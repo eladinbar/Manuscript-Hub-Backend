@@ -5,8 +5,6 @@ import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryE
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, UserEntity> {
     @Override
