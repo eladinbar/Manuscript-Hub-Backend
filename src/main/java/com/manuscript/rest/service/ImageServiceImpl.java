@@ -1,13 +1,15 @@
 package com.manuscript.rest.service;
 
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageModel;
-import com.manuscript.core.usecase.custom.image.ICreateImage;
-import com.manuscript.core.usecase.custom.image.IGetAllImages;
-import com.manuscript.core.usecase.custom.image.IGetByIdImage;
+import com.manuscript.core.exceptions.NoImageFoundException;
+import com.manuscript.core.exceptions.UnauthorizedException;
+import com.manuscript.core.usecase.custom.image.*;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.ImageRequest;
 import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +24,16 @@ public class ImageServiceImpl implements IImageService {
     private final ICreateImage createImageUseCase;
     private final IGetAllImages getAllImagesUseCase;
     private final IGetByIdImage getByIdImageUseCase;
+    private final IUpdateImage updateImageUseCase;
+    private final IGetAllPublicImages getAllPublicImages;
 
     @Override
-    public void save(ImageRequest imageRequest) {
-        ImageModel model = imageRequestMapper.restToModel(imageRequest);
-        createImageUseCase.create(model);
+    public ImageResponse save(ImageRequest imageRequest) throws IllegalArgumentException, NoImageFoundException, UnauthorizedException{
+        ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
+        imageModel = createImageUseCase.create(imageModel);
+        ImageResponse imageResponse= imageResponseMapper.modelToRest(imageModel);
+        verifyPermission(imageRequest.getUid(), imageResponse.getUid(), imageResponse.getStatus());
+        return imageResponse;
     }
 
     @Override
@@ -41,8 +48,12 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public void update(ImageRequest imageRequest) {
-
+    public ImageResponse update(ImageRequest imageRequest) {
+        ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
+        imageModel = updateImageUseCase.update(imageModel);
+        ImageResponse imageResponse= imageResponseMapper.modelToRest(imageModel);
+        verifyPermission(imageRequest.getUid(), imageResponse.getUid(), imageResponse.getStatus());
+        return imageResponse;
     }
 
     @Override
@@ -56,4 +67,17 @@ public class ImageServiceImpl implements IImageService {
                 .filter(image ->
                        image.getUid() != null && image.getUid().equals(uid)).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ImageResponse> getAllPublicImages(){
+        return getAllPublicImages.getAllPublicImages().stream().map(imageResponseMapper::modelToRest).collect(Collectors.toList());
+    }
+
+    private void verifyPermission(String requestUid, String responseUid, Status responseStatus) throws NoImageFoundException, UnauthorizedException {
+        if(responseStatus.equals(Status.inactive))
+            throw new NoImageFoundException();
+        if(!requestUid.equals(responseUid))
+            throw new UnauthorizedException();
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.manuscript.infrastructure.persistence.nosql.impl;
 
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.domain.image.repository.IImageRepositoryService;
 import com.manuscript.infrastructure.persistence.nosql.documents.ImageDocument;
@@ -29,7 +30,14 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
     @Override
     public List<ImageModel> getAll() {
         List<ImageModel> result = new ArrayList<>();
-        repo.findAll().forEach(videoInfoEntity -> result.add(mapper.entityToModel(videoInfoEntity)));
+        repo.findAll().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
+        return result;
+    }
+
+    @Override
+    public List<ImageModel> getAllPublicImages() {
+        List<ImageModel> result = new ArrayList<>();
+        repo.getAllPublicImages().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
         return result;
     }
 
@@ -49,6 +57,6 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
 
     @Override
     public void deleteById(UUID id) {
-
+        repo.deleteById(id);
     }
 }
