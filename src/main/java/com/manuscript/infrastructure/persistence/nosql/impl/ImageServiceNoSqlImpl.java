@@ -37,7 +37,7 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
     @Override
     public List<ImageModel> getAllPublicImages() {
         List<ImageModel> result = new ArrayList<>();
-        repo.getAllPublicImages().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
+        repo.getImagesByPrivacy(Privacy.Public).forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
         return result;
     }
 
