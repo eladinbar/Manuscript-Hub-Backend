@@ -1,5 +1,6 @@
 package com.manuscript.rest.request;
 
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,8 +15,9 @@ import java.util.UUID;
 @SuperBuilder
 public class ImageRequest {
     UUID documentId;
-    String uid;
+    @NotNull String uid;
     @NotNull String fileName;
     Status status;
+    Privacy privacy;
     byte[] data;
 }

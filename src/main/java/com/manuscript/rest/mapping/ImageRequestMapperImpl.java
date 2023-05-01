@@ -16,6 +16,7 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
                 .documentId(imageModel.getId())
                 .status(imageModel.getStatus())
                 .uid(imageModel.getUid())
+                .privacy(imageModel.getPrivacy())
                 .build();
 
     }
@@ -30,6 +31,7 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .status(imageRequest.getStatus())
+                .privacy(imageRequest.getPrivacy())
                 .build();
     }
 }

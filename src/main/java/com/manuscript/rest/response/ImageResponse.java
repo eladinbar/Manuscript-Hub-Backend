@@ -1,5 +1,6 @@
 package com.manuscript.rest.response;
 
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class ImageResponse {
     String fileName;
     byte[] data;
     Status status;
+    Privacy privacy;
     Date createdTime;
     Date updatedTime;
 }

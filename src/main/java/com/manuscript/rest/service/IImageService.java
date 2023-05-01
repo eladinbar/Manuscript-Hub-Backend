@@ -13,4 +13,5 @@ public interface IImageService {
     ImageResponse update(ImageRequest imageRequest);
     List<ImageResponse> getAll();
     List<ImageResponse> getAllByUid(String uid);
+    List<ImageResponse> getAllPublicImages();
 }
