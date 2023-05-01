@@ -1,6 +1,6 @@
 package com.manuscript.rest.service.api;
 
-import com.manuscript.core.domain.common.enums.Role;
+import com.manuscript.core.domain.common.enums.*;
 import com.manuscript.rest.api.UserController;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
@@ -33,7 +33,7 @@ public class UserControllerTests {
     private final String invalidEmail = "emailgmail.com";
     private String name = "asd";
     private String phoneNumber = "234234";
-    private String status;
+    private Status status;
     private String uid = "";
     private Role role;
     private Date createdTime;
