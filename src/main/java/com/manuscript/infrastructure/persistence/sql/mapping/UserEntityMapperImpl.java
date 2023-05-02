@@ -5,35 +5,33 @@ import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryE
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, UserEntity> {
     @Override
     public UserEntity modelToEntity(UserModel userModel) {
         return UserEntity.builder()
-                .createdTime(userModel.getCreatedTime())
-                .updatedTime(userModel.getUpdatedTime())
+                .id(userModel.getId())
+                .uid(userModel.getUid())
                 .email(userModel.getEmail())
                 .name(userModel.getName())
-                .uid(userModel.getUid())
                 .role(userModel.getRole())
-                .phoneNumber(userModel.getPhoneNumber())
                 .status(userModel.getStatus())
-                .build();
+                .phoneNumber(userModel.getPhoneNumber())
+                .createdTime(userModel.getCreatedTime())
+                .updatedTime(userModel.getUpdatedTime()).build();
     }
 
     @Override
     public UserModel entityToModel(final UserEntity userEntity) {
         return UserModel.builder()
-                .createdTime(userEntity.getCreatedTime())
-                .updatedTime(userEntity.getUpdatedTime())
+                .id(userEntity.getId())
+                .uid(userEntity.getUid())
                 .email(userEntity.getEmail())
                 .name(userEntity.getName())
-                .status(userEntity.getStatus())
-                .uid(userEntity.getUid())
                 .role(userEntity.getRole())
+                .status(userEntity.getStatus())
                 .phoneNumber(userEntity.getPhoneNumber())
-                .build();
+                .createdTime(userEntity.getCreatedTime())
+                .updatedTime(userEntity.getUpdatedTime()).build();
     }
 }

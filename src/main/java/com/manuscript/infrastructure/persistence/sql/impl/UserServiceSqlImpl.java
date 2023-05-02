@@ -16,7 +16,6 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserServiceSqlImpl implements IUserRepositoryService {
-
     private final IUserRepo repo;
     private final IRepositoryEntityMapper<UserModel, UserEntity> mapper;
 
@@ -48,6 +47,7 @@ public class UserServiceSqlImpl implements IUserRepositoryService {
         }
         return Optional.empty();
     }
+
     @Override
     public Optional<UserModel> getByEmail(String email) {
         Optional<UserEntity> userEntityOptional = repo.findByEmail(email);
