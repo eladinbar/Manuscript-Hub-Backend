@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IInvitationRequestRepositoryService extends IBaseRepositoryService<InvitationRequestModel> {
-    List<InvitationRequestModel> getAllInvitation();
     Optional<InvitationRequestModel> getByUid(String uid);
 
     Optional<InvitationRequestModel> getByEmail(String email);

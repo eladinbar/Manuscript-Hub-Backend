@@ -4,7 +4,7 @@ import com.manuscript.core.domain.common.repository.IBaseRepositoryService;
 import com.manuscript.core.domain.invitation_request.models.InvitationRequestModel;
 import com.manuscript.core.usecase.common.GetAllUseCaseImpl;
 
-public class GetAllInvitationRequestsImpl extends GetAllUseCaseImpl<InvitationRequestModel> implements IGetAllInvitationRequest {
+public class GetAllInvitationRequestsImpl extends GetAllUseCaseImpl<InvitationRequestModel> implements IGetAllInvitationRequests {
 
     public GetAllInvitationRequestsImpl(IBaseRepositoryService<InvitationRequestModel> _serviceRepo) {
         super(_serviceRepo);

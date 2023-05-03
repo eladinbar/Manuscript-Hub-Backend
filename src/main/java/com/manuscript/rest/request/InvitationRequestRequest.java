@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -15,10 +16,10 @@ import java.util.UUID;
 @SuperBuilder
 public class InvitationRequestRequest {
     UUID id;
-    String uid;
-    String email;
-    String name;
-    Role role;
+    @NotNull String uid;
+    @NotNull String email;
+    @NotNull String name;
+    @NotNull Role role;
     Status status;
-    String phoneNumber;
+    @NotNull String phoneNumber;
 }

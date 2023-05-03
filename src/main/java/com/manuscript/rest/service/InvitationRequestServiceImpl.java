@@ -22,7 +22,7 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
     private final IRestMapper<InvitationRequestModel, InvitationRequestResponse> invitationResponseMapper;
     private final IRestMapper<InvitationRequestModel, InvitationRequestRequest> invitationRequestMapper;
     private final IGetByUidInvitationRequest iGetByUidInvitationRequest;
-    private final IGetAllInvitationRequest getAllInvitationRequest;
+    private final IGetAllInvitationRequests getAllInvitationRequest;
     private final IUpdateInvitationRequest updateInvitationRequest;
     private final IGetByEmailInvitationRequest getByEmailInvitationRequest;
     private final ICreateInvitationRequest createInvitationRequest;

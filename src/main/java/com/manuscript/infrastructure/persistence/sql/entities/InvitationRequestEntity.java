@@ -18,14 +18,14 @@ import javax.persistence.*;
 @SuperBuilder
 @Getter
 public class InvitationRequestEntity extends BaseEntity {
-    @Column(name = "uid", columnDefinition = "TEXT")
+    @Column(name = "uid", nullable = false, updatable = false, columnDefinition = "TEXT")
     private String uid;
-    @Column(name = "email", columnDefinition = "TEXT")
+    @Column(name = "email", nullable = false, updatable = false, columnDefinition = "TEXT")
     private String email;
-    @Column(name = "name", columnDefinition = "TEXT")
+    @Column(name = "name", nullable = false ,columnDefinition = "TEXT")
     private String name;
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private Role role;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

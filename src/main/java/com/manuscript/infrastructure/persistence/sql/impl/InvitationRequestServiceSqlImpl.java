@@ -28,6 +28,7 @@ public class InvitationRequestServiceSqlImpl implements IInvitationRequestReposi
 
     @Override
     public boolean existsById(UUID id) throws IllegalArgumentException {
+        //todo : need to implement
         return false;
     }
 
@@ -40,22 +41,18 @@ public class InvitationRequestServiceSqlImpl implements IInvitationRequestReposi
 
     @Override
     public void deleteById(UUID id) {
-
+        //todo : need to implement
     }
 
     @Override
     public void deleteAll() {
+        //todo : need to implement
 
     }
 
     @Override
     public Optional<InvitationRequestModel> getById(UUID id) throws IllegalArgumentException {
         return repo.findById(id).map(mapper::entityToModel);
-    }
-
-    @Override
-    public List<InvitationRequestModel> getAllInvitation() {
-        return getAll();
     }
 
     @Override

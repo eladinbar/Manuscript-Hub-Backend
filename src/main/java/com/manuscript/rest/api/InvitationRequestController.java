@@ -32,12 +32,19 @@ public class InvitationRequestController {
 
     @GetMapping("/acceptRequest/{email}")
     public List<InvitationRequestResponse> acceptRequest(@PathVariable String email) {
+        if (email.isEmpty()) {
+            requestService.getAllInvitations();
+        }
         return requestService.acceptRequest(email);
     }
 
     @GetMapping("/denyRequest/{email}")
     public List<InvitationRequestResponse> denyRequest(@PathVariable String email) {
+        if (email.isEmpty()) {
+            requestService.getAllInvitations();
+        }
         return requestService.denyRequest(email);
     }
+
 
 }
