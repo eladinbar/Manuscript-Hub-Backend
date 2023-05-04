@@ -1,7 +1,8 @@
 package com.manuscript.rest.mapping;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
-import com.manuscript.rest.request.AnnotationRequest;
+import com.manuscript.rest.forms.request.AnnotationRequest;
+import com.manuscript.rest.mapping.request.AnnotationRequestMapperImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

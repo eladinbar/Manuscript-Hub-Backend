@@ -1,24 +1,17 @@
 package com.manuscript.rest.api;
 
-import com.google.firebase.auth.FirebaseAuthException;
-import com.manuscript.core.domain.common.enums.Role;
-import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.infrastructure.firebase.security.Roles.RoleConstants;
-import com.manuscript.rest.request.UserRequest;
-import com.manuscript.rest.response.ImageResponse;
-import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.forms.request.UserRequest;
+import com.manuscript.rest.forms.response.UserResponse;
 import com.manuscript.rest.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.RoleNotFoundException;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_USER;
-import static lombok.Lombok.checkNotNull;
 
 @RestController
 @RequestMapping(RESOURCE_USER)

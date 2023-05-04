@@ -3,15 +3,12 @@ package com.manuscript.rest.mapping;
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageModel;
-import com.manuscript.core.exceptions.UnauthorizedException;
-import com.manuscript.rest.request.ImageRequest;
-import com.manuscript.rest.response.ImageResponse;
+import com.manuscript.rest.forms.request.ImageRequest;
+import com.manuscript.rest.mapping.request.ImageRequestMapperImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.Calendar;
 import java.util.Date;

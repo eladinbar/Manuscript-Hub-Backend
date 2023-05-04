@@ -8,7 +8,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,12 +18,16 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ImageModel {
-    private UUID id;
-    @NotNull private String uid;
-    private String fileName;
-    private byte[] data;
-    private Status status;
-    private Privacy privacy;
+    private UUID imageId;
+    @NotNull private String userId;
+    @NotNull private String title;
+    private String author;
+    private Date publicationDate;
+    private String description;
+    private ArrayList<String> tags;
+    private ArrayList<String> sharedUserIds;
+    @NotNull private Status status;
+    @NotNull private Privacy privacy;
     @NotNull private Date createdTime;
     @NotNull private Date updatedTime;
 }

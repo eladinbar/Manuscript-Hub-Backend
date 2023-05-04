@@ -1,4 +1,4 @@
-package com.manuscript.rest.response;
+package com.manuscript.rest.forms.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.manuscript.rest.service;
 
-import com.manuscript.rest.request.AnnotationRequest;
-import com.manuscript.rest.response.AnnotationResponse;
+import com.manuscript.rest.forms.request.AnnotationRequest;
+import com.manuscript.rest.forms.response.AnnotationResponse;
 
 import java.util.List;
 import java.util.UUID;

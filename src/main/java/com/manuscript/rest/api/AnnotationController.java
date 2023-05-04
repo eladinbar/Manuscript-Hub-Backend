@@ -1,7 +1,7 @@
 package com.manuscript.rest.api;
 
-import com.manuscript.rest.request.AnnotationRequest;
-import com.manuscript.rest.response.AnnotationResponse;
+import com.manuscript.rest.forms.request.AnnotationRequest;
+import com.manuscript.rest.forms.response.AnnotationResponse;
 import com.manuscript.rest.service.IAnnotationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

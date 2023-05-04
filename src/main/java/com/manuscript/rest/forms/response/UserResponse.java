@@ -1,6 +1,6 @@
-package com.manuscript.rest.response;
+package com.manuscript.rest.forms.response;
 
-import com.manuscript.core.domain.common.enums.Privacy;
+import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,14 +14,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class ImageResponse {
-    UUID documentId;
-    UUID userId;
+public class UserResponse {
+
+    UUID id;
     String uid;
-    String fileName;
-    byte[] data;
+    String email;
+    String name;
+    Role role;
     Status status;
-    Privacy privacy;
+    String phoneNumber;
     Date createdTime;
     Date updatedTime;
 }

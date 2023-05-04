@@ -1,13 +1,13 @@
-package com.manuscript.rest.mapping;
+package com.manuscript.rest.mapping.request;
 
 
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.rest.request.UserRequest;
+import com.manuscript.rest.forms.request.UserRequest;
+import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest> {

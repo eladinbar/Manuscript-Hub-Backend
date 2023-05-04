@@ -1,27 +1,21 @@
 package com.manuscript.rest.api;
 
-import com.google.cloud.ByteArray;
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.exceptions.UnauthorizedException;
-import com.manuscript.rest.request.ImageRequest;
-import com.manuscript.rest.api.ImageController;
-import com.manuscript.rest.response.AnnotationResponse;
-import com.manuscript.rest.response.ImageResponse;
+import com.manuscript.rest.forms.request.ImageRequest;
+import com.manuscript.rest.forms.response.ImageResponse;
 import com.manuscript.rest.service.IImageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.mockito.internal.stubbing.BaseStubbing;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import java.util.Calendar;
 import java.util.Date;

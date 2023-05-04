@@ -1,7 +1,8 @@
-package com.manuscript.rest.mapping;
+package com.manuscript.rest.mapping.response;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
-import com.manuscript.rest.response.AnnotationResponse;
+import com.manuscript.rest.forms.response.AnnotationResponse;
+import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 @Service

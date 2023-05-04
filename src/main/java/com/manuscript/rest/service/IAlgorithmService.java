@@ -1,7 +1,7 @@
 package com.manuscript.rest.service;
 
-import com.manuscript.rest.request.AlgorithmRequest;
-import com.manuscript.rest.response.AlgorithmResponse;
+import com.manuscript.rest.forms.request.AlgorithmRequest;
+import com.manuscript.rest.forms.response.AlgorithmResponse;
 
 import java.util.UUID;
 

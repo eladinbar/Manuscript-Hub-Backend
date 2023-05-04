@@ -1,8 +1,9 @@
-package com.manuscript.rest.mapping;
+package com.manuscript.rest.mapping.response;
 
 
 import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.forms.response.UserResponse;
+import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 @Service

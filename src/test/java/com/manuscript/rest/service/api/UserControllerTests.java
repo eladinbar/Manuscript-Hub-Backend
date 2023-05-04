@@ -2,8 +2,8 @@ package com.manuscript.rest.service.api;
 
 import com.manuscript.core.domain.common.enums.*;
 import com.manuscript.rest.api.UserController;
-import com.manuscript.rest.request.UserRequest;
-import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.forms.request.UserRequest;
+import com.manuscript.rest.forms.response.UserResponse;
 import com.manuscript.rest.service.IUserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,8 @@
-package com.manuscript.rest.mapping;
+package com.manuscript.rest.mapping.request;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
-import com.manuscript.rest.request.AnnotationRequest;
+import com.manuscript.rest.forms.request.AnnotationRequest;
+import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.manuscript.rest.request;
+package com.manuscript.rest.forms.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

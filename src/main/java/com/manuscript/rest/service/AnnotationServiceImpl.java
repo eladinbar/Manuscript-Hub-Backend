@@ -6,9 +6,9 @@ import com.manuscript.core.exceptions.NoAnnotationFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
 import com.manuscript.core.usecase.custom.annotation.*;
 import com.manuscript.rest.mapping.IRestMapper;
-import com.manuscript.rest.request.AnnotationRequest;
-import com.manuscript.rest.response.AnnotationResponse;
-import com.manuscript.rest.response.ImageResponse;
+import com.manuscript.rest.forms.request.AnnotationRequest;
+import com.manuscript.rest.forms.response.AnnotationResponse;
+import com.manuscript.rest.forms.response.ImageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,8 @@
-package com.manuscript.rest.mapping;
+package com.manuscript.rest.mapping.request;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
-import com.manuscript.rest.request.AlgorithmRequest;
+import com.manuscript.rest.forms.request.AlgorithmRequest;
+import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

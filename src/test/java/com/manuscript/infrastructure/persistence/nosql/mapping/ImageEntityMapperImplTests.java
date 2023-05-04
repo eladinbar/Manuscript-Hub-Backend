@@ -5,8 +5,6 @@ import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.infrastructure.persistence.nosql.documents.ImageDocument;
 import com.manuscript.infrastructure.persistence.nosql.service.IImageUtils;
-import com.manuscript.rest.mapping.ImageRequestMapperImpl;
-import com.manuscript.rest.request.ImageRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

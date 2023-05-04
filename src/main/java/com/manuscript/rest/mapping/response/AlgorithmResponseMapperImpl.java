@@ -1,7 +1,8 @@
-package com.manuscript.rest.mapping;
+package com.manuscript.rest.mapping.response;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
-import com.manuscript.rest.response.AlgorithmResponse;
+import com.manuscript.rest.forms.response.AlgorithmResponse;
+import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 @Service
