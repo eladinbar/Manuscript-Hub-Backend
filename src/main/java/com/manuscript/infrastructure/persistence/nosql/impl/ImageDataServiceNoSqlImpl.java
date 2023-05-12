@@ -1,15 +1,10 @@
 package com.manuscript.infrastructure.persistence.nosql.impl;
 
-import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.domain.image.models.ImageDataModel;
-import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.domain.image.repository.IImageDataRepositoryService;
-import com.manuscript.core.exceptions.NoImageFoundException;
+import com.manuscript.infrastructure.persistence.nosql.common.mapping.IRepositoryDocumentMapper;
 import com.manuscript.infrastructure.persistence.nosql.documents.ImageDataDocument;
 import com.manuscript.infrastructure.persistence.nosql.repositories.IImageDataRepo;
-import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
-import com.manuscript.infrastructure.persistence.sql.entities.AnnotationEntity;
-import com.manuscript.infrastructure.persistence.sql.repositories.IImageRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,19 +17,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ImageDataServiceNoSqlImpl implements IImageDataRepositoryService {
     private final IImageDataRepo repo;
-    private final IRepositoryEntityMapper<ImageDataModel, ImageDataDocument> mapper;
+    private final IRepositoryDocumentMapper<ImageDataModel, ImageDataDocument> mapper;
 
     @Override
     public ImageDataModel save(ImageDataModel imageDataModel) throws IllegalArgumentException {
-        ImageDataDocument imageDataDocument = mapper.modelToEntity(imageDataModel);
+        ImageDataDocument imageDataDocument = mapper.modelToDocument(imageDataModel);
         imageDataDocument = repo.save(imageDataDocument);
-        ImageDataModel result = mapper.entityToModel(imageDataDocument);
+        ImageDataModel result = mapper.documentToModel(imageDataDocument);
         return result;
-    }
-
-    @Override
-    public boolean existsById(UUID id) throws IllegalArgumentException {
-        return repo.existsById(id);
     }
 
     @Override
@@ -42,7 +32,7 @@ public class ImageDataServiceNoSqlImpl implements IImageDataRepositoryService {
         Optional<ImageDataDocument> optionalImageDataDocument = repo.findById(id);
         if (!optionalImageDataDocument.isPresent())
             return Optional.empty();
-        ImageDataModel imageDataModel = mapper.entityToModel(optionalImageDataDocument.get());
+        ImageDataModel imageDataModel = mapper.documentToModel(optionalImageDataDocument.get());
         return Optional.of(imageDataModel);
     }
 
@@ -51,9 +41,17 @@ public class ImageDataServiceNoSqlImpl implements IImageDataRepositoryService {
         List<ImageDataDocument> imageDataDocumentList = repo.findAllByImageId(imageId);
         List<ImageDataModel> imageDataModelList = new ArrayList<>();
         for (ImageDataDocument imageDataDocument : imageDataDocumentList) {
-            imageDataModelList.add(mapper.entityToModel(imageDataDocument));
+            imageDataModelList.add(mapper.documentToModel(imageDataDocument));
         }
         return imageDataModelList;
+    }
+
+    @Override
+    public void deleteById(UUID id) { }
+
+    @Override
+    public boolean existsById(UUID id) throws IllegalArgumentException {
+        return repo.existsById(id);
     }
 
     @Override
@@ -62,12 +60,5 @@ public class ImageDataServiceNoSqlImpl implements IImageDataRepositoryService {
     }
 
     @Override
-    public void deleteById(UUID id) {
-
-    }
-
-    @Override
-    public void deleteAll() {
-
-    }
+    public void deleteAll() { }
 }

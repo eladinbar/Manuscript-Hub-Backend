@@ -75,7 +75,7 @@ public class ImageController {
 
     @PutMapping("/updateDocument")
     public ResponseEntity<ImageResponse> updateDocument(@RequestBody ImageRequest imageRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        checkNotNull(imageRequest,false);
+        checkRequestNotNull(imageRequest,false);
         ImageResponse imageResponse = imageService.update(imageRequest);
         return ResponseEntity.ok(imageResponse);
     }
@@ -138,7 +138,7 @@ public class ImageController {
             throw new IllegalArgumentException("User ID can't be null.");
     }
 
-    private void checkNotNull(ImageRequest imageRequest, boolean newRequest) throws IllegalArgumentException{
+    private void checkRequestNotNull(ImageRequest imageRequest, boolean newRequest) throws IllegalArgumentException{
         if(newRequest) {
             if (Stream.of(imageRequest.getUserId(),
                     imageRequest.getTitle(), imageRequest.getStatus(), imageRequest.getPrivacy()).anyMatch(Objects::isNull))

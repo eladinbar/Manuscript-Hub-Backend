@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -24,8 +25,8 @@ public class ImageResponse {
     String author;
     Date publicationDate;
     String description;
-    ArrayList<String> tags;
-    ArrayList<String> sharedUserIds;
+    List<String> tags;
+    List<String> sharedUserIds;
     @NotNull Status status;
     @NotNull Privacy privacy;
     Date createdTime;

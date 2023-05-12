@@ -34,8 +34,8 @@ public class ImageServiceImpl implements IImageService {
     private final IGetByIdImage getByIdImageUseCase;
     private final IGetAllByImageIdImageDatas getAllByImageIdImagesDataUseCase;
     private final IGetAllByUidImages getAllByUidImagesUseCase;
-    private final IGetAllPublicImages getAllPublicImages;
-    private final IGetAllSharedImages getAllSharedImages;
+    private final IGetAllPublicImages getAllPublicImagesUseCase;
+    private final IGetAllSharedImages getAllSharedImagesUseCase;
     private final IDeleteByIdImage deleteByIdImageUseCase;
     private final IDeleteByIdImageData deleteByIdImageDataUseCase;
 
@@ -94,21 +94,21 @@ public class ImageServiceImpl implements IImageService {
     @Override
     public List<ImageResponse> getAllByUid(String userId) throws IllegalArgumentException, NoUserFoundException {
         List<ImageModel> imageModelList = getAllByUidImagesUseCase.getAllByUidImages(userId);
-        List<ImageResponse> imageResponseList = ImageResponseListToModelList(imageModelList);
+        List<ImageResponse> imageResponseList = ImageModelListToResponseList(imageModelList);
         return imageResponseList;
     }
 
     @Override
     public List<ImageResponse> getAllPublicImages() {
-        List<ImageModel> imageModelList = getAllPublicImages.getAllPublicImages();
-        List<ImageResponse> imageResponseList = ImageResponseListToModelList(imageModelList);
+        List<ImageModel> imageModelList = getAllPublicImagesUseCase.getAllPublicImages();
+        List<ImageResponse> imageResponseList = ImageModelListToResponseList(imageModelList);
         return imageResponseList;
     }
 
     @Override
     public List<ImageResponse> getAllSharedImages(String userId) throws IllegalArgumentException, NoUserFoundException {
-        List<ImageModel> imageModelList = getAllSharedImages.getAllSharedImages(userId);
-        List<ImageResponse> imageResponseList = ImageResponseListToModelList(imageModelList);
+        List<ImageModel> imageModelList = getAllSharedImagesUseCase.getAllSharedImages(userId);
+        List<ImageResponse> imageResponseList = ImageModelListToResponseList(imageModelList);
         return imageResponseList;
     }
 
@@ -122,7 +122,7 @@ public class ImageServiceImpl implements IImageService {
         //TODO: implement delete
     }
 
-    private List<ImageResponse> ImageResponseListToModelList(List<ImageModel> imageModelList){
+    private List<ImageResponse> ImageModelListToResponseList(List<ImageModel> imageModelList){
         List<ImageResponse> imageResponseList = new ArrayList<>();
         for (ImageModel imageModel : imageModelList){
             ImageResponse imageResponse = imageResponseMapper.modelToRest(imageModel);

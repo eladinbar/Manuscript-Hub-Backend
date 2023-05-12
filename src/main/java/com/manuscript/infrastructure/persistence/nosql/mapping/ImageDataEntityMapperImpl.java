@@ -1,6 +1,7 @@
 package com.manuscript.infrastructure.persistence.nosql.mapping;
 
 import com.manuscript.core.domain.image.models.ImageDataModel;
+import com.manuscript.infrastructure.persistence.nosql.common.mapping.IRepositoryDocumentMapper;
 import com.manuscript.infrastructure.persistence.nosql.documents.ImageDataDocument;
 import com.manuscript.infrastructure.persistence.nosql.service.IImageUtils;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
@@ -12,11 +13,11 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class ImageDataEntityMapperImpl implements IRepositoryEntityMapper<ImageDataModel, ImageDataDocument> {
+public class ImageDataEntityMapperImpl implements IRepositoryDocumentMapper<ImageDataModel, ImageDataDocument> {
     private final IImageUtils imageUtils;
 
     @Override
-    public ImageDataDocument modelToEntity(ImageDataModel imageDataModel) {
+    public ImageDataDocument modelToDocument(ImageDataModel imageDataModel) {
         if (imageDataModel.getImageDataId() == null) {
             imageDataModel.setImageDataId(UUID.randomUUID());
         }
@@ -32,7 +33,7 @@ public class ImageDataEntityMapperImpl implements IRepositoryEntityMapper<ImageD
     }
 
     @Override
-    public ImageDataModel entityToModel(ImageDataDocument imageDataDocument) {
+    public ImageDataModel documentToModel(ImageDataDocument imageDataDocument) {
         if (imageDataDocument.getId() == null) {
             imageDataDocument.setId(UUID.randomUUID());
         }
