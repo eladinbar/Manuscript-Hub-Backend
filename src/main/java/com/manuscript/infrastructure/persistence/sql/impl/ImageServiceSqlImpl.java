@@ -1,10 +1,11 @@
-package com.manuscript.infrastructure.persistence.nosql.impl;
+package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.domain.image.repository.IImageRepositoryService;
-import com.manuscript.infrastructure.persistence.nosql.documents.ImageDocument;
-import com.manuscript.infrastructure.persistence.nosql.repositories.IImageRepo;
+import com.manuscript.infrastructure.persistence.nosql.documents.ImageDataDocument;
+import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
+import com.manuscript.infrastructure.persistence.sql.repositories.IImageRepo;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,18 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class ImageServiceNoSqlImpl implements IImageRepositoryService {
+public class ImageServiceSqlImpl implements IImageRepositoryService {
     private final IImageRepo repo;
-    private final IRepositoryEntityMapper<ImageModel, ImageDocument> mapper;
+    private final IRepositoryEntityMapper<ImageModel, ImageEntity> mapper;
 
     @Override
     public ImageModel save(ImageModel imageModel) throws IllegalArgumentException {
-        final ImageDocument toSave = mapper.modelToEntity(imageModel);
-        final ImageDocument result = repo.save(toSave);
-        return mapper.entityToModel(result);
+        if (imageModel.getImageId() == null) {
+            imageModel.setImageId(UUID.randomUUID());
+        }
+        ImageEntity imageEntity = mapper.modelToEntity(imageModel);
+        imageEntity = repo.save(imageEntity);
+        return mapper.entityToModel(imageEntity);
     }
 
     @Override
@@ -39,6 +43,16 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
         List<ImageModel> result = new ArrayList<>();
         repo.getImagesByPrivacy(Privacy.Public).forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
         return result;
+    }
+
+    @Override
+    public List<ImageModel> getAllByUidImages(String userId) {
+        return null; //TODO
+    }
+
+    @Override
+    public List<ImageModel> getAllSharedImages(String userId) {
+        return null; //TODO
     }
 
     @Override

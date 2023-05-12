@@ -24,8 +24,8 @@ public class ImageModel {
     private String author;
     private Date publicationDate;
     private String description;
-    private ArrayList<String> tags;
-    private ArrayList<String> sharedUserIds;
+    private List<String> tags;
+    private List<String> sharedUserIds;
     @NotNull private Status status;
     @NotNull private Privacy privacy;
     @NotNull private Date createdTime;

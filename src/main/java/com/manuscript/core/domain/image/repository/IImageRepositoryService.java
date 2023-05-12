@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface IImageRepositoryService extends IBaseRepositoryService<ImageModel> {
     List<ImageModel> getAllPublicImages();
+    List<ImageModel> getAllByUidImages(String userId);
+    List<ImageModel> getAllSharedImages(String userId);
 }

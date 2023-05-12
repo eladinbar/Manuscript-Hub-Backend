@@ -5,6 +5,6 @@ import com.manuscript.core.domain.image.models.ImageDataModel;
 import java.util.List;
 import java.util.UUID;
 
-public interface IGetAllByImageIdImagesData {
+public interface IGetAllByImageIdImageDatas {
     List<ImageDataModel> getAllByImageId(UUID imageId);
 }

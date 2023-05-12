@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -33,7 +32,7 @@ public class ImageServiceImpl implements IImageService {
     private final ICreateImageData createImageDataUseCase;
     private final IUpdateImage updateImageUseCase;
     private final IGetByIdImage getByIdImageUseCase;
-    private final IGetAllByImageIdImagesData getAllByImageIdImagesDataUseCase;
+    private final IGetAllByImageIdImageDatas getAllByImageIdImagesDataUseCase;
     private final IGetAllByUidImages getAllByUidImagesUseCase;
     private final IGetAllPublicImages getAllPublicImages;
     private final IGetAllSharedImages getAllSharedImages;
@@ -115,6 +114,11 @@ public class ImageServiceImpl implements IImageService {
 
     @Override
     public void deleteById(UUID imageId, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        //TODO: implement delete
+    }
+
+    @Override
+    public void deleteDataById(UUID imageDataId, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         //TODO: implement delete
     }
 

@@ -24,6 +24,7 @@ public interface IImageService {
     List<ImageResponse> getAllPublicImages();
     List<ImageResponse> getAllSharedImages(String userId)                           throws IllegalArgumentException, NoUserFoundException;
     void deleteById(UUID imageId, String userId)                                    throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    void deleteDataById(UUID imageDataId, String userId)                            throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
 
 
 

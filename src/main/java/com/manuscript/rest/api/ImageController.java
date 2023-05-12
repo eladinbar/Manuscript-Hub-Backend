@@ -122,7 +122,12 @@ public class ImageController {
         checkUserIdNotNull(userId);
         imageService.deleteById(imageId, userId);
     }
-
+    @DeleteMapping("/deleteDocumentDataById/{imageId}/{userId}")
+    public void deleteDocumentDataById(@PathVariable UUID imageDataId, @PathVariable String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
+        checkImageIdNotNull(imageDataId);
+        checkUserIdNotNull(userId);
+        imageService.deleteDataById(imageDataId, userId);
+    }
     private void checkImageIdNotNull(UUID id) throws IllegalArgumentException{
         if (id == null)
             throw new IllegalArgumentException("Image ID can't be null.");

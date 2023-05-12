@@ -5,7 +5,10 @@ import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.infrastructure.persistence.nosql.common.documents.BaseDocument;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.UUID;
 
 
 @Document(collection = "documents")
@@ -15,10 +18,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @SuperBuilder
 @Getter
-public class ImageDocument extends BaseDocument {
-    private String fileName;
-    private Status status;
-    private Privacy privacy;
-    private String uid;
-    private String data;
+public class ImageDataDocument extends BaseDocument {
+    @NotNull private UUID imageId;
+    @NotNull private String fileName;
+    @NotNull private String data;
+    @NotNull private int index;
 }
