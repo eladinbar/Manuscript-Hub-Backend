@@ -39,7 +39,7 @@ public class AnnotationEntityMapperTests {
     private final String email = "email@gmail.com";
     private final String name = "name";
     private final String phoneNumber = "0541234567";
-    private final Status status = Status.active;
+    private final Status status = Status.Enabled;
     private final Role role = Role.User;
     private UserEntity user;
     private final String url = "url";

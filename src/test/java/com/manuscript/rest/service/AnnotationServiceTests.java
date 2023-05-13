@@ -107,7 +107,7 @@ public class AnnotationServiceTests {
                 .build();
 
         // set up image and algorithm responses
-        this.imageResponse = new ImageResponse(imageId, userId, uid, fileName, data, Status.active, Privacy.Public,createdTime, updatedTime);
+        this.imageResponse = new ImageResponse(imageId, userId, uid, fileName, data, Status.Enabled, Privacy.Public,createdTime, updatedTime);
         this.algorithmResponse = new AlgorithmResponse(manualAlgorithmId, uid, url, createdTime, updatedTime);
     }
 

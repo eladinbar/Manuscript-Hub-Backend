@@ -32,7 +32,7 @@ public class UserRequestMapperImpl implements IRestMapper<UserModel, UserRequest
                 .email(rest.getEmail())
                 .name(rest.getName())
                 .role(rest.getRole())
-                .status(Status.active)
+                .status(Status.Enabled)
                 .phoneNumber(rest.getPhoneNumber())
                 .createdTime(new Date())
                 .updatedTime(new Date())

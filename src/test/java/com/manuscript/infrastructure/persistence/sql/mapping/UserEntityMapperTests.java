@@ -28,7 +28,7 @@ public class UserEntityMapperTests {
     private final String invalidEmail = "emailgmail.com";
     private String name = "asd";
     private String phoneNumber = "234234";
-    private Status status = Status.active;
+    private Status status = Status.Enabled;
     private String uid = "5555888";
     private Role role = Role.User;
     private Date createdTime;

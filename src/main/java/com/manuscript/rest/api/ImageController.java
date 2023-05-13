@@ -1,7 +1,5 @@
 package com.manuscript.rest.api;
 
-import com.manuscript.core.domain.common.enums.Privacy;
-import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.exceptions.FailedUploadException;
 import com.manuscript.core.exceptions.NoImageFoundException;
 import com.manuscript.core.exceptions.NoUserFoundException;
@@ -18,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
@@ -30,33 +29,18 @@ import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
 public class ImageController {
     private final IImageService imageService;
 
-    @PostMapping("/uploadDocument/{userId}")
-    public ResponseEntity<ImageResponse> uploadDocument(@RequestParam("file") List<MultipartFile> filesList,
-                                                        @PathVariable String userId,
-                                                        @RequestParam("title") String title,
-                                                        @RequestParam("author") String author,
-                                                        @RequestParam("publicationDate") Date publicationDate,
-                                                        @RequestParam("description") String description,
-                                                        @RequestParam("tags") List<String> tags)
+    @PostMapping("/uploadDocument")
+    public ResponseEntity<ImageResponse> uploadDocument( @RequestBody ImageRequest imageRequest)
                                             throws IllegalArgumentException, IOException, FailedUploadException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        if (filesList == null || filesList.isEmpty())
-            throw new IllegalArgumentException("Invalid document data.");
-        checkUserIdNotNull(userId);
-        ImageRequest imageRequest = ImageRequest.builder()
-                .userId(userId)
-                .title(title)
-                .author(author)
-                .publicationDate(publicationDate)
-                .description(description)
-                .tags((ArrayList<String>) tags)
-                .status(Status.active)
-                .privacy(Privacy.Private)
-                .build();
-        ImageResponse imageResponse = imageService.save(imageRequest);
-        if (imageResponse == null)
-            throw new FailedUploadException("failed to upload image information.");
-        uploadDocumentData(filesList, imageResponse.getImageId());
-        return ResponseEntity.ok(imageResponse);
+//        checkRequestNotNull(imageRequest, true);
+//        if (filesList == null || filesList.isEmpty())
+//            throw new IllegalArgumentException("Invalid document data.");
+//        ImageResponse imageResponse = imageService.save(imageRequest);
+//        if (imageResponse == null)
+//            throw new FailedUploadException("failed to upload image information.");
+//        uploadDocumentData(filesList, imageResponse.getImageId());
+//        return ResponseEntity.ok(imageResponse);
+        return null;
     }
 
     private void uploadDocumentData(List<MultipartFile> filesList, UUID imageId) throws IOException, IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
@@ -141,11 +125,11 @@ public class ImageController {
 
     private void checkRequestNotNull(ImageRequest imageRequest, boolean newRequest) throws IllegalArgumentException{
         if(newRequest) {
-            if (Stream.of(imageRequest.getUserId(),
+            if (Stream.of(imageRequest.getUid(),
                     imageRequest.getTitle(), imageRequest.getStatus(), imageRequest.getPrivacy()).anyMatch(Objects::isNull))
                 throw new IllegalArgumentException("Image request's fields must not be null.");
         }
-        else if(Stream.of(imageRequest.getImageId(),  imageRequest.getUserId(),
+        else if(Stream.of(imageRequest.getId(),  imageRequest.getUid(),
                 imageRequest.getTitle(), imageRequest.getStatus(), imageRequest.getPrivacy()).anyMatch(Objects::isNull))
             throw new IllegalArgumentException("Image request's fields must not be null.");
     }

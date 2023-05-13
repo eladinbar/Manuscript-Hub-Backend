@@ -45,7 +45,7 @@ public class ImageServiceImpl implements IImageService {
         ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
         imageModel = createImageUseCase.create(imageModel);
         ImageResponse imageResponse = imageResponseMapper.modelToRest(imageModel);
-        verifyOwnerPermissions(imageRequest.getUserId(), imageResponse.getUserId(), imageResponse.getStatus());
+        verifyOwnerPermissions(imageRequest.getUid(), imageResponse.getUserId(), imageResponse.getStatus());
         return imageResponse;
     }
 
@@ -62,8 +62,8 @@ public class ImageServiceImpl implements IImageService {
         ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
         imageModel = updateImageUseCase.update(imageModel);
         ImageResponse imageResponse= imageResponseMapper.modelToRest(imageModel);
-        verifyOwnerPermissions(imageRequest.getUserId(), imageResponse.getUserId(), imageResponse.getStatus());
-        verifySharedPermissions(imageRequest.getUserId(), imageResponse.getUserId(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
+        verifyOwnerPermissions(imageRequest.getUid(), imageResponse.getUserId(), imageResponse.getStatus());
+        verifySharedPermissions(imageRequest.getUid(), imageResponse.getUserId(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
         return imageResponse;
     }
     @Override
@@ -132,7 +132,7 @@ public class ImageServiceImpl implements IImageService {
     }
 
     private void verifyOwnerPermissions(String requestOwnerId, String responseOwnerId, Status responseStatus) throws NoImageFoundException, UnauthorizedException {
-        if(responseStatus.equals(Status.inactive))
+        if(responseStatus.equals(Status.Disabled))
             throw new NoImageFoundException();
         if(!requestOwnerId.equals(responseOwnerId))
             throw new UnauthorizedException();

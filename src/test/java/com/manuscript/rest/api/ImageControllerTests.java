@@ -60,7 +60,7 @@ public class ImageControllerTests {
 
         //data setup
         fileName = "fileName";
-        status = Status.active;
+        status = Status.Enabled;
         uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
         multipartFile = new MockMultipartFile(fileName,data);
         imageId = UUID.randomUUID();

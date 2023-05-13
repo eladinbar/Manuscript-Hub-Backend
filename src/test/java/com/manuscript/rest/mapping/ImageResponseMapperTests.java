@@ -46,7 +46,7 @@ public class ImageResponseMapperTests {
         uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
         imageId = UUID.randomUUID();
         userId = UUID.randomUUID();
-        status = Status.active;
+        status = Status.Enabled;
         privacy = Privacy.Public;
 
         //date setup
