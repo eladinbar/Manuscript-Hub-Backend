@@ -117,8 +117,8 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     private void verifyImagePermission(UUID imageId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
-        ImageResponse image = imageService.getById(imageId);
-        if(!image.getUid().equals(uid))
+        ImageResponse image = imageService.getById(imageId,uid);
+        if(!image.getUserId().equals(uid))
             throw new UnauthorizedException();
     }
 }

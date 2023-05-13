@@ -128,6 +128,7 @@ public class ImageController {
         checkUserIdNotNull(userId);
         imageService.deleteDataById(imageDataId, userId);
     }
+
     private void checkImageIdNotNull(UUID id) throws IllegalArgumentException{
         if (id == null)
             throw new IllegalArgumentException("Image ID can't be null.");
