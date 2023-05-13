@@ -5,8 +5,10 @@ import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.domain.image.repository.IImageRepositoryService;
 import com.manuscript.core.exceptions.NoImageFoundException;
 import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
+import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IImageRepo;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
+import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class ImageServiceSqlImpl implements IImageRepositoryService {
+    private final IUserRepo userRepo;
     private final IImageRepo repo;
     private final IRepositoryEntityMapper<ImageModel, ImageEntity> mapper;
 
@@ -62,7 +65,12 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
 
     @Override
     public List<ImageModel> getAllByUidImages(String userId) throws IllegalArgumentException {
-        List<ImageEntity> imageEntityList = repo.getImagesByUid(userId);
+        Optional<UserEntity> optionalUser = userRepo.findByUid(userId);
+        if(!optionalUser.isPresent())
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity user = optionalUser.get();
+        List<ImageEntity> imageEntityList = repo.getImagesByUser(user);
         List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
@@ -76,7 +84,12 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
 
     @Override
     public List<ImageModel> getAllSharedImages(String userId) {
-        List<ImageEntity> imageEntityList = repo.getImagesByPrivacyAndUid(Privacy.Shared, userId);
+        Optional<UserEntity> optionalUser = userRepo.findByUid(userId);
+        if(!optionalUser.isPresent())
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity user = optionalUser.get();
+        List<ImageEntity> imageEntityList = repo.getImagesByPrivacyAndUser(Privacy.Shared, user);
         List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
