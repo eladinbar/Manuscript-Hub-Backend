@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface IImageRepo extends JpaRepository<ImageEntity, UUID> {
-    List<ImageEntity> getImagesByUser(UserEntity user);
-    List<ImageEntity> getImagesByPrivacy(Privacy privacy);
-    List<ImageEntity> getImagesByPrivacyAndUser(Privacy privacy, UserEntity user);
+    List<ImageEntity> findAllByUser(UserEntity user);
+    List<ImageEntity> findAllByPrivacy(Privacy privacy);
+    List<ImageEntity> findAllByPrivacyAndUser(Privacy privacy, UserEntity user);
 }

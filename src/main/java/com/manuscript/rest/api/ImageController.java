@@ -29,26 +29,25 @@ import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
 public class ImageController {
     private final IImageService imageService;
 
-    @PostMapping("/uploadDocument")
-    public ResponseEntity<ImageResponse> uploadDocument( @RequestBody ImageRequest imageRequest)
+    @PostMapping("/uploadDocumentMetadata")
+    public ResponseEntity<ImageResponse> uploadDocumentMetadata(@RequestBody ImageRequest imageRequest)
                                             throws IllegalArgumentException, IOException, FailedUploadException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-//        checkRequestNotNull(imageRequest, true);
-//        if (filesList == null || filesList.isEmpty())
-//            throw new IllegalArgumentException("Invalid document data.");
-//        ImageResponse imageResponse = imageService.save(imageRequest);
-//        if (imageResponse == null)
-//            throw new FailedUploadException("failed to upload image information.");
-//        uploadDocumentData(filesList, imageResponse.getImageId());
-//        return ResponseEntity.ok(imageResponse);
-        return null;
+        checkRequestNotNull(imageRequest, true);
+        ImageResponse imageResponse = imageService.save(imageRequest);
+        if (imageResponse == null)
+            throw new FailedUploadException("failed to upload image information.");
+        return ResponseEntity.ok(imageResponse);
     }
 
-    private void uploadDocumentData(List<MultipartFile> filesList, UUID imageId) throws IOException, IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        checkImageIdNotNull(imageId);
+    @PostMapping("/uploadDocumentData/{metadataId}")
+    public void uploadDocumentData(@RequestParam("file") List<MultipartFile> filesList, @PathVariable UUID metadataId) throws IOException, IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        if (filesList == null || filesList.isEmpty())
+            throw new IllegalArgumentException("Invalid document data.");
+        checkIdNotNull(metadataId);
         for (int index = 0; index<filesList.toArray().length; index++) {
             MultipartFile file = filesList.get(index);
             ImageDataRequest imageDataRequest = ImageDataRequest.builder()
-                    .imageId(imageId)
+                    .imageId(metadataId)
                     .data(file.getBytes())
                     .fileName(Objects.requireNonNull(file.getOriginalFilename()))
                     .index(index)
@@ -57,69 +56,69 @@ public class ImageController {
         }
     }
 
-    @PutMapping("/updateDocument")
-    public ResponseEntity<ImageResponse> updateDocument(@RequestBody ImageRequest imageRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+    @PutMapping("/updateDocumentMetadata")
+    public ResponseEntity<ImageResponse> updateDocumentMetadata(@RequestBody ImageRequest imageRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkRequestNotNull(imageRequest,false);
         ImageResponse imageResponse = imageService.update(imageRequest);
         return ResponseEntity.ok(imageResponse);
     }
 
-    @GetMapping("/getDocumentById/{imageId}/{userId}")
-    public ResponseEntity<ImageResponse> getDocumentById(@PathVariable UUID imageId, @PathVariable String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        checkImageIdNotNull(imageId);
-        checkUserIdNotNull(userId);
-        ImageResponse result = imageService.getById(imageId, userId);
+    @GetMapping("/getDocumentMetadataById/{metadataId}/{uid}")
+    public ResponseEntity<ImageResponse> getDocumentMetadataById(@PathVariable UUID metadataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        checkIdNotNull(metadataId);
+        checkUserIdNotNull(uid);
+        ImageResponse result = imageService.getById(metadataId, uid);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getDocumentData/{imageId}/{userId}")
-    public ResponseEntity<List<ImageDataResponse>> getDocumentData(@PathVariable UUID imageId, @PathVariable String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        checkImageIdNotNull(imageId);
-        checkUserIdNotNull(userId);
-        List<ImageDataResponse> result = imageService.getAllByIdData(imageId, userId);
+    @GetMapping("/getDocumentDataById/{documentDataId}/{uid}")
+    public ResponseEntity<List<ImageDataResponse>> getDocumentDataById(@PathVariable UUID documentDataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        checkIdNotNull(documentDataId);
+        checkUserIdNotNull(uid);
+        List<ImageDataResponse> result = imageService.getAllByIdData(documentDataId, uid);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAllDocumentsByUid/{userId}")
-    public ResponseEntity<List<ImageResponse>> getAllDocumentsByUid(@PathVariable String userId) throws IllegalArgumentException, NoUserFoundException{
-        checkUserIdNotNull(userId);
-        List<ImageResponse> result = imageService.getAllByUid(userId);
+    @GetMapping("/getAllDocumentsMetadataByUid/{uid}")
+    public ResponseEntity<List<ImageResponse>> getAllDocumentsMetadataByUid(@PathVariable String uid) throws IllegalArgumentException, NoUserFoundException{
+        checkUserIdNotNull(uid);
+        List<ImageResponse> result = imageService.getAllByUid(uid);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAllPublicDocuments")
-    public ResponseEntity<List<ImageResponse>> getAllPublicDocuments(){
+    @GetMapping("/getAllPublicDocumentsMetadata")
+    public ResponseEntity<List<ImageResponse>> getAllPublicDocumentsMetadata(){
         List<ImageResponse> result = imageService.getAllPublicImages();
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAllSharedDocuments/{userId}")
-    public ResponseEntity<List<ImageResponse>> getAllSharedDocuments(@PathVariable String userId) throws IllegalArgumentException, NoUserFoundException  {
-        checkUserIdNotNull(userId);
-        List<ImageResponse> result = imageService.getAllSharedImages(userId);
+    @GetMapping("/getAllSharedDocumentsMetadataByUid/{uid}")
+    public ResponseEntity<List<ImageResponse>> getAllSharedDocumentsMetadataByUid(@PathVariable String uid) throws IllegalArgumentException, NoUserFoundException  {
+        checkUserIdNotNull(uid);
+        List<ImageResponse> result = imageService.getAllSharedImages(uid);
         return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping("/deleteDocumentById/{imageId}/{userId}")
-    public void deleteDocumentById(@PathVariable UUID imageId, @PathVariable String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
-        checkImageIdNotNull(imageId);
-        checkUserIdNotNull(userId);
-        imageService.deleteById(imageId, userId);
+    @DeleteMapping("/deleteDocumentMetadataById/{metadataId}/{uid}")
+    public void deleteDocumentMetadataById(@PathVariable UUID metadataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
+        checkIdNotNull(metadataId);
+        checkUserIdNotNull(uid);
+        imageService.deleteById(metadataId, uid);
     }
-    @DeleteMapping("/deleteDocumentDataById/{imageId}/{userId}")
-    public void deleteDocumentDataById(@PathVariable UUID imageDataId, @PathVariable String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
-        checkImageIdNotNull(imageDataId);
-        checkUserIdNotNull(userId);
-        imageService.deleteDataById(imageDataId, userId);
+    @DeleteMapping("/deleteDocumentDataById/{documentDataId}/{uid}")
+    public void deleteDocumentDataById(@PathVariable UUID documentDataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
+        checkIdNotNull(documentDataId);
+        checkUserIdNotNull(uid);
+        imageService.deleteDataById(documentDataId, uid);
     }
 
-    private void checkImageIdNotNull(UUID id) throws IllegalArgumentException{
+    private void checkIdNotNull(UUID id) throws IllegalArgumentException{
         if (id == null)
             throw new IllegalArgumentException("Image ID can't be null.");
     }
 
-    private void checkUserIdNotNull(String id) throws IllegalArgumentException{
-        if (id == null)
+    private void checkUserIdNotNull(String uid) throws IllegalArgumentException{
+        if (uid == null)
             throw new IllegalArgumentException("User ID can't be null.");
     }
 
@@ -133,5 +132,4 @@ public class ImageController {
                 imageRequest.getTitle(), imageRequest.getStatus(), imageRequest.getPrivacy()).anyMatch(Objects::isNull))
             throw new IllegalArgumentException("Image request's fields must not be null.");
     }
-
 }

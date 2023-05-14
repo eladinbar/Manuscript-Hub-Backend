@@ -13,8 +13,8 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
     @Override
     public ImageRequest modelToRest(ImageModel imageModel) {
         return ImageRequest.builder()
-                .id(imageModel.getImageId())
-                .uid(imageModel.getUserId())
+                .id(imageModel.getId())
+                .uid(imageModel.getUid())
                 .title(imageModel.getTitle())
                 .author(imageModel.getAuthor())
                 .publicationDate(imageModel.getPublicationDate())
@@ -29,8 +29,8 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
     @Override
     public ImageModel restToModel(ImageRequest imageRequest) {
         return ImageModel.builder()
-                .imageId(imageRequest.getId())
-                .userId(imageRequest.getUid())
+                .id(imageRequest.getId())
+                .uid(imageRequest.getUid())
                 .title(imageRequest.getTitle())
                 .author(imageRequest.getAuthor())
                 .publicationDate(imageRequest.getPublicationDate())

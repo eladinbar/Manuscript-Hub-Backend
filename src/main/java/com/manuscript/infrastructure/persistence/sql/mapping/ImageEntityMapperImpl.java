@@ -14,9 +14,9 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
     @Override
     public ImageEntity modelToEntity(ImageModel imageModel) {
         UserEntity mockUserEntity = new UserEntity();
-        mockUserEntity.setUid(imageModel.getUserId());
+        mockUserEntity.setUid(imageModel.getUid());
         return ImageEntity.builder()
-                .id(imageModel.getImageId())
+                .id(imageModel.getId())
                 .user(mockUserEntity)
                 .title(imageModel.getTitle())
                 .author(imageModel.getAuthor())
@@ -34,8 +34,8 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel
     @Override
     public ImageModel entityToModel(ImageEntity imageEntity) {
         return ImageModel.builder()
-                .imageId(imageEntity.getId())
-                .userId(imageEntity.getUser().getUid())
+                .id(imageEntity.getId())
+                .uid(imageEntity.getUser().getUid())
                 .title(imageEntity.getTitle())
                 .author(imageEntity.getAuthor())
                 .publicationDate(imageEntity.getPublicationDate())

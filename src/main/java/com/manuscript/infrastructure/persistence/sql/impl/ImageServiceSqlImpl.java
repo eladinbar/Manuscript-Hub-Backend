@@ -26,17 +26,20 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
 
     @Override
     public ImageModel save(ImageModel imageModel) throws IllegalArgumentException {
-        if (imageModel.getImageId() == null) {
-            imageModel.setImageId(UUID.randomUUID());
-        }
         ImageEntity imageEntity = mapper.modelToEntity(imageModel);
+        Optional<UserEntity> optionalUser = userRepo.findByUid(imageEntity.getUser().getUid());
+        if(!optionalUser.isPresent())
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity user = optionalUser.get();
+        imageEntity.setUser(user);
         imageEntity = repo.save(imageEntity);
         return mapper.entityToModel(imageEntity);
     }
 
     @Override
     public ImageModel update(ImageModel imageModel) throws IllegalArgumentException, NoImageFoundException {
-        Optional<ImageEntity> optionalImageEntity = repo.findById(imageModel.getImageId());
+        Optional<ImageEntity> optionalImageEntity = repo.findById(imageModel.getId());
         if (!optionalImageEntity.isPresent()){
             throw new NoImageFoundException();
         }
@@ -70,14 +73,14 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
-        List<ImageEntity> imageEntityList = repo.getImagesByUser(user);
+        List<ImageEntity> imageEntityList = repo.findAllByUser(user);
         List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
 
     @Override
     public List<ImageModel> getAllPublicImages() {
-        List<ImageEntity> imageEntityList = repo.getImagesByPrivacy(Privacy.Public);
+        List<ImageEntity> imageEntityList = repo.findAllByPrivacy(Privacy.Public);
         List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
@@ -89,7 +92,7 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
-        List<ImageEntity> imageEntityList = repo.getImagesByPrivacyAndUser(Privacy.Shared, user);
+        List<ImageEntity> imageEntityList = repo.findAllByPrivacyAndUser(Privacy.Shared, user);
         List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }

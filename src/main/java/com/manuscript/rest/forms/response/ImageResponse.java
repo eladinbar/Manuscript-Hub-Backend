@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -18,9 +17,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class ImageResponse {
-
-    UUID imageId;
-    @NotNull String userId;
+    UUID id;
+    @NotNull String uid;
     @NotNull String title;
     String author;
     Date publicationDate;
@@ -31,5 +29,4 @@ public class ImageResponse {
     @NotNull Privacy privacy;
     Date createdTime;
     Date updatedTime;
-
 }

@@ -10,8 +10,8 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
     @Override
     public ImageResponse modelToRest(ImageModel imageModel) {
         return ImageResponse.builder()
-                .imageId(imageModel.getImageId())
-                .userId(imageModel.getUserId())
+                .id(imageModel.getId())
+                .uid(imageModel.getUid())
                 .title(imageModel.getTitle())
                 .author(imageModel.getAuthor())
                 .publicationDate(imageModel.getPublicationDate())
@@ -28,8 +28,8 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
     @Override
     public ImageModel restToModel(ImageResponse imageResponse) {
         return ImageModel.builder()
-                .imageId(imageResponse.getImageId())
-                .userId(imageResponse.getUserId())
+                .id(imageResponse.getId())
+                .uid(imageResponse.getUid())
                 .title(imageResponse.getTitle())
                 .author(imageResponse.getAuthor())
                 .publicationDate(imageResponse.getPublicationDate())

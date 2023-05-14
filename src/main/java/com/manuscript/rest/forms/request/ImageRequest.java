@@ -4,6 +4,7 @@ import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @SuperBuilder
 public class ImageRequest {
     UUID id;
@@ -25,6 +27,4 @@ public class ImageRequest {
     List<String> sharedUserIds;
     @NotNull Status status;
     @NotNull Privacy privacy;
-    Date createdTime;
-    Date updatedTime;
 }

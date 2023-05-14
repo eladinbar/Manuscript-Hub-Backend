@@ -45,7 +45,7 @@ public class ImageServiceImpl implements IImageService {
         ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
         imageModel = createImageUseCase.create(imageModel);
         ImageResponse imageResponse = imageResponseMapper.modelToRest(imageModel);
-        verifyOwnerPermissions(imageRequest.getUid(), imageResponse.getUserId(), imageResponse.getStatus());
+        verifyOwnerPermissions(imageRequest.getUid(), imageResponse.getUid(), imageResponse.getStatus());
         return imageResponse;
     }
 
@@ -62,8 +62,8 @@ public class ImageServiceImpl implements IImageService {
         ImageModel imageModel = imageRequestMapper.restToModel(imageRequest);
         imageModel = updateImageUseCase.update(imageModel);
         ImageResponse imageResponse= imageResponseMapper.modelToRest(imageModel);
-        verifyOwnerPermissions(imageRequest.getUid(), imageResponse.getUserId(), imageResponse.getStatus());
-        verifySharedPermissions(imageRequest.getUid(), imageResponse.getUserId(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
+        verifyOwnerPermissions(imageRequest.getUid(), imageResponse.getUid(), imageResponse.getStatus());
+        verifySharedPermissions(imageRequest.getUid(), imageResponse.getUid(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
         return imageResponse;
     }
     @Override
@@ -73,15 +73,15 @@ public class ImageServiceImpl implements IImageService {
             throw new NoImageFoundException();
         ImageModel imageModel = optionalImageModel.get();
         ImageResponse imageResponse = imageResponseMapper.modelToRest(imageModel);
-        verifyOwnerPermissions(userId, imageResponse.getUserId(), imageResponse.getStatus());
-        verifySharedPermissions(userId, imageResponse.getUserId(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
+        verifyOwnerPermissions(userId, imageResponse.getUid(), imageResponse.getStatus());
+        verifySharedPermissions(userId, imageResponse.getUid(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
         return imageResponse;
     }
 
     public List<ImageDataResponse> getAllByIdData(UUID imageId, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         ImageResponse imageResponse = getById(imageId, userId);
-        verifyOwnerPermissions(userId, imageResponse.getUserId(), imageResponse.getStatus());
-        verifySharedPermissions(userId, imageResponse.getUserId(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
+        verifyOwnerPermissions(userId, imageResponse.getUid(), imageResponse.getStatus());
+        verifySharedPermissions(userId, imageResponse.getUid(), imageResponse.getPrivacy(), imageResponse.getSharedUserIds());
         List<ImageDataModel> imageDataModelList = getAllByImageIdImagesDataUseCase.getAllByImageId(imageId);
         List<ImageDataResponse> imageDataResponseList = new ArrayList<>();
         for (ImageDataModel imageDataModel : imageDataModelList){

@@ -102,7 +102,7 @@ public class ImageControllerTests {
     public void uploadDocument_Success() {
         try{
             //act
-            ResponseEntity<ImageResponse> responseEntity = imageController.uploadDocument(multipartFile,uid);
+            ResponseEntity<ImageResponse> responseEntity = imageController.uploadDocumentMetadata(multipartFile,uid);
             ImageResponse imageResponse = responseEntity.getBody();
             //assert
             assertTrue(responseEntity.hasBody());
@@ -124,20 +124,20 @@ public class ImageControllerTests {
     public void uploadDocument_InvalidData() {
         MockMultipartFile invalidMultipartFile = new MockMultipartFile(fileName,invalidData);
         imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
+        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocumentMetadata(invalidMultipartFile,uid));
     }
 
     @Test
     public void uploadDocument_InvalidFilename() {
         MockMultipartFile invalidMultipartFile = new MockMultipartFile(invalidFileName,data);
         imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
+        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocumentMetadata(invalidMultipartFile,uid));
     }
 
     @Test
     public void uploadDocumentInvalidUid() {
         imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(multipartFile,invalidUid));
+        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocumentMetadata(multipartFile,invalidUid));
     }
 
 
@@ -145,7 +145,7 @@ public class ImageControllerTests {
     @Test
     public void updateDocument_Success() {
         //act
-        ResponseEntity<ImageResponse> responseEntity = imageController.updateDocument(imageRequest);
+        ResponseEntity<ImageResponse> responseEntity = imageController.updateDocumentMetadata(imageRequest);
         ImageResponse imageResponse = responseEntity.getBody();
         //assert
         assertTrue(responseEntity.hasBody());
@@ -162,37 +162,37 @@ public class ImageControllerTests {
     @Test
     public void updateDocument_InvalidId() {
         imageRequest.setDocumentId(invalidImageId);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
+        assertThrows(UnauthorizedException.class, () -> imageController.updateDocumentMetadata(imageRequest));
     }
 
     @Test
     public void updateDocument_InvalidUid() {
         imageRequest.setUid(invalidUid);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
+        assertThrows(UnauthorizedException.class, () -> imageController.updateDocumentMetadata(imageRequest));
     }
 
     @Test
     public void updateDocument_InvalidFileName() {
         imageRequest.setFileName(invalidFileName);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
+        assertThrows(UnauthorizedException.class, () -> imageController.updateDocumentMetadata(imageRequest));
     }
 
     @Test
     public void updateDocument_InvalidData() {
         imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
+        assertThrows(UnauthorizedException.class, () -> imageController.updateDocumentMetadata(imageRequest));
     }
 
 
 //---------------------deleteDocumentById tests:---------------------
     @Test
     public void deleteDocumentById_Success() {
-        imageController.deleteDocumentById(userId);
+        imageController.deleteDocumentMetadataById(userId);
     }
 
     @Test
     public void deleteDocumentById_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.deleteDocumentById(invalidUserId));
+        assertThrows(UnauthorizedException.class, () -> imageController.deleteDocumentMetadataById(invalidUserId));
     }
 
 
@@ -200,7 +200,7 @@ public class ImageControllerTests {
     @Test
     public void getDocumentById_Success() {
         //act
-        ResponseEntity<byte[]> responseEntity = imageController.getDocumentById(userId);
+        ResponseEntity<byte[]> responseEntity = imageController.getDocumentMetadataById(userId);
         byte[] bytesResponse = responseEntity.getBody();
         //assert
         assertTrue(responseEntity.hasBody());
@@ -210,7 +210,7 @@ public class ImageControllerTests {
 
     @Test
     public void getDocumentById_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.getDocumentById(invalidUserId));
+        assertThrows(UnauthorizedException.class, () -> imageController.getDocumentMetadataById(invalidUserId));
     }
 
 
@@ -218,7 +218,7 @@ public class ImageControllerTests {
     @Test
     public void getAllDocumentsByUid_Success() {
         //act
-        ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllDocumentsByUid(uid);
+        ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllDocumentsMetadataByUid(uid);
         List<ImageResponse> imageResponseList = responseEntity.getBody();
         ImageResponse imageResponse = imageResponseList.get(0);
         //assert
@@ -236,7 +236,7 @@ public class ImageControllerTests {
 
     @Test
     public void getAllDocumentsByUid_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.getAllDocumentsByUid(invalidUid));
+        assertThrows(UnauthorizedException.class, () -> imageController.getAllDocumentsMetadataByUid(invalidUid));
     }
 
 

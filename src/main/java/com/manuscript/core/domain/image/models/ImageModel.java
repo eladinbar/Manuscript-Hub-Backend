@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -18,8 +17,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ImageModel {
-    private UUID imageId;
-    @NotNull private String userId;
+    private UUID id;
+    @NotNull private String uid;
     @NotNull private String title;
     private String author;
     private Date publicationDate;
