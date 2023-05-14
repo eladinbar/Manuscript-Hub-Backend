@@ -1,15 +1,15 @@
 package com.manuscript.rest.mapping.response;
 
 import com.manuscript.core.domain.image.models.ImageModel;
-import com.manuscript.rest.forms.response.ImageResponse;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageResponse> {
+public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageInfoResponse> {
     @Override
-    public ImageResponse modelToRest(ImageModel imageModel) {
-        return ImageResponse.builder()
+    public ImageInfoResponse modelToRest(ImageModel imageModel) {
+        return ImageInfoResponse.builder()
                 .id(imageModel.getId())
                 .uid(imageModel.getUid())
                 .title(imageModel.getTitle())
@@ -26,20 +26,20 @@ public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageRes
     }
 
     @Override
-    public ImageModel restToModel(ImageResponse imageResponse) {
+    public ImageModel restToModel(ImageInfoResponse imageInfoResponse) {
         return ImageModel.builder()
-                .id(imageResponse.getId())
-                .uid(imageResponse.getUid())
-                .title(imageResponse.getTitle())
-                .author(imageResponse.getAuthor())
-                .publicationDate(imageResponse.getPublicationDate())
-                .description(imageResponse.getDescription())
-                .tags(imageResponse.getTags())
-                .sharedUserIds(imageResponse.getSharedUserIds())
-                .status(imageResponse.getStatus())
-                .privacy(imageResponse.getPrivacy())
-                .createdTime(imageResponse.getCreatedTime())
-                .updatedTime(imageResponse.getUpdatedTime())
+                .id(imageInfoResponse.getId())
+                .uid(imageInfoResponse.getUid())
+                .title(imageInfoResponse.getTitle())
+                .author(imageInfoResponse.getAuthor())
+                .publicationDate(imageInfoResponse.getPublicationDate())
+                .description(imageInfoResponse.getDescription())
+                .tags(imageInfoResponse.getTags())
+                .sharedUserIds(imageInfoResponse.getSharedUserIds())
+                .status(imageInfoResponse.getStatus())
+                .privacy(imageInfoResponse.getPrivacy())
+                .createdTime(imageInfoResponse.getCreatedTime())
+                .updatedTime(imageInfoResponse.getUpdatedTime())
                 .build();
     }
 }

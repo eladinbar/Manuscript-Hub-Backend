@@ -8,7 +8,7 @@ import com.manuscript.core.usecase.custom.annotation.*;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.AnnotationRequest;
 import com.manuscript.rest.forms.response.AnnotationResponse;
-import com.manuscript.rest.forms.response.ImageResponse;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -86,7 +86,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
 
     private void verifyImagePermission(UUID imageId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
-        ImageResponse image = imageService.getById(imageId, uid);
+        ImageInfoResponse image = imageService.getById(imageId, uid);
         if(!image.getUid().equals(uid) || image.getStatus().equals(Status.Disabled))
             throw new UnauthorizedException();
     }

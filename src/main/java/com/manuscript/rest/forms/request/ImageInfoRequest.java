@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class ImageRequest {
+public class ImageInfoRequest {
     UUID id;
     @NotNull String uid;
     @NotNull String title;

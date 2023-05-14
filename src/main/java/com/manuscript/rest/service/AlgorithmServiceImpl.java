@@ -11,7 +11,7 @@ import com.manuscript.core.usecase.custom.algorithm.IUpdateAlgorithm;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.AlgorithmRequest;
 import com.manuscript.rest.forms.response.AlgorithmResponse;
-import com.manuscript.rest.forms.response.ImageResponse;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +117,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     private void verifyImagePermission(UUID imageId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
-        ImageResponse image = imageService.getById(imageId,uid);
+        ImageInfoResponse image = imageService.getById(imageId,uid);
         if(!image.getUid().equals(uid))
             throw new UnauthorizedException();
     }

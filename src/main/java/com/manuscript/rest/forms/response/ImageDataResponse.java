@@ -11,8 +11,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 public class ImageDataResponse {
-    UUID imageDataId;
-    @NotNull UUID imageId;
+    UUID id;
+    @NotNull UUID infoId;
     @NotNull String fileName;
     @NotNull byte[] data;
     @NotNull int index;

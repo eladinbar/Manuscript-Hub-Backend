@@ -3,8 +3,8 @@ package com.manuscript.rest.service;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.usecase.custom.image.*;
 import com.manuscript.rest.mapping.IRestMapper;
-import com.manuscript.rest.forms.request.ImageRequest;
-import com.manuscript.rest.forms.response.ImageResponse;
+import com.manuscript.rest.forms.request.ImageInfoRequest;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,15 +20,15 @@ public class ImageServiceTests {
 
     //test classes
     private ImageServiceImpl imageServiceImpl;
-    private IRestMapper<ImageModel, ImageRequest> imageRequestMapper;
-    private IRestMapper<ImageModel, ImageResponse> imageResponseMapper;
+    private IRestMapper<ImageModel, ImageInfoRequest> imageRequestMapper;
+    private IRestMapper<ImageModel, ImageInfoResponse> imageResponseMapper;
     private ICreateImage createImageUseCase;
     private IGetAllImages getAllImagesUseCase;
     private IGetByIdImage getByIdImageUseCase;
     private IUpdateImage updateImageUseCase;
     private IGetAllPublicImages getAllPublicImages;
-    private ImageRequest imageRequest;
-    private ImageResponse imageResponse;
+    private ImageInfoRequest imageInfoRequest;
+    private ImageInfoResponse imageInfoResponse;
     private ImageModel imageModel;
 
     //test data
@@ -38,8 +38,8 @@ public class ImageServiceTests {
     @SuppressWarnings("unchecked")
     public void setup(){
         //service setup
-        imageRequestMapper = (IRestMapper<ImageModel, ImageRequest>) Mockito.mock(IRestMapper.class);
-        imageResponseMapper = (IRestMapper<ImageModel, ImageResponse>) Mockito.mock(IRestMapper.class);
+        imageRequestMapper = (IRestMapper<ImageModel, ImageInfoRequest>) Mockito.mock(IRestMapper.class);
+        imageResponseMapper = (IRestMapper<ImageModel, ImageInfoResponse>) Mockito.mock(IRestMapper.class);
         createImageUseCase = Mockito.mock(ICreateImage.class);
         getAllImagesUseCase = Mockito.mock(IGetAllImages.class);
         getByIdImageUseCase = Mockito.mock(IGetByIdImage.class);
@@ -61,10 +61,10 @@ public class ImageServiceTests {
         //failcase data setup
 
         //mapper mocks
-        when(imageRequestMapper.restToModel(any(ImageRequest.class))).thenReturn(imageModel);
-        when(imageRequestMapper.modelToRest(any(ImageModel.class))).thenReturn(imageRequest);
-        when(imageResponseMapper.restToModel(any(ImageResponse.class))).thenReturn(imageModel);
-        when(imageResponseMapper.modelToRest(any(ImageModel.class))).thenReturn(imageResponse);
+        when(imageRequestMapper.restToModel(any(ImageInfoRequest.class))).thenReturn(imageModel);
+        when(imageRequestMapper.modelToRest(any(ImageModel.class))).thenReturn(imageInfoRequest);
+        when(imageResponseMapper.restToModel(any(ImageInfoResponse.class))).thenReturn(imageModel);
+        when(imageResponseMapper.modelToRest(any(ImageModel.class))).thenReturn(imageInfoResponse);
 
         //mock return data
         List<ImageModel> listImageModel = new ArrayList<>();

@@ -1,18 +1,18 @@
 package com.manuscript.rest.mapping.request;
 
 import com.manuscript.core.domain.image.models.ImageModel;
-import com.manuscript.rest.forms.request.ImageRequest;
+import com.manuscript.rest.forms.request.ImageInfoRequest;
 import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequest> {
+public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageInfoRequest> {
 
     @Override
-    public ImageRequest modelToRest(ImageModel imageModel) {
-        return ImageRequest.builder()
+    public ImageInfoRequest modelToRest(ImageModel imageModel) {
+        return ImageInfoRequest.builder()
                 .id(imageModel.getId())
                 .uid(imageModel.getUid())
                 .title(imageModel.getTitle())
@@ -27,18 +27,18 @@ public class ImageRequestMapperImpl implements IRestMapper<ImageModel, ImageRequ
     }
 
     @Override
-    public ImageModel restToModel(ImageRequest imageRequest) {
+    public ImageModel restToModel(ImageInfoRequest imageInfoRequest) {
         return ImageModel.builder()
-                .id(imageRequest.getId())
-                .uid(imageRequest.getUid())
-                .title(imageRequest.getTitle())
-                .author(imageRequest.getAuthor())
-                .publicationDate(imageRequest.getPublicationDate())
-                .description(imageRequest.getDescription())
-                .tags(imageRequest.getTags())
-                .sharedUserIds(imageRequest.getSharedUserIds())
-                .status(imageRequest.getStatus())
-                .privacy(imageRequest.getPrivacy())
+                .id(imageInfoRequest.getId())
+                .uid(imageInfoRequest.getUid())
+                .title(imageInfoRequest.getTitle())
+                .author(imageInfoRequest.getAuthor())
+                .publicationDate(imageInfoRequest.getPublicationDate())
+                .description(imageInfoRequest.getDescription())
+                .tags(imageInfoRequest.getTags())
+                .sharedUserIds(imageInfoRequest.getSharedUserIds())
+                .status(imageInfoRequest.getStatus())
+                .privacy(imageInfoRequest.getPrivacy())
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .build();

@@ -10,7 +10,7 @@ import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.AnnotationRequest;
 import com.manuscript.rest.forms.response.AlgorithmResponse;
 import com.manuscript.rest.forms.response.AnnotationResponse;
-import com.manuscript.rest.forms.response.ImageResponse;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +57,7 @@ public class AnnotationServiceTests {
     private final UUID userId = UUID.randomUUID();
     private final String fileName = "filename";
     private final byte[] data = {0};
-    private ImageResponse imageResponse;
+    private ImageInfoResponse imageInfoResponse;
     private final String url = "";
     private AlgorithmResponse algorithmResponse;
 
@@ -107,7 +107,7 @@ public class AnnotationServiceTests {
                 .build();
 
         // set up image and algorithm responses
-        this.imageResponse = new ImageResponse(imageId, userId, uid, fileName, data, Status.Enabled, Privacy.Public,createdTime, updatedTime);
+        this.imageInfoResponse = new ImageInfoResponse(imageId, userId, uid, fileName, data, Status.Enabled, Privacy.Public,createdTime, updatedTime);
         this.algorithmResponse = new AlgorithmResponse(manualAlgorithmId, uid, url, createdTime, updatedTime);
     }
 
@@ -120,7 +120,7 @@ public class AnnotationServiceTests {
                 content, startX, startY, endX, endY, createdTime, updatedTime);
 
         ////mock mappers, assisting services and create use case
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
         when(algorithmService.getById(any(UUID.class))).thenReturn(algorithmResponse);
         when(annotationRequestMapper.restToModel(any(AnnotationRequest.class))).thenReturn(annotationModel);
         when(createAnnotationUseCase.create(any(AnnotationModel.class))).thenReturn(annotationModel);
@@ -151,7 +151,7 @@ public class AnnotationServiceTests {
         newAnnotationRequest.setUid(invalidUid);
 
         ////mock image service
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
 
         //act
         //assert
@@ -177,7 +177,7 @@ public class AnnotationServiceTests {
         newAnnotationRequest.setAlgorithmId(invalidAlgorithmId);
 
         ////mock image and algorithm services
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
         when(algorithmService.getById(any(UUID.class))).thenThrow(NoAlgorithmFoundException.class);
 
         //act
@@ -195,7 +195,7 @@ public class AnnotationServiceTests {
                 content, startX, startY, endX, endY, createdTime, updatedTime);
 
         ////mock mappers, assisting services and create use case
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
         when(algorithmService.getById(any(UUID.class))).thenReturn(algorithmResponse);
         when(annotationRequestMapper.restToModel(any(AnnotationRequest.class))).thenReturn(annotationModel);
         when(updateAnnotationUseCase.update(any(AnnotationModel.class))).thenReturn(annotationModel);
@@ -225,7 +225,7 @@ public class AnnotationServiceTests {
         annotationRequest.setUid(invalidUid);
 
         ////mock image service
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
 
         //act
         //assert
@@ -251,7 +251,7 @@ public class AnnotationServiceTests {
         annotationRequest.setAlgorithmId(invalidAlgorithmId);
 
         ////mock image and algorithm services
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
         when(algorithmService.getById(any(UUID.class))).thenThrow(NoAlgorithmFoundException.class);
 
         //act
@@ -269,7 +269,7 @@ public class AnnotationServiceTests {
         List<AnnotationModel> annotationModels = new ArrayList<>();
 
         ////mock mappers, assisting services and create use case
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
         when(getAllByImageIdAnnotationsUseCase.getAllByImageId(any(UUID.class))).thenReturn(annotationModels);
         when(annotationResponseMapper.modelToRest(any(AnnotationModel.class))).thenReturn(annotationResponse);
 
@@ -287,7 +287,7 @@ public class AnnotationServiceTests {
         annotationRequest.setUid(invalidUid);
 
         /////mock image service
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
 
         //act
         //assert
@@ -315,7 +315,7 @@ public class AnnotationServiceTests {
     public void deleteSuccess() {
         //set up
         ////mock image service
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
 
         //act
         annotationService.delete(annotationRequest.getId(), annotationRequest.getImageId(), annotationRequest.getUid());
@@ -328,7 +328,7 @@ public class AnnotationServiceTests {
         annotationRequest.setId(invalidId);
 
         ////mock image service
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
 
         //act
         annotationService.delete(annotationRequest.getId(), annotationRequest.getImageId(), annotationRequest.getUid());
@@ -340,7 +340,7 @@ public class AnnotationServiceTests {
         annotationRequest.setUid(invalidUid);
 
         ////mock image service
-        when(imageService.getById(any(UUID.class))).thenReturn(imageResponse);
+        when(imageService.getById(any(UUID.class))).thenReturn(imageInfoResponse);
 
         //act
         //assert
