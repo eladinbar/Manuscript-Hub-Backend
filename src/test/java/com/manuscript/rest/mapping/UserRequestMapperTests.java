@@ -1,4 +1,4 @@
-package com.manuscript.rest.service.mapping;
+package com.manuscript.rest.mapping;
 
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.common.enums.Status;

@@ -1,10 +1,15 @@
-package com.manuscript.rest.service.api;
+package com.manuscript.rest.api;
 
 import com.manuscript.core.domain.common.enums.*;
+import com.manuscript.core.exceptions.NoUserFoundException;
+import com.manuscript.core.exceptions.UserAlreadyExistException;
+import com.manuscript.rest.api.AuthenticationController;
+import com.manuscript.infrastructure.firebase.service.IAuthenticationService;
 import com.manuscript.rest.api.UserController;
 import com.manuscript.rest.request.UserRequest;
 import com.manuscript.rest.response.UserResponse;
 import com.manuscript.rest.service.IUserService;
+import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +28,12 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserControllerTests {
+public class AuthenticationControllerTests {
+    private IAuthenticationService authService;
     private IUserService userService;
-    private UserController userController;
+    private AuthenticationController authController;
     private final UUID userId = UUID.randomUUID();
     private final UUID invalidUserId = UUID.fromString("00000000-98d6-42c7-aca8-763bf4cbfd23");
-
     private final String email = "email@gmail.com";
     private final String invalidEmail = "emailgmail.com";
     private String name = "asd";
@@ -53,7 +58,8 @@ public class UserControllerTests {
 
         // set up controller and mocked service
         userService = Mockito.mock(IUserService.class);
-        userController = new UserController(userService);
+        authService = Mockito.mock(IAuthenticationService.class);
+        authController = new AuthenticationController(authService, userService);
     }
 
     @BeforeEach
@@ -76,85 +82,78 @@ public class UserControllerTests {
                 .email(email)
                 .uid(uid)
                 .name(name)
+                .id(userId)
                 .phoneNumber(phoneNumber)
                 .newUser(false).build();    }
 
     @Test
-    public void getUserByIdTest_Success() {
+    public void login_Success() {
         //set up
-        when(userService.getById(any(UUID.class))).thenReturn(userResponse);
+        when(userService.getByUid(any(String.class))).thenReturn(userResponse);
 
         //act
-        ResponseEntity<UserResponse> response = userController.getUserById(userId);
+        ResponseEntity<UserResponse> response = authController.login(userRequest);
 
         //assert
         assertTrue(response.hasBody());
         UserResponse returnedResponse = response.getBody();
-        assertEquals(userResponse.getId(), returnedResponse.getId());
-        assertEquals(userResponse.getRole(), returnedResponse.getRole());
-        assertEquals(userResponse.getName(), returnedResponse.getName());
-        assertEquals(userResponse.getUid(), returnedResponse.getUid());
-        assertEquals(userResponse.getPhoneNumber(), returnedResponse.getPhoneNumber());
-        assertEquals(userResponse.getStatus(), returnedResponse.getStatus());
-        assertEquals(userResponse.getCreatedTime(), returnedResponse.getCreatedTime());
-        assertEquals(userResponse.getUpdatedTime(), returnedResponse.getUpdatedTime());
-        assertEquals(userResponse.getEmail(), returnedResponse.getEmail());
+        assertEquals(userRequest.getId(), returnedResponse.getId());
+        assertEquals(userRequest.getRole(), returnedResponse.getRole());
+        assertEquals(userRequest.getName(), returnedResponse.getName());
+        assertEquals(userRequest.getUid(), returnedResponse.getUid());
+        assertEquals(userRequest.getPhoneNumber(), returnedResponse.getPhoneNumber());
+        assertEquals(userRequest.getEmail(), returnedResponse.getEmail());
     }
     @Test
-    public void getUserByIdTest_NonExistent() {
+    public void login_UserNotFoundOnSQL() {
         //set up
-        when(userService.getById(any(UUID.class))).thenReturn(null);
+        when(userService.getByUid(any(String.class))).thenThrow(NoUserFoundException.class);
+        when(userService.save((any(UserRequest.class)))).thenReturn(userResponse);
 
         //act
-        ResponseEntity<UserResponse> response = userController.getUserById(userId);
-
-        //assert
-        assertFalse(response.hasBody());
-    }
-    @Test
-    public void updateTest_Success() {
-        //set up
-        when(userService.updateUser(any(UserRequest.class))).thenReturn(userResponse);
-
-        //act
-        ResponseEntity<UserResponse> response = userController.update(userRequest ,userId);
+        ResponseEntity<UserResponse> response = authController.login(userRequest);
 
         //assert
         assertTrue(response.hasBody());
         UserResponse returnedResponse = response.getBody();
-        assertEquals(userResponse.getId(), returnedResponse.getId());
-        assertEquals(userResponse.getRole(), returnedResponse.getRole());
-        assertEquals(userResponse.getName(), returnedResponse.getName());
-        assertEquals(userResponse.getUid(), returnedResponse.getUid());
-        assertEquals(userResponse.getPhoneNumber(), returnedResponse.getPhoneNumber());
-        assertEquals(userResponse.getStatus(), returnedResponse.getStatus());
-        assertEquals(userResponse.getCreatedTime(), returnedResponse.getCreatedTime());
-        assertEquals(userResponse.getUpdatedTime(), returnedResponse.getUpdatedTime());
-        assertEquals(userResponse.getEmail(), returnedResponse.getEmail());
+        assertEquals(userRequest.getId(), returnedResponse.getId());
+        assertEquals(userRequest.getRole(), returnedResponse.getRole());
+        assertEquals(userRequest.getName(), returnedResponse.getName());
+        assertEquals(userRequest.getUid(), returnedResponse.getUid());
+        assertEquals(userRequest.getPhoneNumber(), returnedResponse.getPhoneNumber());
+        assertEquals(userRequest.getEmail(), returnedResponse.getEmail());
+    }
+    @Test
+    public void register_Success() {
+        //set up
+        when(userService.save((any(UserRequest.class)))).thenReturn(userResponse);
 
+        //act
+        ResponseEntity<UserResponse> response = authController.register(userRequest);
+
+        //assert
+        assertTrue(response.hasBody());
+        UserResponse returnedResponse = response.getBody();
+        assertEquals(userRequest.getId(), returnedResponse.getId());
+        assertEquals(userRequest.getRole(), returnedResponse.getRole());
+        assertEquals(userRequest.getName(), returnedResponse.getName());
+        assertEquals(userRequest.getUid(), returnedResponse.getUid());
+        assertEquals(userRequest.getPhoneNumber(), returnedResponse.getPhoneNumber());
+        assertEquals(userRequest.getEmail(), returnedResponse.getEmail());
     }
 
     @Test
-    public void updateTest_NonExistent() {
+    public void register_Failure() {
         //set up
-        when(userService.updateUser(any(UserRequest.class))).thenReturn(null);
+        when(userService.save((any(UserRequest.class)))).thenThrow(UserAlreadyExistException.class);
 
         //act
-        ResponseEntity<UserResponse> response = userController.update(userRequest ,userId);
+        ResponseEntity<UserResponse> response = authController.register(userRequest);
 
         //assert
         assertFalse(response.hasBody());
     }
 
-    @Test
-    public void deleteTest_NullId() {
-        //set up
-        doNothing().when(userService).deleteUser(any(UUID.class));
-
-        //act
-        //assert
-        assertThrows(IllegalArgumentException.class, () -> userController.deleteUser(null));
-    }
 
 
 }

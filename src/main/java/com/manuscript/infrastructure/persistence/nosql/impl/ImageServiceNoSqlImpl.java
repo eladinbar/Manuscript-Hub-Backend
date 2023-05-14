@@ -30,7 +30,11 @@ public class ImageServiceNoSqlImpl implements IImageRepositoryService {
     @Override
     public List<ImageModel> getAll() {
         List<ImageModel> result = new ArrayList<>();
-        repo.findAll().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
+        try {
+            repo.findAll().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
         return result;
     }
 
