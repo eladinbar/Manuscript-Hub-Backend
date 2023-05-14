@@ -8,8 +8,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import net.coobird.thumbnailator.Thumbnails;
 
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,7 +35,8 @@ public class ImageController {
             throw new IllegalArgumentException("Invalid document data");
         if (uid == null)
             throw new IllegalArgumentException("User ID can't be null.");
-        ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(file.getBytes()).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
+        byte[] reSizedFile = resizeImage(file, 512, 512);
+        ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(reSizedFile).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
         ImageResponse imageResponse = imageService.save(imageRequest);
         return ResponseEntity.ok(imageResponse);
     }
@@ -83,5 +88,17 @@ public class ImageController {
                 imageRequest.getFileName(), imageRequest.getData()).anyMatch(Objects::isNull))
             throw new IllegalArgumentException("Image request's fields must not be null.");
     }
+
+
+        public byte[] resizeImage(MultipartFile originalImage, int width, int height) throws IOException {
+            try (InputStream in = originalImage.getInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                Thumbnails.of(in)
+                        .size(width, height)
+                        .outputFormat("jpg") // or another format
+                        .toOutputStream(out);
+                return out.toByteArray();
+            }
+        }
+
 
 }
