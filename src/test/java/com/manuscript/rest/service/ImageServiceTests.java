@@ -101,6 +101,7 @@ public class ImageServiceTests {
                 .fileName(fileName)
                 .status(status)
                 .privacy(privacy)
+                .data(data)
                 .createdTime(createdTime)
                 .updatedTime(updatedTime)
                 .build();
