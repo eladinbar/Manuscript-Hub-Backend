@@ -33,7 +33,7 @@ public class ImageController {
     public ResponseEntity<ImageInfoResponse> uploadImageInfo(@RequestBody ImageInfoRequest imageInfoRequest)
                                             throws IllegalArgumentException, IOException, FailedUploadException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkRequestNotNull(imageInfoRequest, true);
-        ImageInfoResponse imageInfoResponse = imageService.save(imageInfoRequest);
+        ImageInfoResponse imageInfoResponse = imageService.saveInfo(imageInfoRequest);
         if (imageInfoResponse == null)
             throw new FailedUploadException("Failed to upload image information.");
         return ResponseEntity.ok(imageInfoResponse);
@@ -59,7 +59,7 @@ public class ImageController {
     @PutMapping("/updateDocumentInfo")
     public ResponseEntity<ImageInfoResponse> updateImageInfo(@RequestBody ImageInfoRequest imageInfoRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkRequestNotNull(imageInfoRequest,false);
-        ImageInfoResponse imageInfoResponse = imageService.update(imageInfoRequest);
+        ImageInfoResponse imageInfoResponse = imageService.updateInfo(imageInfoRequest);
         return ResponseEntity.ok(imageInfoResponse);
     }
 
@@ -67,7 +67,15 @@ public class ImageController {
     public ResponseEntity<ImageInfoResponse> getImageInfoById(@PathVariable UUID imageInfoId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkIdNotNull(imageInfoId);
         checkUserIdNotNull(uid);
-        ImageInfoResponse result = imageService.getById(imageInfoId, uid);
+        ImageInfoResponse result = imageService.getByIdInfo(imageInfoId, uid);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/getDocumentDataById/{imageDataId}/{uid}")
+    public ResponseEntity<ImageDataResponse> getImageDataById(@PathVariable UUID imageDataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        checkIdNotNull(imageDataId);
+        checkUserIdNotNull(uid);
+        ImageDataResponse result = imageService.getByIdData(imageDataId, uid);
         return ResponseEntity.ok(result);
     }
 
@@ -75,14 +83,14 @@ public class ImageController {
     public ResponseEntity<List<ImageDataResponse>> getImageDatasByImageInfoId(@PathVariable UUID imageInfoId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkIdNotNull(imageInfoId);
         checkUserIdNotNull(uid);
-        List<ImageDataResponse> result = imageService.getAllByIdData(imageInfoId, uid);
+        List<ImageDataResponse> result = imageService.getAllByImageInfoIdImageData(imageInfoId, uid);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/getAllDocumentInfosByUid/{uid}")
     public ResponseEntity<List<ImageInfoResponse>> getAllImageInfosByUid(@PathVariable String uid) throws IllegalArgumentException, NoUserFoundException{
         checkUserIdNotNull(uid);
-        List<ImageInfoResponse> result = imageService.getAllByUid(uid);
+        List<ImageInfoResponse> result = imageService.getAllByUidImageInfos(uid);
         return ResponseEntity.ok(result);
     }
 
@@ -103,14 +111,14 @@ public class ImageController {
     public void deleteImageInfoById(@PathVariable UUID imageInfoId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
         checkIdNotNull(imageInfoId);
         checkUserIdNotNull(uid);
-        imageService.deleteById(imageInfoId, uid);
+        imageService.deleteByIdImageInfo(imageInfoId, uid);
     }
 
     @DeleteMapping("/deleteDocumentDataById/{imageDataId}/{uid}")
     public void deleteImageDataById(@PathVariable UUID imageDataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
         checkIdNotNull(imageDataId);
         checkUserIdNotNull(uid);
-        imageService.deleteDataById(imageDataId, uid);
+        imageService.deleteByIdImageData(imageDataId, uid);
     }
 
     private void checkIdNotNull(UUID id) throws IllegalArgumentException{

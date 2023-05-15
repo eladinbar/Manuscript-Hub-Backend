@@ -2,7 +2,7 @@ package com.manuscript.rest.mapping;
 
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.rest.forms.response.ImageInfoResponse;
 import com.manuscript.rest.mapping.response.ImageResponseMapperImpl;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,7 +22,7 @@ public class ImageInfoResponseMapperTests {
     //test classes
     private ImageResponseMapperImpl imageResponseMapperImpl;
     private ImageInfoResponse imageInfoResponse;
-    private ImageModel imageModel;
+    private ImageInfoModel imageInfoModel;
 
     //test data
     private String fileName;
@@ -65,7 +65,7 @@ public class ImageInfoResponseMapperTests {
         imageInfoResponse = new ImageInfoResponse(imageId, userId, uid, fileName, data, status, privacy, createdTime, updatedTime);
 
         //model setup
-        imageModel = ImageModel.builder()
+        imageInfoModel = ImageInfoModel.builder()
                 .id(imageId)
                 .uid(uid)
                 .fileName(fileName)
@@ -80,7 +80,7 @@ public class ImageInfoResponseMapperTests {
     @Test
     public void modelToRest_Success() {
         //act
-        ImageInfoResponse testImageInfoResponse = imageResponseMapperImpl.modelToRest(imageModel);
+        ImageInfoResponse testImageInfoResponse = imageResponseMapperImpl.modelToRest(imageInfoModel);
         //assert
         assertNotNull(testImageInfoResponse);
         assertEquals(uid, testImageInfoResponse.getUid());
@@ -93,13 +93,13 @@ public class ImageInfoResponseMapperTests {
     @Test
     public void restToModel_Success() {
         //act
-        ImageModel testImageModel = imageResponseMapperImpl.restToModel(imageInfoResponse);
+        ImageInfoModel testImageInfoModel = imageResponseMapperImpl.restToModel(imageInfoResponse);
         //assert
-        assertNotNull(testImageModel);
-        assertEquals(uid, testImageModel.getUid());
-        assertEquals(fileName, testImageModel.getFileName());
-        assertEquals(data, testImageModel.getData());
-        assertEquals(status, testImageModel.getStatus());
-        assertEquals(privacy, testImageModel.getPrivacy());
+        assertNotNull(testImageInfoModel);
+        assertEquals(uid, testImageInfoModel.getUid());
+        assertEquals(fileName, testImageInfoModel.getFileName());
+        assertEquals(data, testImageInfoModel.getData());
+        assertEquals(status, testImageInfoModel.getStatus());
+        assertEquals(privacy, testImageInfoModel.getPrivacy());
     }
 }

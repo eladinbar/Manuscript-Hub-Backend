@@ -87,7 +87,7 @@ public class AnnotationEntityMapperTests {
 
         // set up annotation model
         this.annotationModel = AnnotationModel.builder()
-                .id(id).uid(uid).imageId(imageId).algorithmId(algorithmId)
+                .id(id).uid(uid).imageDataId(imageId).algorithmId(algorithmId)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -199,7 +199,7 @@ public class AnnotationEntityMapperTests {
         assertNotNull(annotationModel);
         assertEquals(id, annotationModel.getId());
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(algorithmId, annotationModel.getAlgorithmId());
         assertEquals(content, annotationModel.getContent());
         assertEquals(startX, annotationModel.getStartX());
@@ -234,7 +234,7 @@ public class AnnotationEntityMapperTests {
         assertNotNull(annotationModel);
         assertEquals(id, annotationModel.getId());
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(algorithmId, annotationModel.getAlgorithmId());
         assertEquals(startX, annotationModel.getStartX());
         assertEquals(startY, annotationModel.getStartY());

@@ -1,6 +1,6 @@
 package com.manuscript.core.usecase.custom.image;
 
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.core.domain.image.repository.IImageRepositoryService;
 import lombok.AllArgsConstructor;
 
@@ -10,5 +10,5 @@ import java.util.List;
 public class GetAllSharedImagesImpl implements IGetAllSharedImages{
     private final IImageRepositoryService _serviceRepo;
     @Override
-    public List<ImageModel> getAllSharedImages(String userId) { return _serviceRepo.getAllSharedImages(userId); }
+    public List<ImageInfoModel> getAllSharedImages(String userId) { return _serviceRepo.getAllSharedImages(userId); }
 }

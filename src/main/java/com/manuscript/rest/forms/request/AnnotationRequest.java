@@ -14,7 +14,7 @@ import java.util.UUID;
 public class AnnotationRequest {
     UUID id;
     String uid;
-    UUID imageId;
+    UUID imageDataId;
     UUID algorithmId;
     String content;
     int startX;

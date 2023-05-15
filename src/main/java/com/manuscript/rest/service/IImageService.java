@@ -13,16 +13,17 @@ import java.util.UUID;
 
 public interface IImageService {
 
-    ImageInfoResponse save(ImageInfoRequest imageInfoRequest)                                   throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    ImageDataResponse saveData(ImageDataRequest imageDataRequest)                   throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    ImageInfoResponse update(ImageInfoRequest imageInfoRequest)                                 throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    ImageInfoResponse getById(UUID imageId, String userId)                              throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    List<ImageDataResponse> getAllByIdData(UUID imageId, String userId)             throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    List<ImageInfoResponse> getAllByUid(String userId)                                  throws IllegalArgumentException, NoUserFoundException;
+    ImageInfoResponse saveInfo(ImageInfoRequest imageInfoRequest)                       throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    ImageDataResponse saveData(ImageDataRequest imageDataRequest)                       throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    ImageInfoResponse updateInfo(ImageInfoRequest imageInfoRequest)                     throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    ImageInfoResponse getByIdInfo(UUID imageInfoId, String userId)                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    ImageDataResponse getByIdData(UUID imageDataId, String userId)                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    List<ImageDataResponse> getAllByImageInfoIdImageData(UUID imageId, String userId)   throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    List<ImageInfoResponse> getAllByUidImageInfos(String userId)                        throws IllegalArgumentException, NoUserFoundException;
     List<ImageInfoResponse> getAllPublicImages();
     List<ImageInfoResponse> getAllSharedImages(String userId)                           throws IllegalArgumentException, NoUserFoundException;
-    void deleteById(UUID imageId, String userId)                                    throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    void deleteDataById(UUID imageDataId, String userId)                            throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    void deleteByIdImageInfo(UUID imageInfoId, String userId)                           throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    void deleteByIdImageData(UUID imageDataId, String userId)                           throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
 
 
 

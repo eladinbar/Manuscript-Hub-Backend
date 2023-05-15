@@ -1,33 +1,33 @@
 package com.manuscript.rest.mapping.response;
 
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.rest.forms.response.ImageInfoResponse;
 import com.manuscript.rest.mapping.IRestMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImageResponseMapperImpl implements IRestMapper<ImageModel, ImageInfoResponse> {
+public class ImageResponseMapperImpl implements IRestMapper<ImageInfoModel, ImageInfoResponse> {
     @Override
-    public ImageInfoResponse modelToRest(ImageModel imageModel) {
+    public ImageInfoResponse modelToRest(ImageInfoModel imageInfoModel) {
         return ImageInfoResponse.builder()
-                .id(imageModel.getId())
-                .uid(imageModel.getUid())
-                .title(imageModel.getTitle())
-                .author(imageModel.getAuthor())
-                .publicationDate(imageModel.getPublicationDate())
-                .description(imageModel.getDescription())
-                .tags(imageModel.getTags())
-                .sharedUserIds(imageModel.getSharedUserIds())
-                .status(imageModel.getStatus())
-                .privacy(imageModel.getPrivacy())
-                .createdTime(imageModel.getCreatedTime())
-                .updatedTime(imageModel.getUpdatedTime())
+                .id(imageInfoModel.getId())
+                .uid(imageInfoModel.getUid())
+                .title(imageInfoModel.getTitle())
+                .author(imageInfoModel.getAuthor())
+                .publicationDate(imageInfoModel.getPublicationDate())
+                .description(imageInfoModel.getDescription())
+                .tags(imageInfoModel.getTags())
+                .sharedUserIds(imageInfoModel.getSharedUserIds())
+                .status(imageInfoModel.getStatus())
+                .privacy(imageInfoModel.getPrivacy())
+                .createdTime(imageInfoModel.getCreatedTime())
+                .updatedTime(imageInfoModel.getUpdatedTime())
                 .build();
     }
 
     @Override
-    public ImageModel restToModel(ImageInfoResponse imageInfoResponse) {
-        return ImageModel.builder()
+    public ImageInfoModel restToModel(ImageInfoResponse imageInfoResponse) {
+        return ImageInfoModel.builder()
                 .id(imageInfoResponse.getId())
                 .uid(imageInfoResponse.getUid())
                 .title(imageInfoResponse.getTitle())

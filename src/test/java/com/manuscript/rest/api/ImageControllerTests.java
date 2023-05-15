@@ -84,7 +84,7 @@ public class ImageControllerTests {
         invalidData = null;
 
         //mocks
-        when(imageService.update(any())).thenReturn(testImageInfoResponse);
+        when(imageService.updateInfo(any())).thenReturn(testImageInfoResponse);
     }
 
     @BeforeEach

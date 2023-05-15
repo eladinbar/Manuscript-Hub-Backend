@@ -16,7 +16,7 @@ import java.util.UUID;
 @SuperBuilder
 @Getter
 @Setter
-public class ImageModel {
+public class ImageInfoModel {
     private UUID id;
     @NotNull private String uid;
     @NotNull private String title;

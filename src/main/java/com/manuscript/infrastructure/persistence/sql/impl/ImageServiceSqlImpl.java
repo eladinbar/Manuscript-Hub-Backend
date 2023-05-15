@@ -1,7 +1,7 @@
 package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.common.enums.Privacy;
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.core.domain.image.repository.IImageRepositoryService;
 import com.manuscript.core.exceptions.NoImageFoundException;
 import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
@@ -22,11 +22,11 @@ import java.util.UUID;
 public class ImageServiceSqlImpl implements IImageRepositoryService {
     private final IUserRepo userRepo;
     private final IImageRepo repo;
-    private final IRepositoryEntityMapper<ImageModel, ImageEntity> mapper;
+    private final IRepositoryEntityMapper<ImageInfoModel, ImageEntity> mapper;
 
     @Override
-    public ImageModel save(ImageModel imageModel) throws IllegalArgumentException {
-        ImageEntity imageEntity = mapper.modelToEntity(imageModel);
+    public ImageInfoModel save(ImageInfoModel imageInfoModel) throws IllegalArgumentException {
+        ImageEntity imageEntity = mapper.modelToEntity(imageInfoModel);
         Optional<UserEntity> optionalUser = userRepo.findByUid(imageEntity.getUser().getUid());
         if(!optionalUser.isPresent())
             throw new IllegalArgumentException("No user found.\n" +
@@ -38,12 +38,12 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
     }
 
     @Override
-    public ImageModel update(ImageModel imageModel) throws IllegalArgumentException, NoImageFoundException {
-        Optional<ImageEntity> optionalImageEntity = repo.findById(imageModel.getId());
+    public ImageInfoModel update(ImageInfoModel imageInfoModel) throws IllegalArgumentException, NoImageFoundException {
+        Optional<ImageEntity> optionalImageEntity = repo.findById(imageInfoModel.getId());
         if (!optionalImageEntity.isPresent()){
             throw new NoImageFoundException();
         }
-        ImageEntity newImageEntity = mapper.modelToEntity(imageModel);
+        ImageEntity newImageEntity = mapper.modelToEntity(imageInfoModel);
         ImageEntity currentImageEntity = optionalImageEntity.get();
         currentImageEntity.setTitle(newImageEntity.getTitle());
         currentImageEntity.setAuthor(newImageEntity.getAuthor());
@@ -57,43 +57,43 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
     }
 
     @Override
-    public Optional<ImageModel> getById(UUID id) throws IllegalArgumentException {
+    public Optional<ImageInfoModel> getById(UUID id) throws IllegalArgumentException {
         Optional<ImageEntity> optionalImageEntity = repo.findById(id);
         if (!optionalImageEntity.isPresent()){
             return Optional.empty();
         }
-        ImageModel imageModel = mapper.entityToModel(optionalImageEntity.get());
-        return Optional.of(imageModel);
+        ImageInfoModel imageInfoModel = mapper.entityToModel(optionalImageEntity.get());
+        return Optional.of(imageInfoModel);
     }
 
     @Override
-    public List<ImageModel> getAllByUidImages(String userId) throws IllegalArgumentException {
+    public List<ImageInfoModel> getAllByUidImages(String userId) throws IllegalArgumentException {
         Optional<UserEntity> optionalUser = userRepo.findByUid(userId);
         if(!optionalUser.isPresent())
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
         List<ImageEntity> imageEntityList = repo.findAllByUser(user);
-        List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
+        List<ImageInfoModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
 
     @Override
-    public List<ImageModel> getAllPublicImages() {
+    public List<ImageInfoModel> getAllPublicImages() {
         List<ImageEntity> imageEntityList = repo.findAllByPrivacy(Privacy.Public);
-        List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
+        List<ImageInfoModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
 
     @Override
-    public List<ImageModel> getAllSharedImages(String userId) {
+    public List<ImageInfoModel> getAllSharedImages(String userId) {
         Optional<UserEntity> optionalUser = userRepo.findByUid(userId);
         if(!optionalUser.isPresent())
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
         List<ImageEntity> imageEntityList = repo.findAllByPrivacyAndUser(Privacy.Shared, user);
-        List<ImageModel> result = ImageEntityListToModelList(imageEntityList);
+        List<ImageInfoModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
 
@@ -107,8 +107,8 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
     }
 
     @Override
-    public List<ImageModel> getAll() {
-        List<ImageModel> result = new ArrayList<>();
+    public List<ImageInfoModel> getAll() {
+        List<ImageInfoModel> result = new ArrayList<>();
         repo.findAll().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
         return result;
     }
@@ -118,12 +118,12 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
         repo.deleteAll();
     }
 
-    private List<ImageModel> ImageEntityListToModelList(List<ImageEntity> imageEntityList){
-        List<ImageModel> imageModelList = new ArrayList<>();
+    private List<ImageInfoModel> ImageEntityListToModelList(List<ImageEntity> imageEntityList){
+        List<ImageInfoModel> imageInfoModelList = new ArrayList<>();
         for (ImageEntity imageEntity : imageEntityList){
-            ImageModel imageModel = mapper.entityToModel(imageEntity);
-            imageModelList.add(imageModel);
+            ImageInfoModel imageInfoModel = mapper.entityToModel(imageEntity);
+            imageInfoModelList.add(imageInfoModel);
         }
-        return imageModelList;
+        return imageInfoModelList;
     }
 }

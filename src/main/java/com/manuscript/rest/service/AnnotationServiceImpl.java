@@ -5,6 +5,7 @@ import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.exceptions.NoAnnotationFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
 import com.manuscript.core.usecase.custom.annotation.*;
+import com.manuscript.rest.forms.response.ImageDataResponse;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.AnnotationRequest;
 import com.manuscript.rest.forms.response.AnnotationResponse;
@@ -33,7 +34,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
 
     @Override
     public AnnotationResponse create(AnnotationRequest annotationRequest) {
-        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
+        verifyImagePermission(annotationRequest.getImageDataId(), annotationRequest.getUid());
         checkAlgorithmAvailability(annotationRequest.getAlgorithmId());
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
         annotationModel = createAnnotationUseCase.create(annotationModel);
@@ -42,7 +43,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
 
     @Override
     public AnnotationResponse update(AnnotationRequest annotationRequest) {
-        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
+        verifyImagePermission(annotationRequest.getImageDataId(), annotationRequest.getUid());
         checkAlgorithmAvailability(annotationRequest.getAlgorithmId());
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
         annotationModel = updateAnnotationUseCase.update(annotationModel);
@@ -52,7 +53,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
     //Currently not in use
     @Override
     public AnnotationResponse get(AnnotationRequest annotationRequest) {
-        verifyImagePermission(annotationRequest.getImageId(), annotationRequest.getUid());
+        verifyImagePermission(annotationRequest.getImageDataId(), annotationRequest.getUid());
         Optional<AnnotationModel> optionalAnnotation = getByIdAnnotationUseCase.getById(annotationRequest.getId());
         if(optionalAnnotation.isPresent()) {
             AnnotationModel annotationModel = optionalAnnotation.get();
@@ -62,9 +63,9 @@ public class AnnotationServiceImpl implements IAnnotationService {
     }
 
     @Override
-    public List<AnnotationResponse> getAllByImageId(UUID imageId, String uid) {
-        verifyImagePermission(imageId, uid);
-        List<AnnotationModel> annotationModels = getAllByImageIdAnnotationsUseCase.getAllByImageId(imageId);
+    public List<AnnotationResponse> getAllByImageId(UUID imageDataId, String uid) {
+        verifyImagePermission(imageDataId, uid);
+        List<AnnotationModel> annotationModels = getAllByImageIdAnnotationsUseCase.getAllByImageId(imageDataId);
         List<AnnotationResponse> annotationResponses = new ArrayList<>();
         for(AnnotationModel annotationModel : annotationModels) {
             AnnotationResponse annotationResponse = annotationResponseMapper.modelToRest(annotationModel);
@@ -84,10 +85,11 @@ public class AnnotationServiceImpl implements IAnnotationService {
         throw new RuntimeException("Unimplemented");
     }
 
-    private void verifyImagePermission(UUID imageId, String uid) {
+    private void verifyImagePermission(UUID imageDataId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
-        ImageInfoResponse image = imageService.getById(imageId, uid);
-        if(!image.getUid().equals(uid) || image.getStatus().equals(Status.Disabled))
+        ImageDataResponse imageDataResponse = imageService.getByIdData(imageDataId, uid);
+        ImageInfoResponse imageInfo = imageService.getByIdInfo(imageDataResponse.getInfoId(), uid);
+        if(!imageInfo.getUid().equals(uid) || imageInfo.getStatus().equals(Status.Disabled))
             throw new UnauthorizedException();
     }
 

@@ -64,8 +64,8 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public List<AnnotationModel> getAllByImageId(UUID imageId) {
-        List<AnnotationEntity> annotationEntities = repo.findAllByImageId(imageId);
+    public List<AnnotationModel> getAllByImageId(UUID imageDataId) {
+        List<AnnotationEntity> annotationEntities = repo.findAllByImageId(imageDataId);
         List<AnnotationModel> annotationModels = new ArrayList<>();
         for (AnnotationEntity annotationEntity : annotationEntities) {
             annotationModels.add(mapper.entityToModel(annotationEntity));

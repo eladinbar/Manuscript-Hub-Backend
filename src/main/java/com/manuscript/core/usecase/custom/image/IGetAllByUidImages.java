@@ -1,10 +1,9 @@
 package com.manuscript.core.usecase.custom.image;
 
-import com.manuscript.core.domain.image.models.ImageDataModel;
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 
 import java.util.List;
 
 public interface IGetAllByUidImages {
-    List<ImageModel> getAllByUidImages(String userId);
+    List<ImageInfoModel> getAllByUidImages(String userId);
 }

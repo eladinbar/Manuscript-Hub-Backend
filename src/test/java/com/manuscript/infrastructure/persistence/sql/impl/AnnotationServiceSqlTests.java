@@ -126,7 +126,7 @@ public class AnnotationServiceSqlTests {
 
         // set up annotation model
         this.annotationModel = AnnotationModel.builder()
-                .id(id).uid(uid).imageId(imageId).algorithmId(manualAlgorithmId)
+                .id(id).uid(uid).imageDataId(imageId).algorithmId(manualAlgorithmId)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -159,7 +159,7 @@ public class AnnotationServiceSqlTests {
         //assert
         assertNotNull(annotationModel);
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(manualAlgorithmId, annotationModel.getAlgorithmId());
         assertEquals(content, annotationModel.getContent());
         assertEquals(startX, annotationModel.getStartX());
@@ -244,7 +244,7 @@ public class AnnotationServiceSqlTests {
 
         ////set up new annotation model
         AnnotationModel newAnnotationModel = AnnotationModel.builder()
-                .id(id).uid(uid).imageId(imageId).algorithmId(algorithmId)
+                .id(id).uid(uid).imageDataId(imageId).algorithmId(algorithmId)
                 .content(newContent)
                 .startX(newStartX).startY(newStartY).endX(newEndX).endY(newEndY)
                 .createdTime(createdTime).updatedTime(newUpdateTime)
@@ -262,7 +262,7 @@ public class AnnotationServiceSqlTests {
         //assert
         assertNotNull(newAnnotationModel);
         assertEquals(uid, newAnnotationModel.getUid());
-        assertEquals(imageId, newAnnotationModel.getImageId());
+        assertEquals(imageId, newAnnotationModel.getImageDataId());
         assertEquals(algorithmId, newAnnotationModel.getAlgorithmId());
         assertEquals(newContent, newAnnotationModel.getContent());
         assertEquals(newStartX, newAnnotationModel.getStartX());

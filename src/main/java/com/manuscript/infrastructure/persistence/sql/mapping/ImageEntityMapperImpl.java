@@ -1,6 +1,6 @@
 package com.manuscript.infrastructure.persistence.sql.mapping;
 
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
@@ -9,31 +9,31 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageModel, ImageEntity> {
+public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageInfoModel, ImageEntity> {
 
     @Override
-    public ImageEntity modelToEntity(ImageModel imageModel) {
+    public ImageEntity modelToEntity(ImageInfoModel imageInfoModel) {
         UserEntity mockUserEntity = new UserEntity();
-        mockUserEntity.setUid(imageModel.getUid());
+        mockUserEntity.setUid(imageInfoModel.getUid());
         return ImageEntity.builder()
-                .id(imageModel.getId())
+                .id(imageInfoModel.getId())
                 .user(mockUserEntity)
-                .title(imageModel.getTitle())
-                .author(imageModel.getAuthor())
-                .publicationDate(imageModel.getPublicationDate())
-                .description(imageModel.getDescription())
+                .title(imageInfoModel.getTitle())
+                .author(imageInfoModel.getAuthor())
+                .publicationDate(imageInfoModel.getPublicationDate())
+                .description(imageInfoModel.getDescription())
                 //TODO: tags
                 //TODO: sharedUserIds
-                .status(imageModel.getStatus())
-                .privacy(imageModel.getPrivacy())
-                .createdTime(imageModel.getCreatedTime())
-                .updatedTime(imageModel.getUpdatedTime())
+                .status(imageInfoModel.getStatus())
+                .privacy(imageInfoModel.getPrivacy())
+                .createdTime(imageInfoModel.getCreatedTime())
+                .updatedTime(imageInfoModel.getUpdatedTime())
                 .build();
     }
 
     @Override
-    public ImageModel entityToModel(ImageEntity imageEntity) {
-        return ImageModel.builder()
+    public ImageInfoModel entityToModel(ImageEntity imageEntity) {
+        return ImageInfoModel.builder()
                 .id(imageEntity.getId())
                 .uid(imageEntity.getUser().getUid())
                 .title(imageEntity.getTitle())

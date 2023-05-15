@@ -2,7 +2,7 @@ package com.manuscript.infrastructure.persistence.nosql.mapping;
 
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.infrastructure.persistence.nosql.documents.ImageDataDocument;
 import com.manuscript.infrastructure.persistence.nosql.service.IImageUtils;
 import com.manuscript.infrastructure.persistence.sql.mapping.ImageEntityMapperImpl;
@@ -28,7 +28,7 @@ public class ImageEntityMapperImplTests {
     private ImageEntityMapperImpl imageEntityMapperImpl;
     private IImageUtils imageUtils;
     private ImageDataDocument imageDataDocument;
-    private ImageModel imageModel;
+    private ImageInfoModel imageInfoModel;
 
     //test data
     private String fileName;
@@ -74,7 +74,7 @@ public class ImageEntityMapperImplTests {
         imageDataDocument = new ImageDataDocument(fileName,status,privacy,uid,stringData);
 
         //model setup
-        imageModel = ImageModel.builder()
+        imageInfoModel = ImageInfoModel.builder()
                 .id(imageId)
                 .uid(uid)
                 .fileName(fileName)
@@ -89,7 +89,7 @@ public class ImageEntityMapperImplTests {
     @Test
     public void modelToEntity_Success() {
         //act
-        ImageDataDocument testImageDataDocument = imageEntityMapperImpl.modelToEntity(imageModel);
+        ImageDataDocument testImageDataDocument = imageEntityMapperImpl.modelToEntity(imageInfoModel);
         //assert
         assertNotNull(testImageDataDocument);
         assertEquals(uid, testImageDataDocument.getUid());
@@ -102,13 +102,13 @@ public class ImageEntityMapperImplTests {
     @Test
     public void entityToModel_Success() {
         //act
-        ImageModel testImageModel= imageEntityMapperImpl.entityToModel(imageDataDocument);
+        ImageInfoModel testImageInfoModel = imageEntityMapperImpl.entityToModel(imageDataDocument);
         //assert
-        assertNotNull(testImageModel);
-        assertEquals(uid,testImageModel.getUid());
-        assertEquals(fileName,testImageModel.getFileName());
-        assertEquals(data,testImageModel.getData());
-        assertEquals(status,testImageModel.getStatus());
-        assertEquals(privacy,testImageModel.getPrivacy());
+        assertNotNull(testImageInfoModel);
+        assertEquals(uid, testImageInfoModel.getUid());
+        assertEquals(fileName, testImageInfoModel.getFileName());
+        assertEquals(data, testImageInfoModel.getData());
+        assertEquals(status, testImageInfoModel.getStatus());
+        assertEquals(privacy, testImageInfoModel.getPrivacy());
     }
 }
