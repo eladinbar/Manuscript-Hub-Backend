@@ -1,5 +1,7 @@
 package com.manuscript.rest.service;
 
+import com.manuscript.core.domain.common.enums.Privacy;
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.usecase.custom.image.*;
 import com.manuscript.rest.mapping.IRestMapper;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.*;
 
@@ -31,9 +34,21 @@ public class ImageServiceTests {
     private ImageRequest imageRequest;
     private ImageResponse imageResponse;
     private ImageModel imageModel;
+    private List<ImageModel> listImageModel;
+    private Optional<ImageModel> optionalImageModel;
 
     //test data
-
+    private UUID imageId;
+    private UUID userId;
+    private String uid;
+    private String fileName;
+    private Status status;
+    private final byte[] data = {0};
+    private Privacy privacy;
+    private Date createdTime;
+    private Date updatedTime;
+    private MockMultipartFile multipartFile;
+    private List<ImageResponse> testImageResponseList;
 
     @BeforeAll
     @SuppressWarnings("unchecked")
@@ -49,15 +64,22 @@ public class ImageServiceTests {
         imageServiceImpl = new ImageServiceImpl(imageRequestMapper,imageResponseMapper,createImageUseCase,getAllImagesUseCase,getByIdImageUseCase,updateImageUseCase,getAllPublicImages);
 
         //data setup
+        fileName = "fileName";
+        status = Status.active;
+        uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
+        multipartFile = new MockMultipartFile(fileName,data);
+        imageId = UUID.randomUUID();
+        userId = UUID.randomUUID();
+        privacy = Privacy.Public;
 
         //date setup
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2023);
         cal.set(Calendar.MONTH, Calendar.JANUARY);
         cal.set(Calendar.DAY_OF_MONTH, 1);
-        Date createdTime = cal.getTime();
+        createdTime = cal.getTime();
         cal.set(Calendar.DAY_OF_MONTH, 3);
-        Date updatedTime = cal.getTime();
+        updatedTime = cal.getTime();
 
         //failcase data setup
 
@@ -67,11 +89,6 @@ public class ImageServiceTests {
         when(imageResponseMapper.restToModel(any(ImageResponse.class))).thenReturn(imageModel);
         when(imageResponseMapper.modelToRest(any(ImageModel.class))).thenReturn(imageResponse);
 
-        //mock return data
-        List<ImageModel> listImageModel = new ArrayList<>();
-        listImageModel.add(imageModel);
-        Optional<ImageModel> optionalImageModel = Optional.of(imageModel);
-
         //usecase mocks
         when(createImageUseCase.create(any(ImageModel.class))).thenReturn(imageModel);
         when(getAllImagesUseCase.getAll()).thenReturn(listImageModel);
@@ -80,18 +97,31 @@ public class ImageServiceTests {
         when(getAllPublicImages.getAllPublicImages()).thenReturn(listImageModel);
     }
 
-//    @BeforeEach
-//    public void beforeEach() {
-//        //test model setup
-//        imageModel = new ImageModel(imageId,uid,fileName,status,data);
-//
-//        //test request setup
-//        imageRequest = new ImageResponse(imageId,userId,uid,fileName,data,status,createdTime,updatedTime);
-//
-//        //test response setup
-//        imageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,createdTime,updatedTime);
-//    }
+    @BeforeEach
+    public void beforeEach() {
+        //test model setup
+        imageModel = ImageModel.builder()
+                .id(imageId)
+                .uid(uid)
+                .fileName(fileName)
+                .status(status)
+                .privacy(privacy)
+                .createdTime(createdTime)
+                .updatedTime(updatedTime)
+                .build();
+        listImageModel = new ArrayList<>();
+        listImageModel.add(imageModel);
+        optionalImageModel = Optional.of(imageModel);
+
+        //test request setup
+        imageRequest = new ImageRequest(imageId,uid,fileName,status,privacy,data);
+
+        //test response setup
+        imageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,privacy,createdTime,updatedTime);
+    }
 
     @Test
-    public void uploadDocument_Success() {}
+    public void save_Success() {
+
+    }
 }

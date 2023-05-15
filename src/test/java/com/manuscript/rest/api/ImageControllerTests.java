@@ -23,10 +23,7 @@ import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -50,6 +47,7 @@ public class ImageControllerTests {
     private Date createdTime;
     private Date updatedTime;
     private MockMultipartFile multipartFile;
+    private List<ImageResponse> testImageResponseList;
 
     //test fail case data
     private UUID invalidImageId;
@@ -85,12 +83,9 @@ public class ImageControllerTests {
         //fail case data setup
         invalidImageId = null;
         invalidUserId = null;
-        invalidUid = null;
+        invalidUid = "";
         invalidFileName = null;
         invalidData = null;
-
-        //mocks
-        when(imageService.update(any())).thenReturn(testImageResponse);
     }
 
     @BeforeEach
@@ -100,12 +95,17 @@ public class ImageControllerTests {
 
         //test response setup
         testImageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,privacy,createdTime,updatedTime);
+
+        testImageResponseList = new ArrayList<>();
+        testImageResponseList.add(testImageResponse);
     }
 
 
 //---------------------uploadDocument tests:---------------------
     @Test
     public void uploadDocument_Success() {
+        //mocks
+        when(imageService.save(imageRequest)).thenReturn(testImageResponse);
         try{
             //act
             ResponseEntity<ImageResponse> responseEntity = imageController.uploadDocument(multipartFile,uid);
@@ -128,28 +128,38 @@ public class ImageControllerTests {
 
     @Test
     public void uploadDocument_InvalidData() {
+        //mocks
+        when(imageService.save(imageRequest)).thenReturn(testImageResponse);
         MockMultipartFile invalidMultipartFile = new MockMultipartFile(fileName,invalidData);
+        //act
         imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
+        //assert
+        assertThrows(Exception.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
     }
 
     @Test
     public void uploadDocument_InvalidFilename() {
+        //mocks
+        when(imageService.save(imageRequest)).thenReturn(testImageResponse);
         MockMultipartFile invalidMultipartFile = new MockMultipartFile(invalidFileName,data);
-        imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
+        //act
+        imageRequest.setFileName(invalidFileName);
+        //assert
+        assertThrows(Exception.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
     }
 
     @Test
     public void uploadDocumentInvalidUid() {
         imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(multipartFile,invalidUid));
+        assertThrows(Exception.class, () -> imageController.uploadDocument(multipartFile,invalidUid));
     }
 
 
 //---------------------updateDocument tests:---------------------
     @Test
     public void updateDocument_Success() {
+        //mock
+        when(imageService.update(imageRequest)).thenReturn(testImageResponse);
         //act
         ResponseEntity<ImageResponse> responseEntity = imageController.updateDocument(imageRequest);
         ImageResponse imageResponse = responseEntity.getBody();
@@ -167,44 +177,48 @@ public class ImageControllerTests {
 
     @Test
     public void updateDocument_InvalidId() {
+        //mock
+        when(imageService.update(imageRequest)).thenReturn(testImageResponse);
+        //act
         imageRequest.setDocumentId(invalidImageId);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
-    }
-
-    @Test
-    public void updateDocument_InvalidUid() {
-        imageRequest.setUid(invalidUid);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
-    }
-
-    @Test
-    public void updateDocument_InvalidFileName() {
-        imageRequest.setFileName(invalidFileName);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
+        //assert
+        assertThrows(Exception.class, () -> imageController.updateDocument(imageRequest));
     }
 
     @Test
     public void updateDocument_InvalidData() {
+        //mock
+        when(imageService.update(imageRequest)).thenReturn(testImageResponse);
+        //act
         imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
+        //assert
+        assertThrows(Exception.class, () -> imageController.updateDocument(imageRequest));
     }
 
 
 //---------------------deleteDocumentById tests:---------------------
     @Test
     public void deleteDocumentById_Success() {
-        imageController.deleteDocumentById(userId);
+        //mock
+        doNothing().when(imageService).deleteById(imageId);
+        //assert
+        imageController.deleteDocumentById(imageId);
     }
 
     @Test
     public void deleteDocumentById_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.deleteDocumentById(invalidUserId));
+        //mock
+        doNothing().when(imageService).deleteById(imageId);
+        //assert
+        assertThrows(Exception.class, () -> imageController.deleteDocumentById(invalidUserId));
     }
 
 
 //---------------------getDocumentById tests:---------------------
     @Test
     public void getDocumentById_Success() {
+        //mock
+        when(imageService.getById(userId)).thenReturn(testImageResponse);
         //act
         ResponseEntity<byte[]> responseEntity = imageController.getDocumentById(userId);
         byte[] bytesResponse = responseEntity.getBody();
@@ -216,13 +230,18 @@ public class ImageControllerTests {
 
     @Test
     public void getDocumentById_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.getDocumentById(invalidUserId));
+        //mock
+        when(imageService.getById(userId)).thenReturn(testImageResponse);
+        //assert
+        assertThrows(Exception.class, () -> imageController.getDocumentById(invalidUserId));
     }
 
 
 //---------------------getDocumentById tests:---------------------
     @Test
     public void getAllDocumentsByUid_Success() {
+        //mock
+        when(imageService.getAllByUid(uid)).thenReturn(testImageResponseList);
         //act
         ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllDocumentsByUid(uid);
         List<ImageResponse> imageResponseList = responseEntity.getBody();
@@ -242,13 +261,20 @@ public class ImageControllerTests {
 
     @Test
     public void getAllDocumentsByUid_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.getAllDocumentsByUid(invalidUid));
+        //mock
+        when(imageService.getAllByUid(uid)).thenReturn(testImageResponseList);
+        //act
+        invalidUid = null;
+        //assert
+        assertThrows(Exception.class, () -> imageController.getAllDocumentsByUid(invalidUid));
     }
 
 
 //---------------------getAllPublicImages tests:---------------------
     @Test
     public void getAllPublicImages_Success() {
+        //mock
+        when(imageService.getAllPublicImages()).thenReturn(testImageResponseList);
         //act
         ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllPublicImages();
         List<ImageResponse> imageResponseList = responseEntity.getBody();

@@ -1,5 +1,6 @@
 package com.manuscript.rest.api;
 
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.rest.request.ImageRequest;
 import com.manuscript.rest.response.ImageResponse;
@@ -36,7 +37,13 @@ public class ImageController {
         if (uid == null)
             throw new IllegalArgumentException("User ID can't be null.");
         byte[] reSizedFile = resizeImage(file, 512, 512);
-        ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(reSizedFile).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
+        ImageRequest imageRequest = ImageRequest.builder()
+                .uid(uid)
+                .fileName(Objects.requireNonNull(file.getOriginalFilename()))
+                .status(Status.active)
+                .privacy(Privacy.Private)
+                .data(reSizedFile)
+                .build();
         ImageResponse imageResponse = imageService.save(imageRequest);
         return ResponseEntity.ok(imageResponse);
     }
@@ -89,16 +96,14 @@ public class ImageController {
             throw new IllegalArgumentException("Image request's fields must not be null.");
     }
 
-
-        public byte[] resizeImage(MultipartFile originalImage, int width, int height) throws IOException {
-            try (InputStream in = originalImage.getInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-                Thumbnails.of(in)
-                        .size(width, height)
-                        .outputFormat("jpg") // or another format
-                        .toOutputStream(out);
-                return out.toByteArray();
-            }
+    private byte[] resizeImage(MultipartFile originalImage, int width, int height) throws IOException {
+        try (InputStream in = originalImage.getInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Thumbnails.of(in)
+                    .size(width, height)
+                    .outputFormat("jpg") // or another format
+                    .toOutputStream(out);
+            return out.toByteArray();
         }
-
+    }
 
 }

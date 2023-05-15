@@ -73,6 +73,8 @@ public class ImageEntityMapperImplTests {
     public void beforeEach() {
         //request setup
         imageDocument = new ImageDocument(fileName,status,privacy,uid,stringData);
+        imageDocument.setCreatedTime(createdTime);
+        imageDocument.setUpdatedTime(updatedTime);
 
         //model setup
         imageModel = ImageModel.builder()
@@ -95,7 +97,7 @@ public class ImageEntityMapperImplTests {
         assertNotNull(testImageDocument);
         assertEquals(uid,testImageDocument.getUid());
         assertEquals(fileName,testImageDocument.getFileName());
-        assertEquals(data,testImageDocument.getData());
+        assertEquals(stringData,testImageDocument.getData());
         assertEquals(status,testImageDocument.getStatus());
         assertEquals(privacy,testImageDocument.getPrivacy());
     }
