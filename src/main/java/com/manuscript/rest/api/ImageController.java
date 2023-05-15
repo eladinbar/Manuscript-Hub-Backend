@@ -36,13 +36,12 @@ public class ImageController {
             throw new IllegalArgumentException("Invalid document data");
         if (uid == null)
             throw new IllegalArgumentException("User ID can't be null.");
-        byte[] reSizedFile = resizeImage(file, 512, 512);
         ImageRequest imageRequest = ImageRequest.builder()
                 .uid(uid)
                 .fileName(Objects.requireNonNull(file.getOriginalFilename()))
                 .status(Status.active)
                 .privacy(Privacy.Private)
-                .data(reSizedFile)
+                .data(file.getBytes())
                 .build();
         ImageResponse imageResponse = imageService.save(imageRequest);
         return ResponseEntity.ok(imageResponse);
@@ -94,16 +93,6 @@ public class ImageController {
         else if(Stream.of(imageRequest.getDocumentId(),  imageRequest.getUid(),
                 imageRequest.getFileName(), imageRequest.getData()).anyMatch(Objects::isNull))
             throw new IllegalArgumentException("Image request's fields must not be null.");
-    }
-
-    private byte[] resizeImage(MultipartFile originalImage, int width, int height) throws IOException {
-        try (InputStream in = originalImage.getInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Thumbnails.of(in)
-                    .size(width, height)
-                    .outputFormat("jpg") // or another format
-                    .toOutputStream(out);
-            return out.toByteArray();
-        }
     }
 
 }
