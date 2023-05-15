@@ -72,11 +72,11 @@ public class ImageController {
     }
 
     @GetMapping("/getDocumentDataById/{imageDataId}/{uid}")
-    public ResponseEntity<ImageDataResponse> getImageDataById(@PathVariable UUID imageDataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+    public ResponseEntity<byte[]> getImageDataById(@PathVariable UUID imageDataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkIdNotNull(imageDataId);
         checkUserIdNotNull(uid);
         ImageDataResponse result = imageService.getByIdData(imageDataId, uid);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(result.getData());
     }
 
     @GetMapping("/getDocumentDatasByDocumentInfoId/{imageInfoId}/{uid}")
