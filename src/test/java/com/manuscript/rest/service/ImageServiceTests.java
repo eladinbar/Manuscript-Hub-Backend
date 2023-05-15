@@ -16,6 +16,8 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +38,7 @@ public class ImageServiceTests {
     private ImageModel imageModel;
     private List<ImageModel> listImageModel;
     private Optional<ImageModel> optionalImageModel;
+    private List<ImageResponse> imageResponseList;
 
     //test data
     private UUID imageId;
@@ -47,8 +50,11 @@ public class ImageServiceTests {
     private Privacy privacy;
     private Date createdTime;
     private Date updatedTime;
-    private MockMultipartFile multipartFile;
-    private List<ImageResponse> testImageResponseList;
+
+    //test fail case data
+    private String invalidUid;
+    private Status invalidStatus;
+    private UUID invalidImageId;
 
     @BeforeAll
     @SuppressWarnings("unchecked")
@@ -67,7 +73,6 @@ public class ImageServiceTests {
         fileName = "fileName";
         status = Status.active;
         uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
-        multipartFile = new MockMultipartFile(fileName,data);
         imageId = UUID.randomUUID();
         userId = UUID.randomUUID();
         privacy = Privacy.Public;
@@ -82,19 +87,9 @@ public class ImageServiceTests {
         updatedTime = cal.getTime();
 
         //failcase data setup
-
-        //mapper mocks
-        when(imageRequestMapper.restToModel(any(ImageRequest.class))).thenReturn(imageModel);
-        when(imageRequestMapper.modelToRest(any(ImageModel.class))).thenReturn(imageRequest);
-        when(imageResponseMapper.restToModel(any(ImageResponse.class))).thenReturn(imageModel);
-        when(imageResponseMapper.modelToRest(any(ImageModel.class))).thenReturn(imageResponse);
-
-        //usecase mocks
-        when(createImageUseCase.create(any(ImageModel.class))).thenReturn(imageModel);
-        when(getAllImagesUseCase.getAll()).thenReturn(listImageModel);
-        when(getByIdImageUseCase.getById(any(UUID.class))).thenReturn(optionalImageModel);
-        when(updateImageUseCase.update(any(ImageModel.class))).thenReturn(imageModel);
-        when(getAllPublicImages.getAllPublicImages()).thenReturn(listImageModel);
+        invalidUid = "";
+        invalidStatus = Status.inactive;
+        invalidImageId = null;
     }
 
     @BeforeEach
@@ -118,10 +113,146 @@ public class ImageServiceTests {
 
         //test response setup
         imageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,privacy,createdTime,updatedTime);
+        imageResponseList = new ArrayList<>();
+        imageResponseList.add(imageResponse);
+
+        //mapper mocks
+        when(imageRequestMapper.restToModel(any(ImageRequest.class))).thenReturn(imageModel);
+        when(imageRequestMapper.modelToRest(any(ImageModel.class))).thenReturn(imageRequest);
+        when(imageResponseMapper.restToModel(any(ImageResponse.class))).thenReturn(imageModel);
+        when(imageResponseMapper.modelToRest(any(ImageModel.class))).thenReturn(imageResponse);
+
+        //usecase mocks
+        when(createImageUseCase.create(imageModel)).thenReturn(imageModel);
+        when(getAllImagesUseCase.getAll()).thenReturn(listImageModel);
+        when(getByIdImageUseCase.getById(any(UUID.class))).thenReturn(optionalImageModel);
+        when(updateImageUseCase.update(any(ImageModel.class))).thenReturn(imageModel);
+        when(getAllPublicImages.getAllPublicImages()).thenReturn(listImageModel);
     }
 
     @Test
     public void save_Success() {
+        //act
+        ImageResponse testImageResponse = imageServiceImpl.save(imageRequest);
+        //assert
+        assertNotNull(testImageResponse);
+        assertEquals(uid,testImageResponse.getUid());
+        assertEquals(fileName,testImageResponse.getFileName());
+        assertEquals(data,testImageResponse.getData());
+        assertEquals(status,testImageResponse.getStatus());
+        assertEquals(privacy,testImageResponse.getPrivacy());
+        assertTrue(testImageResponse.getCreatedTime().before(new Date()) || testImageResponse.getCreatedTime().equals(new Date()));
+        assertTrue(testImageResponse.getUpdatedTime().after(createdTime) || testImageResponse.getUpdatedTime().equals(createdTime));
+    }
 
+    @Test
+    public void update_Success() {
+        //act
+        ImageResponse testImageResponse = imageServiceImpl.update(imageRequest);
+        //assert
+        assertNotNull(testImageResponse);
+        assertEquals(uid,testImageResponse.getUid());
+        assertEquals(fileName,testImageResponse.getFileName());
+        assertEquals(data,testImageResponse.getData());
+        assertEquals(status,testImageResponse.getStatus());
+        assertEquals(privacy,testImageResponse.getPrivacy());
+        assertTrue(testImageResponse.getCreatedTime().before(new Date()) || testImageResponse.getCreatedTime().equals(new Date()));
+        assertTrue(testImageResponse.getUpdatedTime().after(createdTime) || testImageResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    @Test
+    public void getById_Success() {
+        //act
+        ImageResponse testImageResponse = imageServiceImpl.getById(imageId);
+        //assert
+        assertNotNull(testImageResponse);
+        assertEquals(uid,testImageResponse.getUid());
+        assertEquals(fileName,testImageResponse.getFileName());
+        assertEquals(data,testImageResponse.getData());
+        assertEquals(status,testImageResponse.getStatus());
+        assertEquals(privacy,testImageResponse.getPrivacy());
+        assertTrue(testImageResponse.getCreatedTime().before(new Date()) || testImageResponse.getCreatedTime().equals(new Date()));
+        assertTrue(testImageResponse.getUpdatedTime().after(createdTime) || testImageResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    @Test
+    public void getById_invalidImageId() {
+        //assert
+        assertThrows(Exception.class, () -> imageServiceImpl.getById(invalidImageId));
+    }
+
+    @Test
+    public void update_invalidUserId() {
+        //act
+        imageRequest.setUid(invalidUid);
+        //assert
+        assertThrows(Exception.class, () -> imageServiceImpl.update(imageRequest));
+    }
+
+    @Test
+    public void update_invalidStatus() {
+        //act
+        imageResponse.setStatus(invalidStatus);
+        //assert
+        assertThrows(Exception.class, () -> imageServiceImpl.update(imageRequest));
+    }
+
+    @Test
+    public void getAll_Success() {
+        //act
+        List<ImageResponse> testImageResponseList = imageServiceImpl.getAll();
+        ImageResponse testImageResponse = testImageResponseList.get(0);
+        //assert
+        assertEquals(testImageResponseList.size(),1);
+        assertNotNull(testImageResponse);
+        assertEquals(uid,testImageResponse.getUid());
+        assertEquals(fileName,testImageResponse.getFileName());
+        assertEquals(data,testImageResponse.getData());
+        assertEquals(status,testImageResponse.getStatus());
+        assertEquals(privacy,testImageResponse.getPrivacy());
+        assertTrue(testImageResponse.getCreatedTime().before(new Date()) || testImageResponse.getCreatedTime().equals(new Date()));
+        assertTrue(testImageResponse.getUpdatedTime().after(createdTime) || testImageResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    @Test
+    public void getAllByUid_Success() {
+        //act
+        List<ImageResponse> testImageResponseList = imageServiceImpl.getAllByUid(uid);
+        ImageResponse testImageResponse = testImageResponseList.get(0);
+        //assert
+        assertEquals(testImageResponseList.size(),1);
+        assertNotNull(testImageResponse);
+        assertEquals(uid,testImageResponse.getUid());
+        assertEquals(fileName,testImageResponse.getFileName());
+        assertEquals(data,testImageResponse.getData());
+        assertEquals(status,testImageResponse.getStatus());
+        assertEquals(privacy,testImageResponse.getPrivacy());
+        assertTrue(testImageResponse.getCreatedTime().before(new Date()) || testImageResponse.getCreatedTime().equals(new Date()));
+        assertTrue(testImageResponse.getUpdatedTime().after(createdTime) || testImageResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    @Test
+    public void getAllByUid_invalidUid() {
+        //act
+        List<ImageResponse> testImageResponseList = imageServiceImpl.getAllByUid(invalidUid);
+        //assert
+        assertEquals(testImageResponseList.size(),0);
+    }
+
+    @Test
+    public void getAllPublicImages_Success() {
+        //act
+        List<ImageResponse> testImageResponseList = imageServiceImpl.getAllPublicImages();
+        ImageResponse testImageResponse = testImageResponseList.get(0);
+        //assert
+        assertEquals(testImageResponseList.size(),1);
+        assertNotNull(testImageResponse);
+        assertEquals(uid,testImageResponse.getUid());
+        assertEquals(fileName,testImageResponse.getFileName());
+        assertEquals(data,testImageResponse.getData());
+        assertEquals(status,testImageResponse.getStatus());
+        assertEquals(privacy,testImageResponse.getPrivacy());
+        assertTrue(testImageResponse.getCreatedTime().before(new Date()) || testImageResponse.getCreatedTime().equals(new Date()));
+        assertTrue(testImageResponse.getUpdatedTime().after(createdTime) || testImageResponse.getUpdatedTime().equals(createdTime));
     }
 }
