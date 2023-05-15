@@ -14,7 +14,7 @@ import java.util.UUID;
 public class AnnotationResponse {
     @NotNull UUID id;
     @NotNull String uid;
-    @NotNull UUID imageId;
+    @NotNull UUID imageDataId;
     @NotNull UUID algorithmId;
     String content;
     int startX;

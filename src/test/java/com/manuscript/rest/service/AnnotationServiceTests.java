@@ -132,7 +132,7 @@ public class AnnotationServiceTests {
         //assert
         assertNotNull(annotationResponse);
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
         assertEquals(startX, annotationResponse.getStartX());
@@ -207,7 +207,7 @@ public class AnnotationServiceTests {
         //assert
         assertNotNull(annotationResponse);
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
         assertEquals(startX, annotationResponse.getStartX());

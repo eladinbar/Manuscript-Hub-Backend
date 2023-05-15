@@ -71,7 +71,7 @@ public class AnnotationResponseMapperTests {
         assertNotNull(annotationResponse);
         assertEquals(id, annotationResponse.getId());
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
         assertEquals(startX, annotationResponse.getStartX());
@@ -106,7 +106,7 @@ public class AnnotationResponseMapperTests {
         assertNotNull(annotationResponse);
         assertEquals(id, annotationResponse.getId());
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(startX, annotationResponse.getStartX());
         assertEquals(startY, annotationResponse.getStartY());
