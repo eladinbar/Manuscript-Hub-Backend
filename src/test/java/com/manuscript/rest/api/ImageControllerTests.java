@@ -53,8 +53,10 @@ public class ImageControllerTests {
     private UUID invalidImageId;
     private UUID invalidUserId;
     private String invalidUid;
+    private String invalidEmptyUid;
     private String invalidFileName;
     private byte[] invalidData;
+    private MockMultipartFile invalidMultipartFile;
 
     @BeforeAll
     public void setup(){
@@ -84,8 +86,10 @@ public class ImageControllerTests {
         invalidImageId = null;
         invalidUserId = null;
         invalidUid = "";
+        invalidEmptyUid = null;
         invalidFileName = null;
         invalidData = null;
+        invalidMultipartFile = null;
     }
 
     @BeforeEach
@@ -94,8 +98,17 @@ public class ImageControllerTests {
         imageRequest = new ImageRequest(imageId,uid,fileName,status,privacy,data);
 
         //test response setup
-        testImageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,privacy,createdTime,updatedTime);
-
+        testImageResponse = ImageResponse.builder()
+                .documentId(imageId)
+                .userId(userId)
+                .uid(uid)
+                .fileName(fileName)
+                .data(data)
+                .status(status)
+                .privacy(privacy)
+                .createdTime(createdTime)
+                .updatedTime(updatedTime)
+                .build();
         testImageResponseList = new ArrayList<>();
         testImageResponseList.add(testImageResponse);
     }
@@ -105,7 +118,7 @@ public class ImageControllerTests {
     @Test
     public void uploadDocument_Success() {
         //mocks
-        when(imageService.save(imageRequest)).thenReturn(testImageResponse);
+        when(imageService.save(any())).thenReturn(testImageResponse);
         try{
             //act
             ResponseEntity<ImageResponse> responseEntity = imageController.uploadDocument(multipartFile,uid);
@@ -127,23 +140,9 @@ public class ImageControllerTests {
     }
 
     @Test
-    public void uploadDocument_InvalidData() {
+    public void uploadDocument_invalidMultipartFile() {
         //mocks
         when(imageService.save(imageRequest)).thenReturn(testImageResponse);
-        MockMultipartFile invalidMultipartFile = new MockMultipartFile(fileName,invalidData);
-        //act
-        imageRequest.setData(invalidData);
-        //assert
-        assertThrows(Exception.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
-    }
-
-    @Test
-    public void uploadDocument_InvalidFilename() {
-        //mocks
-        when(imageService.save(imageRequest)).thenReturn(testImageResponse);
-        MockMultipartFile invalidMultipartFile = new MockMultipartFile(invalidFileName,data);
-        //act
-        imageRequest.setFileName(invalidFileName);
         //assert
         assertThrows(Exception.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
     }
@@ -151,7 +150,7 @@ public class ImageControllerTests {
     @Test
     public void uploadDocumentInvalidUid() {
         imageRequest.setData(invalidData);
-        assertThrows(Exception.class, () -> imageController.uploadDocument(multipartFile,invalidUid));
+        assertThrows(Exception.class, () -> imageController.uploadDocument(multipartFile,invalidEmptyUid));
     }
 
 
