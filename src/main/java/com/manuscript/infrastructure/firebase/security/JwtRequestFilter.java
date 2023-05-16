@@ -38,7 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         if (uri.startsWith("/api")) {
 
-            if(uri.contains("registerNew")){
+            if(uri.contains("register") || uri.contains("createInvitation") ){
                 try{
 
                     chain.doFilter(request, response);
