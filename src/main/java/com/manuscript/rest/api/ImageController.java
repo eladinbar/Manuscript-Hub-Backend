@@ -56,7 +56,7 @@ public class ImageController {
         }
     }
 
-    @PutMapping("/updateDocumentInfo")
+    @PatchMapping("/updateDocumentInfo")
     public ResponseEntity<ImageInfoResponse> updateImageInfo(@RequestBody ImageInfoRequest imageInfoRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkRequestNotNull(imageInfoRequest,false);
         ImageInfoResponse imageInfoResponse = imageService.updateInfo(imageInfoRequest);
