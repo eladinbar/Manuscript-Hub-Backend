@@ -87,7 +87,7 @@ public class AnnotationServiceImpl implements IAnnotationService {
     private void verifyImagePermission(UUID imageId, String uid) {
         //TODO when workspace sharing is added, permission verification needs to be modified
         ImageResponse image = imageService.getById(imageId);
-        if(!image.getUid().equals(uid) || image.getStatus().equals(Status.inactive))
+        if(!image.getUid().equals(uid) || image.getStatus().equals(Status.Disabled))
             throw new UnauthorizedException();
     }
 

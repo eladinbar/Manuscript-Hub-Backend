@@ -62,12 +62,16 @@ public class AlgorithmController {
 
     private void checkNotNull(AlgorithmRequest algorithmRequest, boolean newRequest) {
         if(newRequest) {
-            if(Stream.of(algorithmRequest.getUid(), algorithmRequest.getImageId(),
+            if(Stream.of(algorithmRequest.getUid(),
+                    algorithmRequest.getTitle(), algorithmRequest.getDescription(),
+                    algorithmRequest.getModelType(), algorithmRequest.getStatus(),
                     algorithmRequest.getUrl()).anyMatch(Objects::isNull))
                 throw new IllegalArgumentException("Algorithm request's fields must not be null.");
         }
-        else if(Stream.of(algorithmRequest.getId(), algorithmRequest.getUid(), algorithmRequest.getImageId(),
-                        algorithmRequest.getUrl()).anyMatch(Objects::isNull))
+        else if(Stream.of(algorithmRequest.getId(), algorithmRequest.getUid(),
+                algorithmRequest.getTitle(), algorithmRequest.getDescription(),
+                algorithmRequest.getModelType(), algorithmRequest.getStatus(),
+                algorithmRequest.getUrl()).anyMatch(Objects::isNull))
             throw new IllegalArgumentException("Algorithm request's fields must not be null.");
     }
 }

@@ -31,7 +31,7 @@ public class ImageController {
             throw new IllegalArgumentException("Invalid document data");
         if (uid == null)
             throw new IllegalArgumentException("User ID can't be null.");
-        ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(file.getBytes()).status(Status.active).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
+        ImageRequest imageRequest = ImageRequest.builder().uid(uid).data(file.getBytes()).status(Status.Enabled).fileName(Objects.requireNonNull(file.getOriginalFilename())).build();
         ImageResponse imageResponse = imageService.save(imageRequest);
         return ResponseEntity.ok(imageResponse);
     }

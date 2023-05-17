@@ -30,7 +30,7 @@ public class InvitationRequestResponseMapperImpl implements IRestMapper<Invitati
                         .email(rest.getEmail())
                         .name(rest.getName())
                         .role(rest.getRole())
-                        .status(Status.active)
+                        .status(Status.Enabled)
                         .createdTime(new Date())
                         .updatedTime(new Date())
                         .build())

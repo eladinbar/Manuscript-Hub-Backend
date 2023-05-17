@@ -33,7 +33,7 @@ public class InvitationRequestRequestMapperImpl implements IRestMapper<Invitatio
                         .email(rest.getEmail())
                         .name(rest.getName())
                         .role(rest.getRole())
-                        .status(Status.active)
+                        .status(Status.Enabled)
                         .phoneNumber(rest.getPhoneNumber())
                         .createdTime(new Date())
                         .updatedTime(new Date()).build())
