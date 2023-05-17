@@ -2,11 +2,11 @@ package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
 import com.manuscript.core.domain.algorithm.repository.IAlgorithmRepositoryService;
-import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.core.domain.user.repository.IUserRepositoryService;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.entities.AlgorithmEntity;
+import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IAlgorithmRepo;
+import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +18,19 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
-    private final IUserRepositoryService userServiceRepo;
+    private final IUserRepo userRepo;
     private final IAlgorithmRepo repo;
     private final IRepositoryEntityMapper<AlgorithmModel, AlgorithmEntity> mapper;
 
     @Override
     public AlgorithmModel save(AlgorithmModel model) throws IllegalArgumentException {
         AlgorithmEntity algorithmEntity = mapper.modelToEntity(model);
-        Optional<UserModel> user = userServiceRepo.getByUid(algorithmEntity.getUser().getUid());
-        if(!user.isPresent())
+        Optional<UserEntity> optionalUser = userRepo.findByUid(algorithmEntity.getUser().getUid());
+        if(!optionalUser.isPresent())
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
-        algorithmEntity.getUser().setId(user.get().getId());
+        UserEntity user = optionalUser.get();
+        algorithmEntity.setUser(user);
         algorithmEntity = repo.save(algorithmEntity);
         return mapper.entityToModel(algorithmEntity);
     }

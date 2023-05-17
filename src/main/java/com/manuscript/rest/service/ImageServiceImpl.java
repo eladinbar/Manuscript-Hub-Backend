@@ -74,7 +74,7 @@ public class ImageServiceImpl implements IImageService {
     }
 
     private void verifyPermission(String requestUid, String responseUid, Status responseStatus) throws NoImageFoundException, UnauthorizedException {
-        if(responseStatus.equals(Status.inactive))
+        if(responseStatus.equals(Status.Disabled))
             throw new NoImageFoundException();
         if(!requestUid.equals(responseUid))
             throw new UnauthorizedException();

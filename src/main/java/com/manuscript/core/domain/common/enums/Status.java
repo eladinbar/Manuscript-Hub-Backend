@@ -4,5 +4,5 @@ public enum Status {
     active,
     inactive,
     Enabled,
-    Disabled
+    Disabled,
 }

@@ -13,7 +13,11 @@ public class AlgorithmRequestMapperImpl implements IRestMapper<AlgorithmModel, A
         return AlgorithmRequest.builder()
                 .id(algorithmModel.getId())
                 .uid(algorithmModel.getUid())
+                .title(algorithmModel.getTitle())
+                .modelType(algorithmModel.getModelType())
+                .description(algorithmModel.getDescription())
                 .url(algorithmModel.getUrl())
+                .status(algorithmModel.getStatus())
                 .build();
     }
 
@@ -22,7 +26,11 @@ public class AlgorithmRequestMapperImpl implements IRestMapper<AlgorithmModel, A
         return AlgorithmModel.builder()
                 .id(algorithmRequest.getId())
                 .uid(algorithmRequest.getUid())
+                .title(algorithmRequest.getTitle())
+                .modelType(algorithmRequest.getModelType())
+                .description(algorithmRequest.getDescription())
                 .url(algorithmRequest.getUrl())
+                .status(algorithmRequest.getStatus())
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .build();
