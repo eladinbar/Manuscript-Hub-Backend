@@ -48,19 +48,19 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
 
     @Override
     public List<InvitationRequestResponse> acceptRequest(String email) {
-        return handleRequest(email, InvitationEnum.approved);
+        return handleRequest(email, InvitationEnum.Approved);
     }
 
     @Override
     public List<InvitationRequestResponse> denyRequest(String email) {
-        return handleRequest(email, InvitationEnum.disapprove);
+        return handleRequest(email, InvitationEnum.Denied);
     }
 
     private List<InvitationRequestResponse> handleRequest(String email, InvitationEnum invitationEnum) {
         Optional<InvitationRequestModel> emailOptional = getByEmailInvitationRequest.getByEmail(email);
         if (emailOptional.isPresent()) {
             InvitationRequestModel invitationRequestModel = emailOptional.get();
-            if (invitationEnum.equals(InvitationEnum.approved)) {
+            if (invitationEnum.equals(InvitationEnum.Approved)) {
                 UserModel userModel = invitationRequestModel.getUser();
                 createUser.create(userModel);
             }

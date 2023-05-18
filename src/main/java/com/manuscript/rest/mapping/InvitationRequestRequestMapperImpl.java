@@ -39,7 +39,7 @@ public class InvitationRequestRequestMapperImpl implements IRestMapper<Invitatio
                         .updatedTime(new Date()).build())
                 .createdTime(new Date())
                 .updatedTime(new Date())
-                .invitationEnum(InvitationEnum.pending)
+                .invitationEnum(InvitationEnum.Pending)
                 .build();
     }
 }
