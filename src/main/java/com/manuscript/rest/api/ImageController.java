@@ -1,5 +1,6 @@
 package com.manuscript.rest.api;
 
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.exceptions.FailedUploadException;
 import com.manuscript.core.exceptions.NoImageFoundException;
 import com.manuscript.core.exceptions.NoUserFoundException;
@@ -114,11 +115,25 @@ public class ImageController {
         imageService.deleteByIdImageInfo(imageInfoId, uid);
     }
 
-    @DeleteMapping("/deleteDocumentDataById/{imageDataId}/{uid}")
-    public void deleteImageDataById(@PathVariable UUID imageDataId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
+    @DeleteMapping("/deleteDocumentDataById/{imageDataId}/{uid}/{deleteAnnotation}")
+    public void deleteImageDataById(@PathVariable UUID imageDataId, @PathVariable String uid, @PathVariable boolean deleteAnnotation) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException{
         checkIdNotNull(imageDataId);
         checkUserIdNotNull(uid);
-        imageService.deleteByIdImageData(imageDataId, uid);
+        imageService.deleteByIdImageData(imageDataId, uid, deleteAnnotation);
+    }
+
+    @PatchMapping("/transferOwnership/{newOwnerUid}")
+    public ResponseEntity<ImageInfoResponse> transferOwnership(@RequestBody ImageInfoRequest imageInfoRequest, @PathVariable String newOwnerUid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        checkRequestNotNull(imageInfoRequest,false);
+        ImageInfoResponse imageInfoResponse = imageService.transferOwnership(imageInfoRequest, newOwnerUid);
+        return ResponseEntity.ok(imageInfoResponse);
+    }
+
+    @GetMapping("/getImageInfoByTextSearch/{searchText}/{uid}")
+    public ResponseEntity<Map<Privacy, List<ImageInfoResponse>>> getImageInfoByTextSearch(@PathVariable String searchText, @PathVariable String uid) throws IllegalArgumentException, NoUserFoundException  {
+        checkSearchTextNoNull(uid);
+        Map<Privacy, List<ImageInfoResponse>> result = imageService.getImageInfoByTextSearch(searchText,uid);
+        return ResponseEntity.ok(result);
     }
 
     private void checkIdNotNull(UUID id) throws IllegalArgumentException{
@@ -129,6 +144,11 @@ public class ImageController {
     private void checkUserIdNotNull(String uid) throws IllegalArgumentException{
         if (uid == null)
             throw new IllegalArgumentException("User ID can't be null.");
+    }
+
+    private void checkSearchTextNoNull(String searchText) throws IllegalArgumentException{
+        if (searchText == null)
+            throw new IllegalArgumentException("Search text can't be null.");
     }
 
     private void checkRequestNotNull(ImageInfoRequest imageInfoRequest, boolean newRequest) throws IllegalArgumentException{

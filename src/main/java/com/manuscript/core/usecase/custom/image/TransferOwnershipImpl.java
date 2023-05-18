@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-public class GetAllByUidImagesImpl implements IGetAllByUidImages{
+public class TransferOwnershipImpl implements ITransferOwnership{
     private final IImageRepositoryService _serviceRepo;
     @Override
-    public List<ImageInfoModel> getAllByUidImageInfos(String userId) { return _serviceRepo.getAllByUidImageInfos(userId); }
+    public ImageInfoModel transferOwnership(ImageInfoModel imageInfoModel, String newOwnerUid) { return _serviceRepo.transferOwnership(imageInfoModel, newOwnerUid); }
 }

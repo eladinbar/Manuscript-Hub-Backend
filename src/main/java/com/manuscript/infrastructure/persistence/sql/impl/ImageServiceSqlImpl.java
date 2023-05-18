@@ -1,6 +1,7 @@
 package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.common.enums.Privacy;
+import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.core.domain.image.repository.IImageRepositoryService;
 import com.manuscript.core.exceptions.NoImageFoundException;
@@ -12,10 +13,9 @@ import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -67,7 +67,7 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
     }
 
     @Override
-    public List<ImageInfoModel> getAllByUidImages(String userId) throws IllegalArgumentException {
+    public List<ImageInfoModel> getAllByUidImageInfos(String userId) throws IllegalArgumentException {
         Optional<UserEntity> optionalUser = userRepo.findByUid(userId);
         if(!optionalUser.isPresent())
             throw new IllegalArgumentException("No user found.\n" +
@@ -116,6 +116,49 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
     @Override
     public void deleteAll() {
         repo.deleteAll();
+    }
+
+    @Override
+    public Map<Privacy, List<ImageInfoModel>> getImageInfoByTextSearch(String searchText, String userId) {
+        Optional<UserEntity> optionalUser = userRepo.findByUid(userId);
+        if(!optionalUser.isPresent())
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity user = optionalUser.get();
+        Predicate<ImageEntity> filterPredicate = (ImageEntity image) ->
+                            image.getStatus() != Status.Disabled &&
+                            image.getTitle().contains(searchText) ||
+                            image.getAuthor().contains(searchText) ||
+                            image.getDescription().contains(searchText) ||
+                            image.getTags().toList().contains(searchText);
+        Map<Privacy, List<ImageInfoModel>> imageEntityDict = new HashMap<>();
+        imageEntityDict.put(Privacy.Private, repo.findAllByUser(user)
+                                            .stream().filter(filterPredicate).collect(Collectors.toList())
+                                            .stream().map(mapper::entityToModel).collect(Collectors.toList()));
+        imageEntityDict.put(Privacy.Shared, repo.findAllByPrivacyAndUser(Privacy.Shared, user)
+                                            .stream().filter(filterPredicate).collect(Collectors.toList())
+                                            .stream().map(mapper::entityToModel).collect(Collectors.toList()));
+        imageEntityDict.put(Privacy.Public, repo.findAllByPrivacy(Privacy.Shared)
+                                            .stream().filter(filterPredicate).collect(Collectors.toList())
+                                            .stream().map(mapper::entityToModel).collect(Collectors.toList()));
+        return imageEntityDict;
+    }
+
+    @Override
+    public ImageInfoModel transferOwnership(ImageInfoModel imageInfoModel, String newOwnerUid) {
+        Optional<ImageEntity> optionalImageEntity = repo.findById(imageInfoModel.getId());
+        if (!optionalImageEntity.isPresent()){
+            throw new NoImageFoundException();
+        }
+        ImageEntity imageEntity = optionalImageEntity.get();
+        Optional<UserEntity> optionalUserEntity = userRepo.findByUid(newOwnerUid);
+        if(!optionalUserEntity.isPresent())
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity userEntity = optionalUserEntity.get();
+        imageEntity.setUser(userEntity);
+        imageEntity = repo.save(imageEntity);
+        return mapper.entityToModel(imageEntity);
     }
 
     private List<ImageInfoModel> ImageEntityListToModelList(List<ImageEntity> imageEntityList){
