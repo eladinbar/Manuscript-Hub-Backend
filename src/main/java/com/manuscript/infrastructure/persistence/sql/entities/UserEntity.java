@@ -29,6 +29,6 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
-    @Column(name = "phoneNumber", columnDefinition = "TEXT")
+    @Column(name = "phone_number", columnDefinition = "TEXT")
     private String phoneNumber;
 }
