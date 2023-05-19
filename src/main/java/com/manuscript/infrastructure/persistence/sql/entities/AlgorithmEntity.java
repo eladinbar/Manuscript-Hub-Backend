@@ -22,7 +22,7 @@ public class AlgorithmEntity extends BaseEntity {
     @org.hibernate.annotations.Type(type = "uuid-char")
     UserEntity user;
 
-    @Column(name = "title", columnDefinition = "TEXT")
+    @Column(name = "title", nullable = false, columnDefinition = "TEXT")
     String title;
 
     @Enumerated(EnumType.STRING)
@@ -30,10 +30,10 @@ public class AlgorithmEntity extends BaseEntity {
     AlgorithmModelType modelType;
     String description;
 
-    @Column(name = "url", columnDefinition = "TEXT")
+    @Column(name = "url", nullable = false, unique = true, columnDefinition = "TEXT")
     String url;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     AlgorithmStatus status;
 }
