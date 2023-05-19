@@ -3,6 +3,7 @@ package com.manuscript.rest.api;
 import com.manuscript.rest.request.InvitationRequestRequest;
 import com.manuscript.rest.response.InvitationRequestResponse;
 import com.manuscript.rest.service.IInvitationRequestService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,32 +20,29 @@ public class InvitationRequestController {
         this.requestService = requestService;
     }
 
-
-    @GetMapping("/getAllInvitations")
-    public List<InvitationRequestResponse> getAllInvitations() {
-        return requestService.getAllInvitations();
-    }
-
     @PostMapping("/createInvitation")
     public List<InvitationRequestResponse> createInvitation(@RequestBody InvitationRequestRequest invitationRequestRequest) {
         return requestService.save(invitationRequestRequest);
     }
 
-    @GetMapping("/acceptRequest/{email}")
-    public List<InvitationRequestResponse> acceptRequest(@PathVariable String email) {
+    @GetMapping("/approveInvitationRequest/{email}")
+    public List<InvitationRequestResponse> approveInvitationRequest(@PathVariable String email) {
         if (email.isEmpty()) {
             requestService.getAllInvitations();
         }
-        return requestService.acceptRequest(email);
+        return requestService.approveRequest(email);
     }
 
-    @GetMapping("/denyRequest/{email}")
-    public List<InvitationRequestResponse> denyRequest(@PathVariable String email) {
+    @GetMapping("/denyInvitationRequest/{email}")
+    public List<InvitationRequestResponse> denyInvitationRequest(@PathVariable String email) {
         if (email.isEmpty()) {
             requestService.getAllInvitations();
         }
         return requestService.denyRequest(email);
     }
 
-
+    @GetMapping("/getAllInvitations")
+    public ResponseEntity<List<InvitationRequestResponse>> getAllInvitations() {
+        return ResponseEntity.ok(requestService.getAllInvitations());
+    }
 }

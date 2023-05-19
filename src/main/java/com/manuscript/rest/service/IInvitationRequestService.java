@@ -9,7 +9,7 @@ import java.util.List;
 public interface IInvitationRequestService {
     List<InvitationRequestResponse> getAllInvitations();
     List<InvitationRequestResponse> save(InvitationRequestRequest invitationRequestRequest);
-    List<InvitationRequestResponse> acceptRequest(String email);
+    List<InvitationRequestResponse> approveRequest(String email);
 
     List<InvitationRequestResponse> denyRequest(String email);
 }

@@ -47,7 +47,7 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
     }
 
     @Override
-    public List<InvitationRequestResponse> acceptRequest(String email) {
+    public List<InvitationRequestResponse> approveRequest(String email) {
         return handleRequest(email, InvitationEnum.Approved);
     }
 
