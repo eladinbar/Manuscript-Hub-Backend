@@ -17,17 +17,17 @@ import javax.persistence.*;
 @SuperBuilder
 @Getter
 public class UserEntity extends BaseEntity {
-    @Column(name = "uid", columnDefinition = "TEXT")
+    @Column(name = "uid", unique = true, nullable = false, columnDefinition = "TEXT")
     private String uid;
-    @Column(name = "email", columnDefinition = "TEXT")
+    @Column(name = "email", unique = true, nullable = false, columnDefinition = "TEXT")
     private String email;
-    @Column(name = "name", columnDefinition = "TEXT")
+    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String name;
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private Role role;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private Status status;
     @Column(name = "phoneNumber", columnDefinition = "TEXT")
     private String phoneNumber;
