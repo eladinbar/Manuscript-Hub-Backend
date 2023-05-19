@@ -4,10 +4,7 @@ import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.exceptions.NoAlgorithmFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
-import com.manuscript.core.usecase.custom.algorithm.ICreateAlgorithm;
-import com.manuscript.core.usecase.custom.algorithm.IDeleteByIdAlgorithm;
-import com.manuscript.core.usecase.custom.algorithm.IGetByIdAlgorithm;
-import com.manuscript.core.usecase.custom.algorithm.IUpdateAlgorithm;
+import com.manuscript.core.usecase.custom.algorithm.*;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.AlgorithmRequest;
 import com.manuscript.rest.response.AlgorithmResponse;
@@ -15,8 +12,10 @@ import com.manuscript.rest.response.ImageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -30,7 +29,10 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     private final ICreateAlgorithm createAlgorithmUseCase;
     private final IUpdateAlgorithm updateAlgorithmUseCase;
     private final IGetByIdAlgorithm getByIdAlgorithmUseCase;
+    private final IGetByUrlAlgorithm getByUrlAlgorithmUseCase;
+    private final IGetAllAlgorithms getAllAlgorithmsUseCase;
     private final IDeleteByIdAlgorithm deleteByIdAlgorithmUseCase;
+    private final IDeleteByUrlAlgorithm deleteByUrlAlgorithmUseCase;
 
     @Override
     public void run(AlgorithmRequest algorithmRequest) {
@@ -48,6 +50,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     @Override
     public AlgorithmResponse create(AlgorithmRequest algorithmRequest) {
         verifyUserDeveloperRole(algorithmRequest.getUid());
+        checkIfAlgorithmExists(algorithmRequest.getUrl());
         AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
         algorithmModel = createAlgorithmUseCase.create(algorithmModel);
         return algorithmResponseMapper.modelToRest(algorithmModel);
@@ -56,7 +59,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     @Override
     public AlgorithmResponse update(AlgorithmRequest algorithmRequest) {
         verifyUserDeveloperRole(algorithmRequest.getUid());
-        verifyAlgorithmAuthorization(algorithmRequest.getId(), algorithmRequest.getUid());
+        verifyAlgorithmAuthorization(algorithmRequest.getUid(), algorithmRequest.getId(), algorithmRequest.getUrl());
         AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
         algorithmModel = updateAlgorithmUseCase.update(algorithmModel);
         return algorithmResponseMapper.modelToRest(algorithmModel);
@@ -73,10 +76,32 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public void delete(UUID id, String uid) {
+    public AlgorithmResponse getByUrl(String url) {
+        Optional<AlgorithmModel> optionalModel = getByUrlAlgorithmUseCase.getByUrl(url);
+        if(optionalModel.isPresent()) {
+            AlgorithmModel algorithmModel = optionalModel.get();
+            return algorithmResponseMapper.modelToRest(algorithmModel);
+        }
+        throw new NoAlgorithmFoundException();
+    }
+
+    @Override
+    public List<AlgorithmResponse> getAll() {
+        return getAllAlgorithmsUseCase.getAll().stream().map(algorithmResponseMapper::modelToRest).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteById(UUID id, String uid) {
         verifyUserDeveloperRole(uid);
-        verifyAlgorithmAuthorization(id, uid);
+        verifyAlgorithmAuthorization(uid, id);
         deleteByIdAlgorithmUseCase.deleteById(id);
+    }
+
+    @Override
+    public void deleteByUrl(String url, String uid) {
+        verifyUserDeveloperRole(uid);
+        verifyAlgorithmAuthorization(uid, url);
+        deleteByUrlAlgorithmUseCase.deleteByUrl(url);
     }
 
     @Override
@@ -84,8 +109,8 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         throw new RuntimeException("Unimplemented");
     }
 
-    private void verifyUserDeveloperRole(String userId) {
-        if(userService.getByUid(userId).getRole().equals(Role.User))
+    private void verifyUserDeveloperRole(String uid) {
+        if(userService.getByUid(uid).getRole().equals(Role.User))
             throw new UnauthorizedException("User does not have sufficient authorization to upload an algorithm");
     }
 
@@ -104,15 +129,46 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         getByIdAlgorithmUseCase.getById(algorithmId);
     }
 
-    private void verifyAlgorithmAuthorization(UUID algorithmId, String uid) {
+    private void verifyAlgorithmAuthorization(String uid, UUID algorithmId, String url) {
+        Optional<AlgorithmModel> optionalAlgorithm = Optional.empty();
+        if(algorithmId != null)
+            optionalAlgorithm = getByIdAlgorithmUseCase.getById(algorithmId);
+        if(!optionalAlgorithm.isPresent())
+            optionalAlgorithm = getByUrlAlgorithmUseCase.getByUrl(url);
+        if(optionalAlgorithm.isPresent()) {
+            AlgorithmModel algorithmModel = optionalAlgorithm.get();
+            if (userService.getByUid(uid).getRole().equals(Role.Admin) || algorithmModel.getUid().equals(uid))
+                return;
+            throw new UnauthorizedException("User has no authorization to modify this algorithm.");
+        }
+        throw new NoAlgorithmFoundException("No algorithm with the given ID or URL exists.");
+    }
+
+    private void verifyAlgorithmAuthorization(String uid, UUID algorithmId) {
         Optional<AlgorithmModel> optionalAlgorithm = getByIdAlgorithmUseCase.getById(algorithmId);
         if(optionalAlgorithm.isPresent()) {
             AlgorithmModel algorithmModel = optionalAlgorithm.get();
-            if(algorithmModel.getUid().equals(uid))
+            if (userService.getByUid(uid).getRole().equals(Role.Admin) || algorithmModel.getUid().equals(uid))
                 return;
             throw new UnauthorizedException("User has no authorization to modify this algorithm.");
         }
         throw new NoAlgorithmFoundException("No algorithm with the given ID exists.");
+    }
+
+    private void verifyAlgorithmAuthorization(String uid, String url) {
+        Optional<AlgorithmModel> optionalAlgorithm = getByUrlAlgorithmUseCase.getByUrl(url);
+        if(optionalAlgorithm.isPresent()) {
+            AlgorithmModel algorithmModel = optionalAlgorithm.get();
+            if (userService.getByUid(uid).getRole().equals(Role.Admin) || algorithmModel.getUid().equals(uid))
+                return;
+            throw new UnauthorizedException("User has no authorization to modify this algorithm.");
+        }
+        throw new NoAlgorithmFoundException("No algorithm with the given URL exists.");
+    }
+
+    private void checkIfAlgorithmExists(String url) {
+        if(getByUrlAlgorithmUseCase.getByUrl(url).isPresent())
+            throw new IllegalArgumentException("An algorithm with the given URL already exists.");
     }
 
     private void verifyImagePermission(UUID imageId, String uid) {

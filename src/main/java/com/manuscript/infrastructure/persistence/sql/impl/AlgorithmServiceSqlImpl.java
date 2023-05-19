@@ -10,10 +10,7 @@ import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -37,12 +34,20 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
 
     @Override
     public AlgorithmModel update(AlgorithmModel model) throws IllegalArgumentException {
-        Optional<AlgorithmEntity> oldAlgorithm = repo.findById(model.getId());
+        Optional<AlgorithmEntity> oldAlgorithm = Optional.empty();
+        if(model.getId() != null)
+            oldAlgorithm = repo.findById(model.getId());
+        if(!oldAlgorithm.isPresent())
+            oldAlgorithm = repo.findByUrl(model.getUrl());
         if(!oldAlgorithm.isPresent())
             throw new IllegalArgumentException("No old algorithm found.\n" +
                     "This should not happen, please contact an administrator.");
         AlgorithmEntity algorithmEntity = oldAlgorithm.get();
+        algorithmEntity.setTitle(model.getTitle());
+        algorithmEntity.setDescription(model.getDescription());
+        algorithmEntity.setModelType(model.getModelType());
         algorithmEntity.setUrl(model.getUrl());
+        algorithmEntity.setStatus(model.getStatus());
         algorithmEntity.setUpdatedTime(new Date());
         algorithmEntity = repo.save(algorithmEntity);
         return mapper.entityToModel(algorithmEntity);
@@ -59,13 +64,25 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
     }
 
     @Override
+    public Optional<AlgorithmModel> getByUrl(String url) throws IllegalArgumentException {
+        return repo.findByUrl(url).map(mapper::entityToModel);
+    }
+
+    @Override
     public List<AlgorithmModel> getAll() {
-        throw new RuntimeException("Unimplemented");
+        List<AlgorithmModel> result = new ArrayList<>();
+        repo.findAll().forEach(invitationRequest -> result.add(mapper.entityToModel(invitationRequest)));
+        return result;
     }
 
     @Override
     public void deleteById(UUID id) {
         repo.deleteById(id);
+    }
+
+    @Override
+    public void deleteByUrl(String url) {
+        repo.deleteByUrl(url);
     }
 
     @Override

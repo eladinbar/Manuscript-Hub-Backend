@@ -185,7 +185,7 @@ public class AlgorithmControllerTests {
         when(algorithmService.getById(any(UUID.class))).thenReturn(newAlgorithm);
 
         //act
-        ResponseEntity<AlgorithmResponse> response = algorithmController.getAlgorithm(id, uid);
+        ResponseEntity<AlgorithmResponse> response = algorithmController.getAlgorithmById(id, uid);
 
         //assert
         assertTrue(response.hasBody());
@@ -203,14 +203,14 @@ public class AlgorithmControllerTests {
     public void getAlgorithmNullId() {
         //act
         //assert
-        assertThrows(IllegalArgumentException.class, () -> algorithmController.getAlgorithm(null, uid));
+        assertThrows(IllegalArgumentException.class, () -> algorithmController.getAlgorithmById(null, uid));
     }
 
     @Test
     public void getAlgorithmNullUid() {
         //act
         //assert
-        assertThrows(IllegalArgumentException.class, () -> algorithmController.getAlgorithm(id, null));
+        assertThrows(IllegalArgumentException.class, () -> algorithmController.getAlgorithmById(id, null));
     }
 
     ////--------------------------------------- 'deleteAlgorithm' tests
@@ -218,7 +218,7 @@ public class AlgorithmControllerTests {
     @Test
     public void deleteAlgorithmSuccess() {
         //act
-        algorithmController.deleteAlgorithm(algorithmRequest.getId(), algorithmRequest.getUid());
+        algorithmController.deleteAlgorithmById(algorithmRequest.getId(), algorithmRequest.getUid());
     }
 
     @Test
@@ -229,7 +229,7 @@ public class AlgorithmControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                algorithmController.deleteAlgorithm(algorithmRequest.getId(), algorithmRequest.getUid()));
+                algorithmController.deleteAlgorithmById(algorithmRequest.getId(), algorithmRequest.getUid()));
     }
 
     @Test
@@ -240,6 +240,6 @@ public class AlgorithmControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                algorithmController.deleteAlgorithm(algorithmRequest.getId(), algorithmRequest.getUid()));
+                algorithmController.deleteAlgorithmById(algorithmRequest.getId(), algorithmRequest.getUid()));
     }
 }

@@ -304,7 +304,7 @@ public class AlgorithmServiceTests {
         when(userService.getByUid(any(String.class))).thenReturn(developerUserResponse);
 
         //act
-        algorithmService.delete(id, uid);
+        algorithmService.deleteById(id, uid);
     }
 
     @Test
@@ -317,7 +317,7 @@ public class AlgorithmServiceTests {
         when(userService.getByUid(any(String.class))).thenReturn(developerUserResponse);
 
         //act
-        assertThrows(NoAlgorithmFoundException.class, () -> algorithmService.delete(invalidId, uid));
+        assertThrows(NoAlgorithmFoundException.class, () -> algorithmService.deleteById(invalidId, uid));
     }
 
     @Test
@@ -330,7 +330,7 @@ public class AlgorithmServiceTests {
         when(userService.getByUid(any(String.class))).thenReturn(developerUserResponse);
 
         //act
-        assertThrows(UnauthorizedException.class, () -> algorithmService.delete(id, invalidUid));
+        assertThrows(UnauthorizedException.class, () -> algorithmService.deleteById(id, invalidUid));
     }
 
     @Test
@@ -343,6 +343,6 @@ public class AlgorithmServiceTests {
         when(userService.getByUid(any(String.class))).thenReturn(userResponse);
 
         //act
-        assertThrows(UnauthorizedException.class, () -> algorithmService.delete(id, uid));
+        assertThrows(UnauthorizedException.class, () -> algorithmService.deleteById(id, uid));
     }
 }
