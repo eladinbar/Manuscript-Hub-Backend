@@ -144,7 +144,7 @@ public class ImageServiceImpl implements IImageService {
         ImageDataResponse imageDataResponse = getByIdData(imageDataId,userId); //get requested image from db to check if permissions match.
         verifyDeletePermissions(imageDataResponse.getInfoId(), userId);
         if (deleteAnnotation) {
-            annotationService.deleteAllByImageDataId(imageDataId, userId);
+            annotationService.deleteAllByImageDataId(imageDataId);
         }
         deleteByIdImageDataUseCase.deleteById(imageDataId);
     }
