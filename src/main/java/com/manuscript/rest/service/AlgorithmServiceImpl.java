@@ -30,6 +30,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     private final IUpdateAlgorithm updateAlgorithmUseCase;
     private final IGetByIdAlgorithm getByIdAlgorithmUseCase;
     private final IGetByUrlAlgorithm getByUrlAlgorithmUseCase;
+    private final IGetAllByUidAlgorithms getAllByUidAlgorithmsUseCase;
     private final IGetAllAlgorithms getAllAlgorithmsUseCase;
     private final IDeleteByIdAlgorithm deleteByIdAlgorithmUseCase;
     private final IDeleteByUrlAlgorithm deleteByUrlAlgorithmUseCase;
@@ -86,7 +87,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public List<AlgorithmResponse> getAll() {
+    public List<AlgorithmResponse> getAllByUid(String uid) {
+        verifyUserDeveloperRole(uid);
+        return getAllByUidAlgorithmsUseCase.getAllByUid(uid).stream().map(algorithmResponseMapper::modelToRest).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AlgorithmResponse> getAll(String uid) {
+        verifyUserAdminRole(uid);
         return getAllAlgorithmsUseCase.getAll().stream().map(algorithmResponseMapper::modelToRest).collect(Collectors.toList());
     }
 
@@ -105,13 +113,18 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public void deleteAllByUserId(UUID userId) {
+    public void deleteAllByUid(String uid, String adminUid) {
         throw new RuntimeException("Unimplemented");
     }
 
     private void verifyUserDeveloperRole(String uid) {
         if(userService.getByUid(uid).getRole().equals(Role.User))
-            throw new UnauthorizedException("User does not have sufficient authorization to upload an algorithm");
+            throw new UnauthorizedException("User does not have sufficient authorization to upload an algorithm.");
+    }
+
+    private void verifyUserAdminRole(String uid) {
+        if(!userService.getByUid(uid).getRole().equals(Role.Admin))
+            throw new UnauthorizedException("User does not have permission to perform this operation.");
     }
 
     private boolean algorithmExists(UUID algorithmId) {

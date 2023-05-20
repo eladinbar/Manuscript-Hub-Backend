@@ -12,8 +12,9 @@ public interface IAlgorithmService {
     AlgorithmResponse update(AlgorithmRequest algorithmRequest);
     AlgorithmResponse getById(UUID algorithmId);
     AlgorithmResponse getByUrl(String url);
-    List<AlgorithmResponse> getAll();
+    List<AlgorithmResponse> getAll(String uid);
+    List<AlgorithmResponse> getAllByUid(String uid);
     void deleteById(UUID id, String uid);
     void deleteByUrl(String url, String uid);
-    void deleteAllByUserId(UUID userId);
+    void deleteAllByUid(String uid, String adminUid);
 }

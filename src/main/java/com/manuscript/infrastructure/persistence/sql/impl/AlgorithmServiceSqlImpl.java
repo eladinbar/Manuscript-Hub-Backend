@@ -69,6 +69,18 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
     }
 
     @Override
+    public List<AlgorithmModel> getAllByUid(String uid) {
+        Optional<UserEntity> optionalUser = userRepo.findByUid(uid);
+        if(!optionalUser.isPresent())
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity user = optionalUser.get();
+        List<AlgorithmModel> result = new ArrayList<>();
+        repo.findAllByUser(user).forEach(invitationRequest -> result.add(mapper.entityToModel(invitationRequest)));
+        return result;
+    }
+
+    @Override
     public List<AlgorithmModel> getAll() {
         List<AlgorithmModel> result = new ArrayList<>();
         repo.findAll().forEach(invitationRequest -> result.add(mapper.entityToModel(invitationRequest)));
