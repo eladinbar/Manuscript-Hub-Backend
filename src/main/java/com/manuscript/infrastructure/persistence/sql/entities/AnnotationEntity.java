@@ -17,16 +17,16 @@ import java.util.UUID;
 @Getter
 public class AnnotationEntity extends BaseEntity {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "userId", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     @org.hibernate.annotations.Type(type = "uuid-char")
     UserEntity user;
 
-    @Column(name = "imageId", nullable = false, updatable = false)
+    @Column(name = "image_data_id", nullable = false, updatable = false)
     @org.hibernate.annotations.Type(type = "uuid-char")
-    UUID imageId;
+    UUID imageDataId;
 
     @ManyToOne()
-    @JoinColumn(name = "algorithmId", updatable = false)
+    @JoinColumn(name = "algorithm_id", updatable = false)
     @org.hibernate.annotations.Type(type = "uuid-char")
     AlgorithmEntity algorithm;
 

@@ -13,6 +13,6 @@ public class GetAllByImageIdAnnotationsImpl implements IGetAllByImageIdAnnotatio
 
     @Override
     public List<AnnotationModel> getAllByImageId(UUID imageId) {
-        return _serviceRepo.getAllByImageId(imageId);
+        return _serviceRepo.getAllByImageDataId(imageId);
     }
 }

@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Getter
 public class AlgorithmEntity extends BaseEntity {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "userId", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     @org.hibernate.annotations.Type(type = "uuid-char")
     UserEntity user;
 

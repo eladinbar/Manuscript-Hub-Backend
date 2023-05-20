@@ -25,7 +25,7 @@ public class UserEntity extends BaseEntity {
     @Column(name = "name", columnDefinition = "TEXT")
     private String name;
 
-    @Column(name = "phoneNumber", columnDefinition = "TEXT")
+    @Column(name = "phone_number", columnDefinition = "TEXT")
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)

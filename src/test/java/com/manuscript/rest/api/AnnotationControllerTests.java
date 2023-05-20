@@ -256,7 +256,7 @@ public class AnnotationControllerTests {
         List<AnnotationResponse> annotationResponses = new ArrayList<>();
 
         ////mock service
-        when(annotationService.getAllByImageId(any(UUID.class), any(String.class))).thenReturn(annotationResponses);
+        when(annotationService.getAllByImageDataId(any(UUID.class), any(String.class))).thenReturn(annotationResponses);
 
         //act
         ResponseEntity<List<AnnotationResponse>> responses =

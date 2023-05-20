@@ -275,7 +275,7 @@ public class AnnotationServiceTests {
 
         //act
         List<AnnotationResponse> annotationResponses =
-                annotationService.getAllByImageId(annotationRequest.getImageDataId(), annotationRequest.getUid());
+                annotationService.getAllByImageDataId(annotationRequest.getImageDataId(), annotationRequest.getUid());
 
         //assert
         assertNotNull(annotationResponses);
@@ -292,7 +292,7 @@ public class AnnotationServiceTests {
         //act
         //assert
         assertThrows(UnauthorizedException.class, () ->
-                annotationService.getAllByImageId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
+                annotationService.getAllByImageDataId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
     }
 
     @Test
@@ -306,7 +306,7 @@ public class AnnotationServiceTests {
         //act
         //assert
         assertThrows(NoSuchElementException.class, () ->
-                annotationService.getAllByImageId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
+                annotationService.getAllByImageDataId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
     }
 
     ////--------------------------------------- 'delete' tests

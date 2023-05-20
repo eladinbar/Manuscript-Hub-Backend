@@ -84,7 +84,7 @@ public class ImageController {
     public ResponseEntity<List<ImageDataResponse>> getImageDatasByImageInfoId(@PathVariable UUID imageInfoId, @PathVariable String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         checkIdNotNull(imageInfoId);
         checkUserIdNotNull(uid);
-        List<ImageDataResponse> result = imageService.getAllByImageInfoIdImageData(imageInfoId, uid);
+        List<ImageDataResponse> result = imageService.getAllByImageInfoIdImageDatas(imageInfoId, uid);
         return ResponseEntity.ok(result);
     }
 

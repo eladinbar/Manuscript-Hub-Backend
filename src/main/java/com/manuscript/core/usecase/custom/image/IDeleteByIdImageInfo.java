@@ -5,7 +5,7 @@ import com.manuscript.core.usecase.common.IDeleteByIdUseCase;
 
 import java.util.UUID;
 
-public interface IDeleteByIdImage extends IDeleteByIdUseCase<ImageInfoModel> {
+public interface IDeleteByIdImageInfo extends IDeleteByIdUseCase<ImageInfoModel> {
     @Override
     void deleteById(UUID id) throws IllegalArgumentException;
 }

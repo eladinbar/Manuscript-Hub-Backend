@@ -64,8 +64,8 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public List<AnnotationModel> getAllByImageId(UUID imageDataId) {
-        List<AnnotationEntity> annotationEntities = repo.findAllByImageId(imageDataId);
+    public List<AnnotationModel> getAllByImageDataId(UUID imageDataId) {
+        List<AnnotationEntity> annotationEntities = repo.findAllByImageDataId(imageDataId);
         List<AnnotationModel> annotationModels = new ArrayList<>();
         for (AnnotationEntity annotationEntity : annotationEntities) {
             annotationModels.add(mapper.entityToModel(annotationEntity));
@@ -75,8 +75,7 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
 
     @Override
     public List<AnnotationModel> getAll() {
-        List<AnnotationEntity> annotationEntities = new ArrayList<>();
-        repo.findAll().forEach(annotationEntities::add);
+        List<AnnotationEntity> annotationEntities = repo.findAll();
         List<AnnotationModel> annotationModels = new ArrayList<>();
         for (AnnotationEntity annotationEntity : annotationEntities) {
             annotationModels.add(mapper.entityToModel(annotationEntity));
@@ -90,8 +89,8 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public void deleteAllByDocumentId(UUID documentId) {
-//        repo.delete();
+    public void deleteAllByImageDataId(UUID imageDataId) {
+        repo.deleteAllByImageDataId(imageDataId);
     }
 
     @Override

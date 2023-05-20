@@ -8,9 +8,6 @@ import com.manuscript.rest.forms.request.ImageDataRequest;
 import com.manuscript.rest.forms.request.ImageInfoRequest;
 import com.manuscript.rest.forms.response.ImageDataResponse;
 import com.manuscript.rest.forms.response.ImageInfoResponse;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +20,7 @@ public interface IImageService {
     ImageInfoResponse updateInfo(ImageInfoRequest imageInfoRequest)                                     throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageInfoResponse getByIdInfo(UUID imageInfoId, String userId)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageDataResponse getByIdData(UUID imageDataId, String userId)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    List<ImageDataResponse> getAllByImageInfoIdImageData(UUID imageId, String userId)                   throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    List<ImageDataResponse> getAllByImageInfoIdImageDatas(UUID imageId, String userId)                   throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     List<ImageInfoResponse> getAllByUidImageInfos(String userId)                                        throws IllegalArgumentException, NoUserFoundException;
     List<ImageInfoResponse> getAllPublicImages();
     List<ImageInfoResponse> getAllSharedImages(String userId)                                           throws IllegalArgumentException, NoUserFoundException;

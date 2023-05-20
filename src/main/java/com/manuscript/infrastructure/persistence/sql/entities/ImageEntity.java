@@ -20,7 +20,7 @@ import java.util.Date;
 @Getter
 public class ImageEntity extends BaseEntity {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "userId", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     @org.hibernate.annotations.Type(type = "uuid-char")
     private UserEntity user;
 
@@ -31,7 +31,7 @@ public class ImageEntity extends BaseEntity {
     private String author;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "publicationDate")
+    @Column(name = "publication_date")
     private Date publicationDate;
 
     @Column(name = "description", columnDefinition = "TEXT")
@@ -43,7 +43,7 @@ public class ImageEntity extends BaseEntity {
     private JSONArray tags;
 
     @Lob
-    @Column(name = "sharedUserIds", columnDefinition = "JSON")
+    @Column(name = "shared_user_ids", columnDefinition = "JSON")
     @org.hibernate.annotations.Type(type = "json")
     private JSONArray sharedUserIds;
 

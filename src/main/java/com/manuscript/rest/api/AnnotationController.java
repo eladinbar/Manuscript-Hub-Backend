@@ -43,7 +43,7 @@ public class AnnotationController {
     public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByDocumentId(@PathVariable UUID documentId, @PathVariable String uid) {
         if(documentId == null || uid == null)
             throw new IllegalArgumentException("Invalid document or user ID.");
-        List<AnnotationResponse> result = annotationService.getAllByImageId(documentId, uid);
+        List<AnnotationResponse> result = annotationService.getAllByImageDataId(documentId, uid);
         return ResponseEntity.ok(result);
     }
 

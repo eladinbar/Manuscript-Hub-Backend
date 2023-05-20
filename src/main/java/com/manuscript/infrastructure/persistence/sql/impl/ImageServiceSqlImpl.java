@@ -7,6 +7,7 @@ import com.manuscript.core.domain.image.repository.IImageRepositoryService;
 import com.manuscript.core.exceptions.NoImageFoundException;
 import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
+import com.manuscript.infrastructure.persistence.sql.repositories.IAnnotationRepo;
 import com.manuscript.infrastructure.persistence.sql.repositories.IImageRepo;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ImageServiceSqlImpl implements IImageRepositoryService {
     private final IUserRepo userRepo;
-    private final IImageRepo repo;
+    private final IImageRepo imageRepo;
     private final IRepositoryEntityMapper<ImageInfoModel, ImageEntity> mapper;
 
     @Override
@@ -33,13 +34,13 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
         imageEntity.setUser(user);
-        imageEntity = repo.save(imageEntity);
+        imageEntity = imageRepo.save(imageEntity);
         return mapper.entityToModel(imageEntity);
     }
 
     @Override
     public ImageInfoModel update(ImageInfoModel imageInfoModel) throws IllegalArgumentException, NoImageFoundException {
-        Optional<ImageEntity> optionalImageEntity = repo.findById(imageInfoModel.getId());
+        Optional<ImageEntity> optionalImageEntity = imageRepo.findById(imageInfoModel.getId());
         if (!optionalImageEntity.isPresent()){
             throw new NoImageFoundException();
         }
@@ -52,13 +53,13 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
         currentImageEntity.setTags(newImageEntity.getTags());
         currentImageEntity.setSharedUserIds(newImageEntity.getSharedUserIds());
         currentImageEntity.setPrivacy(newImageEntity.getPrivacy());
-        newImageEntity = repo.save(currentImageEntity);
+        newImageEntity = imageRepo.save(currentImageEntity);
         return mapper.entityToModel(newImageEntity);
     }
 
     @Override
     public Optional<ImageInfoModel> getById(UUID id) throws IllegalArgumentException {
-        Optional<ImageEntity> optionalImageEntity = repo.findById(id);
+        Optional<ImageEntity> optionalImageEntity = imageRepo.findById(id);
         if (!optionalImageEntity.isPresent()){
             return Optional.empty();
         }
@@ -73,14 +74,14 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
-        List<ImageEntity> imageEntityList = repo.findAllByUser(user);
+        List<ImageEntity> imageEntityList = imageRepo.findAllByUser(user);
         List<ImageInfoModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
 
     @Override
     public List<ImageInfoModel> getAllPublicImages() {
-        List<ImageEntity> imageEntityList = repo.findAllByPrivacy(Privacy.Public);
+        List<ImageEntity> imageEntityList = imageRepo.findAllByPrivacy(Privacy.Public);
         List<ImageInfoModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
@@ -92,30 +93,30 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
-        List<ImageEntity> imageEntityList = repo.findAllByPrivacyAndUser(Privacy.Shared, user);
+        List<ImageEntity> imageEntityList = imageRepo.findAllByPrivacyAndUser(Privacy.Shared, user);
         List<ImageInfoModel> result = ImageEntityListToModelList(imageEntityList);
         return result;
     }
 
     @Override
     public void deleteById(UUID id) {
-        repo.deleteById(id);
+        imageRepo.deleteById(id);
     }
 
     public boolean existsById(UUID id) throws IllegalArgumentException {
-        return repo.existsById(id);
+        return imageRepo.existsById(id);
     }
 
     @Override
     public List<ImageInfoModel> getAll() {
         List<ImageInfoModel> result = new ArrayList<>();
-        repo.findAll().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
+        imageRepo.findAll().forEach(imageDocument -> result.add(mapper.entityToModel(imageDocument)));
         return result;
     }
 
     @Override
     public void deleteAll() {
-        repo.deleteAll();
+        imageRepo.deleteAll();
     }
 
     @Override
@@ -132,13 +133,13 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
                             image.getDescription().contains(searchText) ||
                             image.getTags().toList().contains(searchText);
         Map<Privacy, List<ImageInfoModel>> imageEntityDict = new HashMap<>();
-        imageEntityDict.put(Privacy.Private, repo.findAllByUser(user)
+        imageEntityDict.put(Privacy.Private, imageRepo.findAllByUser(user)
                                             .stream().filter(filterPredicate).collect(Collectors.toList())
                                             .stream().map(mapper::entityToModel).collect(Collectors.toList()));
-        imageEntityDict.put(Privacy.Shared, repo.findAllByPrivacyAndUser(Privacy.Shared, user)
+        imageEntityDict.put(Privacy.Shared, imageRepo.findAllByPrivacyAndUser(Privacy.Shared, user)
                                             .stream().filter(filterPredicate).collect(Collectors.toList())
                                             .stream().map(mapper::entityToModel).collect(Collectors.toList()));
-        imageEntityDict.put(Privacy.Public, repo.findAllByPrivacy(Privacy.Shared)
+        imageEntityDict.put(Privacy.Public, imageRepo.findAllByPrivacy(Privacy.Shared)
                                             .stream().filter(filterPredicate).collect(Collectors.toList())
                                             .stream().map(mapper::entityToModel).collect(Collectors.toList()));
         return imageEntityDict;
@@ -146,7 +147,7 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
 
     @Override
     public ImageInfoModel transferOwnership(ImageInfoModel imageInfoModel, String newOwnerUid) {
-        Optional<ImageEntity> optionalImageEntity = repo.findById(imageInfoModel.getId());
+        Optional<ImageEntity> optionalImageEntity = imageRepo.findById(imageInfoModel.getId());
         if (!optionalImageEntity.isPresent()){
             throw new NoImageFoundException();
         }
@@ -157,7 +158,7 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
                     "This should not happen, please contact an administrator.");
         UserEntity userEntity = optionalUserEntity.get();
         imageEntity.setUser(userEntity);
-        imageEntity = repo.save(imageEntity);
+        imageEntity = imageRepo.save(imageEntity);
         return mapper.entityToModel(imageEntity);
     }
 

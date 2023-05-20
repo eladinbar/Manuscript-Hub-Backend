@@ -47,7 +47,7 @@ public class ImageDataServiceNoSqlImpl implements IImageDataRepositoryService {
     }
 
     @Override
-    public void deleteById(UUID id) { }
+    public void deleteById(UUID id) { repo.deleteById(id); }
 
     @Override
     public boolean existsById(UUID id) throws IllegalArgumentException {

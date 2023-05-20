@@ -13,9 +13,9 @@ public interface IAnnotationService {
 
     AnnotationResponse get(AnnotationRequest annotationRequest);
 
-    List<AnnotationResponse> getAllByImageId(UUID imageId, String uid);
+    List<AnnotationResponse> getAllByImageDataId(UUID imageDataId, String uid);
 
-    void delete(UUID annotationId, UUID documentId, String uid);
+    void delete(UUID annotationId);
 
-    void deleteAllByDocumentId(UUID documentId, String uid);
+    void deleteAllByImageDataId(UUID imageDataId);
 }
