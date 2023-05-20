@@ -53,6 +53,11 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
     private void checkNotNull(UserRequest userRequest, boolean newRequest) {
         if (Stream.of(userRequest.getUid(),  userRequest.getRole(),
                 userRequest.getEmail(), userRequest.getName(), userRequest.getPhoneNumber()).anyMatch(Objects::isNull))

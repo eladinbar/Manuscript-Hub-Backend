@@ -58,4 +58,9 @@ public class AuthenticationController {
         authenticationService.addRole(uid, RoleConstants.REG_USER);
         throw new NoSuchFieldException();   //todo: need to check this exception
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

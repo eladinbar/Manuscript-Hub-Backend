@@ -3,6 +3,7 @@ package com.manuscript.rest.api;
 import com.manuscript.rest.request.InvitationRequestRequest;
 import com.manuscript.rest.response.InvitationRequestResponse;
 import com.manuscript.rest.service.IInvitationRequestService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,5 +45,10 @@ public class InvitationRequestController {
     @GetMapping("/getAllInvitations")
     public ResponseEntity<List<InvitationRequestResponse>> getAllInvitations() {
         return ResponseEntity.ok(requestService.getAllInvitations());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
