@@ -43,13 +43,15 @@ public class ImageController {
             return ResponseEntity.ok(imageInfoResponse);
     }
 
-    @PostMapping("/uploadDocumentData/{imageInfoId}")
-    public void uploadImageData(@RequestParam("file") List<MultipartFile> filesList, @PathVariable UUID imageInfoId) {
+    @PostMapping("/uploadDocumentData/{imageInfoId}/{uid}")
+    public void uploadImageData(@RequestParam("file") List<MultipartFile> filesList, @PathVariable UUID imageInfoId, @PathVariable String uid) {
         if (filesList == null || filesList.isEmpty())
             throw new IllegalArgumentException("Invalid document data.");
         checkIdNotNull(imageInfoId);
+        boolean succeededSavingData = false;
         try {
             List<MultipartFile> correctFilesList = checkAndFixFilesList(filesList);
+            List<ImageDataRequest> imageDataRequestList = new ArrayList<>();
             for (int index = 0; index < correctFilesList.toArray().length; index++) {
                 MultipartFile file = correctFilesList.get(index);
                 ImageDataRequest imageDataRequest = ImageDataRequest.builder()
@@ -58,11 +60,21 @@ public class ImageController {
                         .fileName(Objects.requireNonNull(file.getOriginalFilename()))
                         .index(index)
                         .build();
+                imageDataRequestList.add(imageDataRequest);
+            }
+            for (ImageDataRequest imageDataRequest : imageDataRequestList){
                 imageService.saveData(imageDataRequest);
+                succeededSavingData = true;
             }
         }
-        catch (IOException ioException) {
+        catch (IOException ioException){
             throw new FailedUploadException("Something went wrong trying to retrieve file data");
+        }
+        catch (Exception exception) {
+            if (!succeededSavingData) {
+                deleteImageInfoById(imageInfoId, uid);
+            }
+            throw exception;
         }
     }
 
@@ -203,10 +215,11 @@ public class ImageController {
                 || fileType.equals("image/jpeg")
                 || fileType.equals("application/pdf");
         if (!isSupportedType){
-            throw new IllegalArgumentException("unsupported file type");
+            throw new IllegalArgumentException("Unsupported file type, expected image or pdf");
         }
     }
 
+    //TODO: fix function to convert pdf to list of images saved as MultipartFile
     private List<MultipartFile> convertIfPdfToPngFiles(MultipartFile file) throws IOException{
         List<MultipartFile> images = new ArrayList<>();
 

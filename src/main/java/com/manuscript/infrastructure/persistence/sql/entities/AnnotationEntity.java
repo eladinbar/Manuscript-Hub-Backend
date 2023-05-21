@@ -33,15 +33,15 @@ public class AnnotationEntity extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT")
     String content;
 
-    @Column(name = "startX", columnDefinition = "INT")
+    @Column(name = "start_x", columnDefinition = "INT")
     int startX;
 
-    @Column(name = "startY", columnDefinition = "INT")
+    @Column(name = "start_y", columnDefinition = "INT")
     int startY;
 
-    @Column(name = "endX", columnDefinition = "INT")
+    @Column(name = "end_x", columnDefinition = "INT")
     int endX;
 
-    @Column(name = "endY", columnDefinition = "INT")
+    @Column(name = "end_y", columnDefinition = "INT")
     int endY;
 }

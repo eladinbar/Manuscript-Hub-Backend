@@ -9,6 +9,7 @@ import com.manuscript.infrastructure.persistence.sql.entities.AnnotationEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IAnnotationRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -89,6 +90,7 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
+    @Transactional
     public void deleteAllByImageDataId(UUID imageDataId) {
         repo.deleteAllByImageDataId(imageDataId);
     }

@@ -12,6 +12,7 @@ public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, 
     @Override
     public UserEntity modelToEntity(UserModel userModel) {
         return UserEntity.builder()
+                .id(userModel.getId())
                 .createdTime(userModel.getCreatedTime())
                 .updatedTime(userModel.getUpdatedTime())
                 .email(userModel.getEmail())
@@ -26,14 +27,15 @@ public class UserEntityMapperImpl implements IRepositoryEntityMapper<UserModel, 
     @Override
     public UserModel entityToModel(final UserEntity userEntity) {
         return UserModel.builder()
-                .createdTime(userEntity.getCreatedTime())
-                .updatedTime(userEntity.getUpdatedTime())
+                .id(userEntity.getId())
+                .uid(userEntity.getUid())
                 .email(userEntity.getEmail())
                 .name(userEntity.getName())
                 .status(userEntity.getStatus())
-                .uid(userEntity.getUid())
                 .role(userEntity.getRole())
                 .phoneNumber(userEntity.getPhoneNumber())
+                .createdTime(userEntity.getCreatedTime())
+                .updatedTime(userEntity.getUpdatedTime())
                 .build();
     }
 }

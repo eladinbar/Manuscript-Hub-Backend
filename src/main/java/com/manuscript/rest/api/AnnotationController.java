@@ -40,7 +40,7 @@ public class AnnotationController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAnnotationsByDocumentId/{documentId}/{uid}")
+    @GetMapping("/getAllAnnotationsByDocumentId/{documentId}/{uid}")
     public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByDocumentId(@PathVariable UUID documentId, @PathVariable String uid) {
         if(documentId == null || uid == null)
             throw new IllegalArgumentException("Invalid document or user ID.");
@@ -53,13 +53,13 @@ public class AnnotationController {
         if(annotationId == null)
             throw new IllegalArgumentException("Invalid annotation, document or user ID.");
         annotationService.delete(annotationId);
-        return ResponseEntity.ok("Image deleted successfully");
+        return ResponseEntity.ok("Annotation deleted successfully");
     }
 
-    @DeleteMapping("/deleteAllAnnotationsByDocumentId")
+    @DeleteMapping("/deleteAllAnnotationsByDocumentId/{imageDataId}")
     public ResponseEntity<String> deleteAllAnnotationsByImageDataId(@PathVariable UUID imageDataId) {
         annotationService.deleteAllByImageDataId(imageDataId);
-        return ResponseEntity.ok("Image deleted successfully");
+        return ResponseEntity.ok("All related annotations deleted successfully");
     }
 
     private void checkNotNull(AnnotationRequest annotationRequest, boolean newRequest) {

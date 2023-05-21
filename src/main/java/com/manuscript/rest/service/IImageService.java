@@ -15,12 +15,12 @@ import java.util.UUID;
 
 public interface IImageService {
 
-    ImageInfoResponse saveInfo(ImageInfoRequest imageInfoRequest)                               throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    ImageDataResponse saveData(ImageDataRequest imageDataRequest)                               throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    ImageInfoResponse saveInfo(ImageInfoRequest imageInfoRequest)                                       throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    ImageDataResponse saveData(ImageDataRequest imageDataRequest)                                       throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageInfoResponse updateInfo(ImageInfoRequest imageInfoRequest)                                     throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageInfoResponse getByIdInfo(UUID imageInfoId, String userId)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageDataResponse getByIdData(UUID imageDataId, String userId)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
-    List<ImageDataResponse> getAllByImageInfoIdImageDatas(UUID imageId, String userId)                   throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    List<ImageDataResponse> getAllByImageInfoIdImageDatas(UUID imageId, String userId)                  throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     List<ImageInfoResponse> getAllByUidImageInfos(String userId)                                        throws IllegalArgumentException, NoUserFoundException;
     List<ImageInfoResponse> getAllPublicImages();
     List<ImageInfoResponse> getAllSharedImages(String userId)                                           throws IllegalArgumentException, NoUserFoundException;
