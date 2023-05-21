@@ -17,9 +17,9 @@ import javax.persistence.*;
 @SuperBuilder
 @Getter
 public class UserEntity extends BaseEntity {
-    @Column(name = "uid", unique = true, nullable = false, columnDefinition = "TEXT")
+    @Column(name = "uid", unique = true, nullable = false, updatable = false, columnDefinition = "VARCHAR(36)")
     private String uid;
-    @Column(name = "email", unique = true, nullable = false, columnDefinition = "TEXT")
+    @Column(name = "email", unique = true, nullable = false, updatable = false, columnDefinition = "VARCHAR(255)")
     private String email;
     @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String name;

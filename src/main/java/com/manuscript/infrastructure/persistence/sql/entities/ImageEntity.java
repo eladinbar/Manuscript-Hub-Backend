@@ -20,7 +20,7 @@ import java.util.Date;
 @Getter
 public class ImageEntity extends BaseEntity {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @org.hibernate.annotations.Type(type = "uuid-char")
     private UserEntity user;
 
@@ -48,10 +48,10 @@ public class ImageEntity extends BaseEntity {
     private JSONArray sharedUserIds;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private Status status;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "privacy")
+    @Column(name = "privacy", nullable = false)
     private Privacy privacy;
 }

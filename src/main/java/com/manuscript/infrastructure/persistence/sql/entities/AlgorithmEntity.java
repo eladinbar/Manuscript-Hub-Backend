@@ -26,8 +26,10 @@ public class AlgorithmEntity extends BaseEntity {
     String title;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "model_type")
+    @Column(name = "model_type", nullable = false)
     AlgorithmModelType modelType;
+
+    @Column(name = "description", nullable = false)
     String description;
 
     @Column(name = "url", nullable = false, unique = true, columnDefinition = "TEXT")

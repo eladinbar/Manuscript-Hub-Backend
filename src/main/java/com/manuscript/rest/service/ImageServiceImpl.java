@@ -183,12 +183,12 @@ public class ImageServiceImpl implements IImageService {
 
     private void verifyPermissions(String requestUid, String responseOwnerId, List<String> responseSharedUserIds, Status responseStatus, Privacy responsePrivacy) throws UnauthorizedException {
         if(responseStatus.equals(Status.Disabled))
-            throw new NoImageFoundException();
+            throw new NoImageFoundException("Disabled images are unavailable.");
         if (!requestUid.equals(responseOwnerId)) {
             if (!responsePrivacy.equals(Privacy.Shared))
-                throw new UnauthorizedException();
+                throw new UnauthorizedException("You have no permissions to view this image.");
             else if (!responseSharedUserIds.contains(requestUid)) {
-                throw new UnauthorizedException();
+                throw new UnauthorizedException("This document isn't shared with you.");
             }
         }
     }
