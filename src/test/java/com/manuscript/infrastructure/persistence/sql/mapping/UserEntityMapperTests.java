@@ -1,14 +1,12 @@
 package com.manuscript.infrastructure.persistence.sql.mapping;
 
-import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.infrastructure.persistence.sql.entities.AlgorithmEntity;
-import com.manuscript.infrastructure.persistence.sql.entities.AnnotationEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
-import com.manuscript.rest.request.UserRequest;
-import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.forms.request.UserRequest;
+import com.manuscript.rest.forms.response.UserResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,7 @@ public class UserEntityMapperTests {
     private final String invalidEmail = "emailgmail.com";
     private String name = "asd";
     private String phoneNumber = "234234";
-    private Status status = Status.active;
+    private Status status = Status.Enabled;
     private String uid = "5555888";
     private Role role = Role.User;
     private Date createdTime;

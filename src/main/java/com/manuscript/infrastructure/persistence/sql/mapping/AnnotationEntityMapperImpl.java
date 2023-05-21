@@ -18,7 +18,7 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
     public AnnotationEntity modelToEntity(AnnotationModel annotationModel) {
         AnnotationEntity annotationEntity = AnnotationEntity.builder()
                 .user(new UserEntity())
-                .imageId(annotationModel.getImageId())
+                .imageDataId(annotationModel.getImageDataId())
                 .algorithm(null)
                 .content(annotationModel.getContent())
                 .startX(annotationModel.getStartX())
@@ -39,7 +39,7 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
     public AnnotationEntity modelToEntity(AnnotationModel annotationModel, UserEntity user, AlgorithmEntity algorithm) {
         return AnnotationEntity.builder()
                 .user(user)
-                .imageId(annotationModel.getImageId())
+                .imageDataId(annotationModel.getImageDataId())
                 .algorithm(algorithm)
                 .content(annotationModel.getContent())
                 .startX(annotationModel.getStartX())
@@ -58,7 +58,7 @@ public class AnnotationEntityMapperImpl implements IRepositoryEntityMapper<Annot
         return AnnotationModel.builder()
                 .id(annotationEntity.getId())
                 .uid(annotationEntity.getUser().getUid())
-                .imageId(annotationEntity.getImageId())
+                .imageDataId(annotationEntity.getImageDataId())
                 .algorithmId(annotationEntity.getAlgorithm() != null ? annotationEntity.getAlgorithm().getId() : NIL)
                 .content(annotationEntity.getContent())
                 .startX(annotationEntity.getStartX())

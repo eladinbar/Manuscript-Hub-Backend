@@ -1,7 +1,7 @@
 package com.manuscript.rest.api;
 
-import com.manuscript.rest.request.AnnotationRequest;
-import com.manuscript.rest.response.AnnotationResponse;
+import com.manuscript.rest.forms.request.AnnotationRequest;
+import com.manuscript.rest.forms.response.AnnotationResponse;
 import com.manuscript.rest.service.IAnnotationService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +80,7 @@ public class AnnotationControllerTests {
         AnnotationResponse annotationResponse = response.getBody();
         assertNotNull(annotationResponse);
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
         assertEquals(startX, annotationResponse.getStartX());
@@ -106,7 +106,7 @@ public class AnnotationControllerTests {
     @Test
     public void addAnnotationNullDocumentId() {
         //set up
-        newAnnotationRequest.setImageId(null);
+        newAnnotationRequest.setImageDataId(null);
 
         //act
         //assert
@@ -169,7 +169,7 @@ public class AnnotationControllerTests {
         AnnotationResponse annotationResponse = response.getBody();
         assertNotNull(annotationResponse);
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
         assertEquals(startX, annotationResponse.getStartX());
@@ -204,7 +204,7 @@ public class AnnotationControllerTests {
     @Test
     public void updateAnnotationNullDocumentId() {
         //set up
-        annotationRequest.setImageId(null);
+        annotationRequest.setImageDataId(null);
 
         //act
         //assert
@@ -256,11 +256,11 @@ public class AnnotationControllerTests {
         List<AnnotationResponse> annotationResponses = new ArrayList<>();
 
         ////mock service
-        when(annotationService.getAllByImageId(any(UUID.class), any(String.class))).thenReturn(annotationResponses);
+        when(annotationService.getAllByImageDataId(any(UUID.class), any(String.class))).thenReturn(annotationResponses);
 
         //act
         ResponseEntity<List<AnnotationResponse>> responses =
-                annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageId(), annotationRequest.getUid());
+                annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageDataId(), annotationRequest.getUid());
 
         //assert
         assertTrue(responses.hasBody());
@@ -276,18 +276,18 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class,
-                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageId(), annotationRequest.getUid()));
+                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
     }
 
     @Test
     public void getAllAnnotationsByDocumentIdNullDocumentId() {
         //set up
-        annotationRequest.setImageId(null);
+        annotationRequest.setImageDataId(null);
 
         //act
         //assert
         assertThrows(IllegalArgumentException.class,
-                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageId(), annotationRequest.getUid()));
+                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
     }
 
     ////--------------------------------------- 'deleteAnnotation' tests
@@ -295,7 +295,7 @@ public class AnnotationControllerTests {
     @Test
     public void deleteAnnotationSuccess() {
         //act
-        annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(), annotationRequest.getUid());
+        annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(), annotationRequest.getUid());
     }
 
     @Test
@@ -306,7 +306,7 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(),
+                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(),
                         annotationRequest.getUid()));
     }
 
@@ -318,19 +318,19 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(),
+                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(),
                         annotationRequest.getUid()));
     }
 
     @Test
     public void deleteAnnotationNullDocumentId() {
         //set up
-        annotationRequest.setImageId(null);
+        annotationRequest.setImageDataId(null);
 
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageId(),
+                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(),
                         annotationRequest.getUid()));
     }
 }

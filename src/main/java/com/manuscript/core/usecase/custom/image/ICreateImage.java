@@ -1,10 +1,10 @@
 package com.manuscript.core.usecase.custom.image;
 
 
-import com.manuscript.core.domain.image.models.ImageModel;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.core.usecase.common.ICreateUseCase;
 
-public interface ICreateImage extends ICreateUseCase<ImageModel> {
+public interface ICreateImage extends ICreateUseCase<ImageInfoModel> {
     @Override
-    ImageModel create(ImageModel imageModel) throws IllegalArgumentException;
+    ImageInfoModel create(ImageInfoModel imageInfoModel) throws IllegalArgumentException;
 }

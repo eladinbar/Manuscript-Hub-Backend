@@ -1,29 +1,26 @@
 package com.manuscript.rest.api;
 
-import com.google.cloud.ByteArray;
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.exceptions.UnauthorizedException;
-import com.manuscript.rest.request.ImageRequest;
-import com.manuscript.rest.api.ImageController;
-import com.manuscript.rest.response.AnnotationResponse;
-import com.manuscript.rest.response.ImageResponse;
+import com.manuscript.rest.forms.request.ImageInfoRequest;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import com.manuscript.rest.service.IImageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.mockito.internal.stubbing.BaseStubbing;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -33,8 +30,8 @@ public class ImageControllerTests {
     //test classes
     private IImageService imageService;
     private ImageController imageController;
-    private ImageRequest imageRequest;
-    private ImageResponse testImageResponse;
+    private ImageInfoRequest imageInfoRequest;
+    private ImageInfoResponse testImageInfoResponse;
 
     //test data
     private UUID imageId;
@@ -66,7 +63,7 @@ public class ImageControllerTests {
 
         //data setup
         fileName = "fileName";
-        status = Status.active;
+        status = Status.Enabled;
         uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
         multipartFile = new MockMultipartFile(fileName,data);
         imageId = UUID.randomUUID();
@@ -89,13 +86,16 @@ public class ImageControllerTests {
         invalidEmptyUid = null;
         invalidFileName = null;
         invalidData = null;
+
+        //mocks
+        when(imageService.updateInfo(any())).thenReturn(testImageInfoResponse);
         invalidMultipartFile = null;
     }
 
     @BeforeEach
     public void beforeEach() {
         //request setup
-        imageRequest = new ImageRequest(imageId,uid,fileName,status,privacy,data);
+        imageInfoRequest = new ImageInfoRequest(imageId,uid,fileName,status,privacy,data);
 
         //test response setup
         testImageResponse = ImageResponse.builder()
@@ -121,18 +121,18 @@ public class ImageControllerTests {
         when(imageService.save(any())).thenReturn(testImageResponse);
         try{
             //act
-            ResponseEntity<ImageResponse> responseEntity = imageController.uploadDocument(multipartFile,uid);
-            ImageResponse imageResponse = responseEntity.getBody();
+            ResponseEntity<ImageInfoResponse> responseEntity = imageController.uploadImageInfo(multipartFile,uid);
+            ImageInfoResponse imageInfoResponse = responseEntity.getBody();
             //assert
             assertTrue(responseEntity.hasBody());
-            assertNotNull(imageResponse);
-            assertEquals(uid,imageResponse.getUid());
-            assertEquals(fileName,imageResponse.getFileName());
-            assertEquals(data,imageResponse.getData());
-            assertEquals(status,imageResponse.getStatus());
-            assertEquals(privacy,imageResponse.getPrivacy());
-            assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-            assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
+            assertNotNull(imageInfoResponse);
+            assertEquals(uid, imageInfoResponse.getUid());
+            assertEquals(fileName, imageInfoResponse.getFileName());
+            assertEquals(data, imageInfoResponse.getData());
+            assertEquals(status, imageInfoResponse.getStatus());
+            assertEquals(privacy, imageInfoResponse.getPrivacy());
+            assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) || imageInfoResponse.getCreatedTime().equals(new Date()));
+            assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) || imageInfoResponse.getUpdatedTime().equals(createdTime));
         }
         catch (Exception e){
             fail("exception detected:" + e);
@@ -160,18 +160,18 @@ public class ImageControllerTests {
         //mock
         when(imageService.update(imageRequest)).thenReturn(testImageResponse);
         //act
-        ResponseEntity<ImageResponse> responseEntity = imageController.updateDocument(imageRequest);
-        ImageResponse imageResponse = responseEntity.getBody();
+        ResponseEntity<ImageInfoResponse> responseEntity = imageController.updateImageInfo(imageInfoRequest);
+        ImageInfoResponse imageInfoResponse = responseEntity.getBody();
         //assert
         assertTrue(responseEntity.hasBody());
-        assertNotNull(imageResponse);
-        assertEquals(uid,imageResponse.getUid());
-        assertEquals(fileName,imageResponse.getFileName());
-        assertEquals(data,imageResponse.getData());
-        assertEquals(status,imageResponse.getStatus());
-        assertEquals(privacy,imageResponse.getPrivacy());
-        assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-        assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(fileName, imageInfoResponse.getFileName());
+        assertEquals(data, imageInfoResponse.getData());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) || imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) || imageInfoResponse.getUpdatedTime().equals(createdTime));
     }
 
     @Test
@@ -219,7 +219,7 @@ public class ImageControllerTests {
         //mock
         when(imageService.getById(userId)).thenReturn(testImageResponse);
         //act
-        ResponseEntity<byte[]> responseEntity = imageController.getDocumentById(userId);
+        ResponseEntity<byte[]> responseEntity = imageController.getImageInfoById(userId);
         byte[] bytesResponse = responseEntity.getBody();
         //assert
         assertTrue(responseEntity.hasBody());
@@ -242,20 +242,20 @@ public class ImageControllerTests {
         //mock
         when(imageService.getAllByUid(uid)).thenReturn(testImageResponseList);
         //act
-        ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllDocumentsByUid(uid);
-        List<ImageResponse> imageResponseList = responseEntity.getBody();
-        ImageResponse imageResponse = imageResponseList.get(0);
+        ResponseEntity<List<ImageInfoResponse>> responseEntity = imageController.getAllImageInfosByUid(uid);
+        List<ImageInfoResponse> imageInfoResponseList = responseEntity.getBody();
+        ImageInfoResponse imageInfoResponse = imageInfoResponseList.get(0);
         //assert
         assertTrue(responseEntity.hasBody());
-        assertEquals(imageResponseList.size(),1);
-        assertNotNull(imageResponse);
-        assertEquals(uid,imageResponse.getUid());
-        assertEquals(fileName,imageResponse.getFileName());
-        assertEquals(data,imageResponse.getData());
-        assertEquals(status,imageResponse.getStatus());
-        assertEquals(privacy,imageResponse.getPrivacy());
-        assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-        assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
+        assertEquals(imageInfoResponseList.size(),1);
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(fileName, imageInfoResponse.getFileName());
+        assertEquals(data, imageInfoResponse.getData());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) || imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) || imageInfoResponse.getUpdatedTime().equals(createdTime));
     }
 
     @Test
@@ -275,19 +275,19 @@ public class ImageControllerTests {
         //mock
         when(imageService.getAllPublicImages()).thenReturn(testImageResponseList);
         //act
-        ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllPublicImages();
-        List<ImageResponse> imageResponseList = responseEntity.getBody();
-        ImageResponse imageResponse = imageResponseList.get(0);
+        ResponseEntity<List<ImageInfoResponse>> responseEntity = imageController.getAllPublicImages();
+        List<ImageInfoResponse> imageInfoResponseList = responseEntity.getBody();
+        ImageInfoResponse imageInfoResponse = imageInfoResponseList.get(0);
         //assert
         assertTrue(responseEntity.hasBody());
-        assertEquals(imageResponseList.size(), 1);
-        assertNotNull(imageResponse);
-        assertEquals(uid, imageResponse.getUid());
-        assertEquals(fileName, imageResponse.getFileName());
-        assertEquals(data, imageResponse.getData());
-        assertEquals(status, imageResponse.getStatus());
-        assertEquals(privacy,imageResponse.getPrivacy());
-        assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-        assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
+        assertEquals(imageInfoResponseList.size(), 1);
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(fileName, imageInfoResponse.getFileName());
+        assertEquals(data, imageInfoResponse.getData());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) || imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) || imageInfoResponse.getUpdatedTime().equals(createdTime));
     }
 }

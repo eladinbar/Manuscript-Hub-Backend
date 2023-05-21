@@ -2,11 +2,10 @@ package com.manuscript.infrastructure.persistence.nosql.mapping;
 
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
-import com.manuscript.core.domain.image.models.ImageModel;
-import com.manuscript.infrastructure.persistence.nosql.documents.ImageDocument;
+import com.manuscript.core.domain.image.models.ImageInfoModel;
+import com.manuscript.infrastructure.persistence.nosql.documents.ImageDataDocument;
 import com.manuscript.infrastructure.persistence.nosql.service.IImageUtils;
-import com.manuscript.rest.mapping.ImageRequestMapperImpl;
-import com.manuscript.rest.request.ImageRequest;
+import com.manuscript.infrastructure.persistence.sql.mapping.ImageEntityMapperImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +27,8 @@ public class ImageEntityMapperImplTests {
     //test classes
     private ImageEntityMapperImpl imageEntityMapperImpl;
     private IImageUtils imageUtils;
-    private ImageDocument imageDocument;
-    private ImageModel imageModel;
+    private ImageDataDocument imageDataDocument;
+    private ImageInfoModel imageInfoModel;
 
     //test data
     private String fileName;
@@ -52,7 +51,7 @@ public class ImageEntityMapperImplTests {
         fileName = "fileName";
         uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
         imageId = UUID.randomUUID();
-        status = Status.active;
+        status = Status.Enabled;
         privacy = Privacy.Public;
 
         //date setup
@@ -77,7 +76,7 @@ public class ImageEntityMapperImplTests {
         imageDocument.setUpdatedTime(updatedTime);
 
         //model setup
-        imageModel = ImageModel.builder()
+        imageInfoModel = ImageInfoModel.builder()
                 .id(imageId)
                 .uid(uid)
                 .fileName(fileName)
@@ -92,7 +91,7 @@ public class ImageEntityMapperImplTests {
     @Test
     public void modelToEntity_Success() {
         //act
-        ImageDocument testImageDocument = imageEntityMapperImpl.modelToEntity(imageModel);
+        ImageDataDocument testImageDataDocument = imageEntityMapperImpl.modelToEntity(imageInfoModel);
         //assert
         assertNotNull(testImageDocument);
         assertEquals(uid,testImageDocument.getUid());
@@ -105,13 +104,13 @@ public class ImageEntityMapperImplTests {
     @Test
     public void entityToModel_Success() {
         //act
-        ImageModel testImageModel= imageEntityMapperImpl.entityToModel(imageDocument);
+        ImageInfoModel testImageInfoModel = imageEntityMapperImpl.entityToModel(imageDataDocument);
         //assert
-        assertNotNull(testImageModel);
-        assertEquals(uid,testImageModel.getUid());
-        assertEquals(fileName,testImageModel.getFileName());
-        assertEquals(data,testImageModel.getData());
-        assertEquals(status,testImageModel.getStatus());
-        assertEquals(privacy,testImageModel.getPrivacy());
+        assertNotNull(testImageInfoModel);
+        assertEquals(uid, testImageInfoModel.getUid());
+        assertEquals(fileName, testImageInfoModel.getFileName());
+        assertEquals(data, testImageInfoModel.getData());
+        assertEquals(status, testImageInfoModel.getStatus());
+        assertEquals(privacy, testImageInfoModel.getPrivacy());
     }
 }

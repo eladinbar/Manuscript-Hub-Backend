@@ -9,6 +9,7 @@ import com.manuscript.infrastructure.persistence.sql.entities.AnnotationEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IAnnotationRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -64,8 +65,8 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public List<AnnotationModel> getAllByImageId(UUID imageId) {
-        List<AnnotationEntity> annotationEntities = repo.findAllByImageId(imageId);
+    public List<AnnotationModel> getAllByImageDataId(UUID imageDataId) {
+        List<AnnotationEntity> annotationEntities = repo.findAllByImageDataId(imageDataId);
         List<AnnotationModel> annotationModels = new ArrayList<>();
         for (AnnotationEntity annotationEntity : annotationEntities) {
             annotationModels.add(mapper.entityToModel(annotationEntity));
@@ -75,8 +76,7 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
 
     @Override
     public List<AnnotationModel> getAll() {
-        List<AnnotationEntity> annotationEntities = new ArrayList<>();
-        repo.findAll().forEach(annotationEntities::add);
+        List<AnnotationEntity> annotationEntities = repo.findAll();
         List<AnnotationModel> annotationModels = new ArrayList<>();
         for (AnnotationEntity annotationEntity : annotationEntities) {
             annotationModels.add(mapper.entityToModel(annotationEntity));
@@ -90,8 +90,9 @@ public class AnnotationServiceSqlImpl implements IAnnotationRepositoryService {
     }
 
     @Override
-    public void deleteAllByDocumentId(UUID documentId) {
-//        repo.delete();
+    @Transactional
+    public void deleteAllByImageDataId(UUID imageDataId) {
+        repo.deleteAllByImageDataId(imageDataId);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class AnnotationServiceSqlTests {
     private final String email = "email@gmail.com";
     private final String name = "name";
     private final String phoneNumber = "0541234567";
-    private final Status status = Status.active;
+    private final Status status = Status.Enabled;
     private final Role role = Role.User;
     private UserEntity user;
     private final String url = "url";
@@ -118,7 +118,7 @@ public class AnnotationServiceSqlTests {
 
         // set up annotation entity
         this.annotationEntity = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
+                .id(id).user(user).imageDataId(imageId).algorithm(algorithm)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -126,7 +126,7 @@ public class AnnotationServiceSqlTests {
 
         // set up annotation model
         this.annotationModel = AnnotationModel.builder()
-                .id(id).uid(uid).imageId(imageId).algorithmId(manualAlgorithmId)
+                .id(id).uid(uid).imageDataId(imageId).algorithmId(manualAlgorithmId)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -139,7 +139,7 @@ public class AnnotationServiceSqlTests {
     public void saveSuccess() {
         //set up
         AnnotationEntity newAnnotation = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
+                .id(id).user(user).imageDataId(imageId).algorithm(algorithm)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -159,7 +159,7 @@ public class AnnotationServiceSqlTests {
         //assert
         assertNotNull(annotationModel);
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(manualAlgorithmId, annotationModel.getAlgorithmId());
         assertEquals(content, annotationModel.getContent());
         assertEquals(startX, annotationModel.getStartX());
@@ -178,7 +178,7 @@ public class AnnotationServiceSqlTests {
         annotationModel.setUid(invalidUid);
 
         AnnotationEntity newAnnotation = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
+                .id(id).user(user).imageDataId(imageId).algorithm(algorithm)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -199,7 +199,7 @@ public class AnnotationServiceSqlTests {
     public void saveInvalidAlgorithmId() {
         //set up
         AnnotationEntity newAnnotation = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
+                .id(id).user(user).imageDataId(imageId).algorithm(algorithm)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -236,7 +236,7 @@ public class AnnotationServiceSqlTests {
 
         ////set up new annotation entity
         AnnotationEntity newAnnotation = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
+                .id(id).user(user).imageDataId(imageId).algorithm(algorithm)
                 .content(newContent)
                 .startX(newStartX).startY(newStartY).endX(newEndX).endY(newEndY)
                 .createdTime(createdTime).updatedTime(newUpdateTime)
@@ -244,7 +244,7 @@ public class AnnotationServiceSqlTests {
 
         ////set up new annotation model
         AnnotationModel newAnnotationModel = AnnotationModel.builder()
-                .id(id).uid(uid).imageId(imageId).algorithmId(algorithmId)
+                .id(id).uid(uid).imageDataId(imageId).algorithmId(algorithmId)
                 .content(newContent)
                 .startX(newStartX).startY(newStartY).endX(newEndX).endY(newEndY)
                 .createdTime(createdTime).updatedTime(newUpdateTime)
@@ -262,7 +262,7 @@ public class AnnotationServiceSqlTests {
         //assert
         assertNotNull(newAnnotationModel);
         assertEquals(uid, newAnnotationModel.getUid());
-        assertEquals(imageId, newAnnotationModel.getImageId());
+        assertEquals(imageId, newAnnotationModel.getImageDataId());
         assertEquals(algorithmId, newAnnotationModel.getAlgorithmId());
         assertEquals(newContent, newAnnotationModel.getContent());
         assertEquals(newStartX, newAnnotationModel.getStartX());
@@ -315,11 +315,11 @@ public class AnnotationServiceSqlTests {
         annotationEntities.add(annotationEntity);
 
         ////mock mappers, assisting services and repository
-        when(repo.findAllByImageId(any(UUID.class))).thenReturn(annotationEntities);
+        when(repo.findAllByImageDataId(any(UUID.class))).thenReturn(annotationEntities);
         when(mapper.entityToModel(any(AnnotationEntity.class))).thenReturn(annotationModel);
 
         //act
-        List<AnnotationModel> annotationModels = repoService.getAllByImageId(imageId);
+        List<AnnotationModel> annotationModels = repoService.getAllByImageDataId(imageId);
 
         //assert
         assertNotNull(annotationModels);
@@ -332,11 +332,11 @@ public class AnnotationServiceSqlTests {
         List<AnnotationEntity> annotationEntities = new ArrayList<>();
 
         ////mock mappers, assisting services and repository
-        when(repo.findAllByImageId(any(UUID.class))).thenReturn(annotationEntities);
+        when(repo.findAllByImageDataId(any(UUID.class))).thenReturn(annotationEntities);
         when(mapper.entityToModel(any(AnnotationEntity.class))).thenReturn(annotationModel);
 
         //act
-        List<AnnotationModel> annotationModels = repoService.getAllByImageId(imageId);
+        List<AnnotationModel> annotationModels = repoService.getAllByImageDataId(imageId);
 
         //assert
         assertNotNull(annotationModels);

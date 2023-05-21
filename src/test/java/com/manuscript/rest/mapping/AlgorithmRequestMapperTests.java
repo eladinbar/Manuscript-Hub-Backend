@@ -1,7 +1,8 @@
 package com.manuscript.rest.mapping;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
-import com.manuscript.rest.request.AlgorithmRequest;
+import com.manuscript.rest.forms.request.AlgorithmRequest;
+import com.manuscript.rest.mapping.request.AlgorithmRequestMapperImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

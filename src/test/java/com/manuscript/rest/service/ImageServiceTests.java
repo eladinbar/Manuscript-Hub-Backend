@@ -1,14 +1,14 @@
 package com.manuscript.rest.service;
 
+import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageModel;
 import com.manuscript.core.usecase.custom.image.*;
 import com.manuscript.rest.mapping.IRestMapper;
-import com.manuscript.rest.request.ImageRequest;
-import com.manuscript.rest.response.ImageResponse;
+import com.manuscript.rest.forms.request.ImageInfoRequest;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
@@ -26,11 +26,11 @@ public class ImageServiceTests {
 
     //test classes
     private ImageServiceImpl imageServiceImpl;
-    private IRestMapper<ImageModel, ImageRequest> imageRequestMapper;
-    private IRestMapper<ImageModel, ImageResponse> imageResponseMapper;
+    private IRestMapper<ImageInfoModel, ImageInfoRequest> imageRequestMapper;
+    private IRestMapper<ImageInfoModel, ImageInfoResponse> imageResponseMapper;
     private ICreateImage createImageUseCase;
     private IGetAllImages getAllImagesUseCase;
-    private IGetByIdImage getByIdImageUseCase;
+    private IGetByIdImageInfo getByIdImageUseCase;
     private IUpdateImage updateImageUseCase;
     private IGetAllPublicImages getAllPublicImages;
     private ImageRequest imageRequest;
@@ -39,6 +39,9 @@ public class ImageServiceTests {
     private List<ImageModel> listImageModel;
     private Optional<ImageModel> optionalImageModel;
     private List<ImageResponse> imageResponseList;
+    private ImageInfoRequest imageInfoRequest;
+    private ImageInfoResponse imageInfoResponse;
+    private ImageInfoModel imageInfoModel;
 
     //test data
     private UUID imageId;
@@ -60,11 +63,11 @@ public class ImageServiceTests {
     @SuppressWarnings("unchecked")
     public void setup(){
         //service setup
-        imageRequestMapper = (IRestMapper<ImageModel, ImageRequest>) Mockito.mock(IRestMapper.class);
-        imageResponseMapper = (IRestMapper<ImageModel, ImageResponse>) Mockito.mock(IRestMapper.class);
+        imageRequestMapper = (IRestMapper<ImageInfoModel, ImageInfoRequest>) Mockito.mock(IRestMapper.class);
+        imageResponseMapper = (IRestMapper<ImageInfoModel, ImageInfoResponse>) Mockito.mock(IRestMapper.class);
         createImageUseCase = Mockito.mock(ICreateImage.class);
         getAllImagesUseCase = Mockito.mock(IGetAllImages.class);
-        getByIdImageUseCase = Mockito.mock(IGetByIdImage.class);
+        getByIdImageUseCase = Mockito.mock(IGetByIdImageInfo.class);
         updateImageUseCase = Mockito.mock(IUpdateImage.class);
         getAllPublicImages = Mockito.mock(IGetAllPublicImages.class);
         imageServiceImpl = new ImageServiceImpl(imageRequestMapper,imageResponseMapper,createImageUseCase,getAllImagesUseCase,getByIdImageUseCase,updateImageUseCase,getAllPublicImages);
@@ -118,17 +121,17 @@ public class ImageServiceTests {
         imageResponseList.add(imageResponse);
 
         //mapper mocks
-        when(imageRequestMapper.restToModel(any(ImageRequest.class))).thenReturn(imageModel);
-        when(imageRequestMapper.modelToRest(any(ImageModel.class))).thenReturn(imageRequest);
-        when(imageResponseMapper.restToModel(any(ImageResponse.class))).thenReturn(imageModel);
-        when(imageResponseMapper.modelToRest(any(ImageModel.class))).thenReturn(imageResponse);
+        when(imageRequestMapper.restToModel(any(ImageInfoRequest.class))).thenReturn(imageInfoModel);
+        when(imageRequestMapper.modelToRest(any(ImageInfoModel.class))).thenReturn(imageInfoRequest);
+        when(imageResponseMapper.restToModel(any(ImageInfoResponse.class))).thenReturn(imageInfoModel);
+        when(imageResponseMapper.modelToRest(any(ImageInfoModel.class))).thenReturn(imageInfoResponse);
 
         //usecase mocks
         when(createImageUseCase.create(imageModel)).thenReturn(imageModel);
         when(getAllImagesUseCase.getAll()).thenReturn(listImageModel);
         when(getByIdImageUseCase.getById(any(UUID.class))).thenReturn(optionalImageModel);
-        when(updateImageUseCase.update(any(ImageModel.class))).thenReturn(imageModel);
-        when(getAllPublicImages.getAllPublicImages()).thenReturn(listImageModel);
+        when(updateImageUseCase.update(any(ImageInfoModel.class))).thenReturn(imageInfoModel);
+        when(getAllPublicImages.getAllPublicImages()).thenReturn(listImageInfoModel);
     }
 
     @Test

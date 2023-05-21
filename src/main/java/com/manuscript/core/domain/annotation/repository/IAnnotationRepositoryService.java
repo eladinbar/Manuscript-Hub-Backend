@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IAnnotationRepositoryService extends IBaseRepositoryService<AnnotationModel> {
-    List<AnnotationModel> getAllByImageId(UUID documentId);
-    void deleteAllByDocumentId(UUID documentId);
+    List<AnnotationModel> getAllByImageDataId(UUID imageDataId);
+    void deleteAllByImageDataId(UUID imageDataId);
 }

@@ -1,7 +1,7 @@
 package com.manuscript.rest.api;
 
-import com.manuscript.rest.request.UserRequest;
-import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.forms.request.UserRequest;
+import com.manuscript.rest.forms.response.UserResponse;
 import com.manuscript.rest.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
