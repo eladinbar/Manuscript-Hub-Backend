@@ -1,5 +1,6 @@
 package com.manuscript.rest.api;
 
+import com.manuscript.core.domain.common.enums.AlgorithmStatus;
 import com.manuscript.rest.request.AlgorithmRequest;
 import com.manuscript.rest.response.AlgorithmResponse;
 import com.manuscript.rest.service.IAlgorithmService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -62,6 +64,13 @@ public class AlgorithmController {
         if(uid == null)
             throw new IllegalArgumentException("Invalid user ID.");
         return ResponseEntity.ok(algorithmService.getAllByUid(uid));
+    }
+
+    @GetMapping("/getAllAlgorithmsByUid/{algorithmStatuses}/{uid}")
+    public ResponseEntity<List<AlgorithmResponse>> getAllAlgorithmsByStatus(@PathVariable Set<AlgorithmStatus> algorithmStatuses, @PathVariable String uid) {
+        if(algorithmStatuses.size() == 0)
+            throw new IllegalArgumentException("Invalid algorithm status.");
+        return ResponseEntity.ok(algorithmService.getAllByAlgorithmStatuses(algorithmStatuses, uid));
     }
 
     @GetMapping("/getAllAlgorithms/{uid}")

@@ -1,6 +1,7 @@
 package com.manuscript.rest.service;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
+import com.manuscript.core.domain.common.enums.AlgorithmStatus;
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.exceptions.NoAlgorithmFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
@@ -9,11 +10,13 @@ import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.AlgorithmRequest;
 import com.manuscript.rest.response.AlgorithmResponse;
 import com.manuscript.rest.response.ImageResponse;
+import com.manuscript.rest.response.UserResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     private final IGetByIdAlgorithm getByIdAlgorithmUseCase;
     private final IGetByUrlAlgorithm getByUrlAlgorithmUseCase;
     private final IGetAllByUidAlgorithms getAllByUidAlgorithmsUseCase;
+    private final IGetAllByAlgorithmStatusesAlgorithms getAllByAlgorithmStatusesAlgorithmsUseCase;
     private final IGetAllAlgorithms getAllAlgorithmsUseCase;
     private final IDeleteByIdAlgorithm deleteByIdAlgorithmUseCase;
     private final IDeleteByUrlAlgorithm deleteByUrlAlgorithmUseCase;
@@ -93,6 +97,12 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
+    public List<AlgorithmResponse> getAllByAlgorithmStatuses(Set<AlgorithmStatus> algorithmStatuses, String uid) {
+        verifyAlgorithmAcquisitionAuthorization(algorithmStatuses, uid);
+        return getAllByAlgorithmStatusesAlgorithmsUseCase.getAllByAlgorithmStatuses(algorithmStatuses).stream().map(algorithmResponseMapper::modelToRest).collect(Collectors.toList());
+    }
+
+    @Override
     public List<AlgorithmResponse> getAll(String uid) {
         verifyUserAdminRole(uid);
         return getAllAlgorithmsUseCase.getAll().stream().map(algorithmResponseMapper::modelToRest).collect(Collectors.toList());
@@ -140,6 +150,19 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     private void checkAlgorithmAvailability(UUID algorithmId) {
         // If no algorithm is found, an exception is thrown
         getByIdAlgorithmUseCase.getById(algorithmId);
+    }
+
+    private void verifyAlgorithmAcquisitionAuthorization(Set<AlgorithmStatus> statuses, String uid) {
+        // Check if all algorithms requested are those in production or in trial
+        if(statuses.stream()
+                .allMatch(element -> element == AlgorithmStatus.Trial || element == AlgorithmStatus.Production)) {
+            return;
+        }
+        // If not, verify that the user requesting these algorithms is an admin
+        UserResponse user = userService.getByUid(uid);
+        if(!user.getRole().equals(Role.Admin))
+            if(!user.getRole().equals(Role.Developer) || !user.getUid().equals(uid))
+                throw new UnauthorizedException("User has no authorization to get algorithms with the given statuses.");
     }
 
     private void verifyAlgorithmAuthorization(String uid, UUID algorithmId, String url) {

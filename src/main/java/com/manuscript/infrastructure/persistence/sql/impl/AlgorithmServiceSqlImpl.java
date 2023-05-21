@@ -2,6 +2,7 @@ package com.manuscript.infrastructure.persistence.sql.impl;
 
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
 import com.manuscript.core.domain.algorithm.repository.IAlgorithmRepositoryService;
+import com.manuscript.core.domain.common.enums.AlgorithmStatus;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.entities.AlgorithmEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
@@ -10,7 +11,12 @@ import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -77,6 +83,14 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
         UserEntity user = optionalUser.get();
         List<AlgorithmModel> result = new ArrayList<>();
         repo.findAllByUser(user).forEach(invitationRequest -> result.add(mapper.entityToModel(invitationRequest)));
+        return result;
+    }
+
+    @Override
+    public List<AlgorithmModel> getAllByAlgorithmStatuses(Set<AlgorithmStatus> statuses) {
+        List<AlgorithmModel> result = new ArrayList<>();
+        for (AlgorithmStatus status : statuses)
+            repo.findAllByStatus(status).forEach(invitationRequest -> result.add(mapper.entityToModel(invitationRequest)));
         return result;
     }
 
