@@ -2,9 +2,6 @@ package com.manuscript.rest.api;
 
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.exceptions.FailedUploadException;
-import com.manuscript.core.exceptions.NoImageFoundException;
-import com.manuscript.core.exceptions.NoUserFoundException;
-import com.manuscript.core.exceptions.UnauthorizedException;
 import com.manuscript.rest.forms.request.ImageDataRequest;
 import com.manuscript.rest.forms.request.ImageInfoRequest;
 import com.manuscript.rest.forms.response.ImageDataResponse;
@@ -16,10 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+//import org.apache.pdfbox.pdmodel.PDDocument;
+//import org.apache.pdfbox.rendering.ImageType;
+//import org.apache.pdfbox.rendering.PDFRenderer;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
 
@@ -44,13 +47,11 @@ public class ImageController {
     public void uploadImageData(@RequestParam("file") List<MultipartFile> filesList, @PathVariable UUID imageInfoId) {
         if (filesList == null || filesList.isEmpty())
             throw new IllegalArgumentException("Invalid document data.");
-        for (MultipartFile file : filesList) {
-            checkLegalFile(file);
-        }
         checkIdNotNull(imageInfoId);
         try {
-            for (int index = 0; index < filesList.toArray().length; index++) {
-                MultipartFile file = filesList.get(index);
+            List<MultipartFile> correctFilesList = checkAndFixFilesList(filesList);
+            for (int index = 0; index < correctFilesList.toArray().length; index++) {
+                MultipartFile file = correctFilesList.get(index);
                 ImageDataRequest imageDataRequest = ImageDataRequest.builder()
                         .imageId(imageInfoId)
                         .data(file.getBytes())
@@ -172,11 +173,31 @@ public class ImageController {
             throw new IllegalArgumentException("Image request's fields must not be null.");
     }
 
-    private void checkLegalFile(MultipartFile file) throws IllegalArgumentException{
-        if (file.getSize() > 10L * 1024 * 1024){
+    private List<MultipartFile> checkAndFixFilesList(List<MultipartFile> filesList) throws NullPointerException, IOException{
+        List<MultipartFile> adjustedMultipartFileList = new ArrayList<>();
+        for (MultipartFile file : filesList) {
+            String fileType = file.getContentType();
+            if (fileType == null) {
+                throw new NullPointerException("No file type detected");
+            }
+            fileType = fileType.toLowerCase();
+            checkFileIsLegal(fileType, file.getSize());
+            if (fileType.equals("application/pdf")){
+                //TODO fix pdf to images function
+                //adjustedMultipartFileList.addAll(convertIfPdfToPngFiles(file));
+                adjustedMultipartFileList.add(file);
+            }
+            else {
+                adjustedMultipartFileList.add(file);
+            }
+        }
+        return adjustedMultipartFileList;
+    }
+
+    private void checkFileIsLegal(String fileType, Long fileSize) throws IllegalArgumentException{
+        if (fileSize > 10L * 1024 * 1024) {
             throw new IllegalArgumentException("File size over 10MB");
         }
-        String fileType = file.getContentType();
         boolean isSupportedType = fileType.equals("image/png")
                 || fileType.equals("image/jpg")
                 || fileType.equals("image/jpeg")
@@ -184,6 +205,19 @@ public class ImageController {
         if (!isSupportedType){
             throw new IllegalArgumentException("unsupported file type");
         }
+    }
+
+    private List<MultipartFile> convertIfPdfToPngFiles(MultipartFile file) throws IOException{
+        List<MultipartFile> images = new ArrayList<>();
+
+        BufferedImage image = new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB);
+        ByteArrayOutputStream pageBytes = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", pageBytes);
+        pageBytes.flush();
+        byte[] imageBytes = pageBytes.toByteArray();
+        pageBytes.close();
+
+        return images;
     }
 
     @ExceptionHandler(FailedUploadException.class)
