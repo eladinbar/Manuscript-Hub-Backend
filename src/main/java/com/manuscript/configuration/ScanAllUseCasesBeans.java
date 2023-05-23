@@ -17,12 +17,18 @@ public class ScanAllUseCasesBeans {
     @Bean
     BeanFactoryPostProcessor beanFactoryPostProcessor(ApplicationContext beanRegistry) {
         return beanFactory -> {
-            genericApplicationContext((BeanDefinitionRegistry) ((AnnotationConfigServletWebServerApplicationContext) beanRegistry).getBeanFactory());
+//            if (beanRegistry instanceof AnnotationConfigServletWebServerApplicationContext) {
+                genericApplicationContext(beanRegistry);
+//            }
+//            else {
+//                return (AnnotationConfigServletWebServerApplicationContext) beanRegistry;
+////                throw new IllegalStateException("Expected ApplicationContext to be an instance of AnnotationConfigServletWebServerApplicationContext, but found " + beanRegistry.getClass());
+//            }
         };
     }
 
-    void genericApplicationContext(BeanDefinitionRegistry beanRegistry) {
-        ClassPathBeanDefinitionScanner beanDefinitionScanner = new ClassPathBeanDefinitionScanner(beanRegistry);
+    void genericApplicationContext(ApplicationContext beanRegistry) {
+        ClassPathBeanDefinitionScanner beanDefinitionScanner = new ClassPathBeanDefinitionScanner((BeanDefinitionRegistry) beanRegistry);
         beanDefinitionScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
         beanDefinitionScanner.scan("com.manuscript.core.usecase.custom");
         beanDefinitionScanner.scan("com.manuscript.rest.service");

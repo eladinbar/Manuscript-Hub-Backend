@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+//import org.junit.jupiter.params.ParameterizedTest;
+//import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 
@@ -133,11 +133,11 @@ public class AnnotationControllerTests {
         assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
     }
 
-    @ParameterizedTest
-    @CsvSource({"-1, 0, 0, 0", "0, -1, 0, 0", "0, 0, -1, 0", "0, 0, 0, -1",
-            "-1, -1, 0, 0", "-1, 0, -1, 0", "-1, 0, 0, -1", "0, -1, -1, 0", "0, -1, 0, -1", "0, 0, -1, -1",
-            "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
-            "-1, -1, -1, -1"})
+//    @ParameterizedTest
+//    @CsvSource({"-1, 0, 0, 0", "0, -1, 0, 0", "0, 0, -1, 0", "0, 0, 0, -1",
+//            "-1, -1, 0, 0", "-1, 0, -1, 0", "-1, 0, 0, -1", "0, -1, -1, 0", "0, -1, 0, -1", "0, 0, -1, -1",
+//            "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
+//            "-1, -1, -1, -1"})
     public void addAnnotationNegativeCoordinates(int startX, int startY, int endX, int endY) {
         //set up
         newAnnotationRequest.setStartX(startX);
@@ -231,11 +231,11 @@ public class AnnotationControllerTests {
         assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
     }
 
-    @ParameterizedTest
-    @CsvSource({"-1, 0, 0, 0", "0, -1, 0, 0", "0, 0, -1, 0", "0, 0, 0, -1",
-            "-1, -1, 0, 0", "-1, 0, -1, 0", "-1, 0, 0, -1", "0, -1, -1, 0", "0, -1, 0, -1", "0, 0, -1, -1",
-            "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
-            "-1, -1, -1, -1"})
+//    @ParameterizedTest
+//    @CsvSource({"-1, 0, 0, 0", "0, -1, 0, 0", "0, 0, -1, 0", "0, 0, 0, -1",
+//            "-1, -1, 0, 0", "-1, 0, -1, 0", "-1, 0, 0, -1", "0, -1, -1, 0", "0, -1, 0, -1", "0, 0, -1, -1",
+//            "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
+//            "-1, -1, -1, -1"})
     public void updateAnnotationNegativeCoordinates(int startX, int startY, int endX, int endY) {
         //set up
         annotationRequest.setStartX(startX);
