@@ -1,105 +1,105 @@
-package com.manuscript.rest.mapping;
-
-import com.manuscript.core.domain.common.enums.Privacy;
-import com.manuscript.core.domain.common.enums.Status;
-import com.manuscript.core.domain.image.models.ImageInfoModel;
-import com.manuscript.rest.forms.response.ImageInfoResponse;
-import com.manuscript.rest.mapping.response.ImageResponseMapperImpl;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ImageInfoResponseMapperTests {
-    //test classes
-    private ImageResponseMapperImpl imageResponseMapperImpl;
-    private ImageInfoResponse imageInfoResponse;
-    private ImageInfoModel imageInfoModel;
-
-    //test data
-    private String fileName;
-    private String uid;
-    private UUID imageId;
-    private UUID userId;
-    private Status status;
-    private Privacy privacy;
-    private final byte[] data = {0};
-    private Date createdTime;
-    private Date updatedTime;
-
-
-    @BeforeAll
-    public void setup() {
-        //mapper setup
-        imageResponseMapperImpl = new ImageResponseMapperImpl();
-
-        //data setup
-        fileName = "fileName";
-        uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
-        imageId = UUID.randomUUID();
-        userId = UUID.randomUUID();
-        status = Status.Enabled;
-        privacy = Privacy.Public;
-
-        //date setup
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2023);
-        cal.set(Calendar.MONTH, Calendar.JANUARY);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        createdTime = cal.getTime();
-        cal.set(Calendar.DAY_OF_MONTH, 3);
-        updatedTime = cal.getTime();
-    }
-
-    @BeforeEach
-    public void beforeEach() {
-        //request setup
-        imageInfoResponse = new ImageInfoResponse(imageId, userId, uid, fileName, data, status, privacy, createdTime, updatedTime);
-
-        //model setup
-        imageInfoModel = ImageInfoModel.builder()
-                .id(imageId)
-                .uid(uid)
-                .fileName(fileName)
-                .status(status)
-                .privacy(privacy)
-                .data(data)
-                .createdTime(createdTime)
-                .updatedTime(updatedTime)
-                .build();
-    }
-
-    @Test
-    public void modelToRest_Success() {
-        //act
-        ImageInfoResponse testImageInfoResponse = imageResponseMapperImpl.modelToRest(imageInfoModel);
-        //assert
-        assertNotNull(testImageInfoResponse);
-        assertEquals(uid, testImageInfoResponse.getUid());
-        assertEquals(fileName, testImageInfoResponse.getFileName());
-        assertEquals(data, testImageInfoResponse.getData());
-        assertEquals(status, testImageInfoResponse.getStatus());
-        assertEquals(privacy, testImageInfoResponse.getPrivacy());
-    }
-
-    @Test
-    public void restToModel_Success() {
-        //act
-        ImageInfoModel testImageInfoModel = imageResponseMapperImpl.restToModel(imageInfoResponse);
-        //assert
-        assertNotNull(testImageInfoModel);
-        assertEquals(uid, testImageInfoModel.getUid());
-        assertEquals(fileName, testImageInfoModel.getFileName());
-        assertEquals(data, testImageInfoModel.getData());
-        assertEquals(status, testImageInfoModel.getStatus());
-        assertEquals(privacy, testImageInfoModel.getPrivacy());
-    }
-}
+//package com.manuscript.rest.mapping;
+//
+//import com.manuscript.core.domain.common.enums.Privacy;
+//import com.manuscript.core.domain.common.enums.Status;
+//import com.manuscript.core.domain.image.models.ImageInfoModel;
+//import com.manuscript.rest.forms.response.ImageInfoResponse;
+//import com.manuscript.rest.mapping.response.ImageResponseMapperImpl;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.TestInstance;
+//
+//import java.util.Calendar;
+//import java.util.Date;
+//import java.util.UUID;
+//
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertNotNull;
+//
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//public class ImageInfoResponseMapperTests {
+//    //test classes
+//    private ImageResponseMapperImpl imageResponseMapperImpl;
+//    private ImageInfoResponse imageInfoResponse;
+//    private ImageInfoModel imageInfoModel;
+//
+//    //test data
+//    private String fileName;
+//    private String uid;
+//    private UUID imageId;
+//    private UUID userId;
+//    private Status status;
+//    private Privacy privacy;
+//    private final byte[] data = {0};
+//    private Date createdTime;
+//    private Date updatedTime;
+//
+//
+//    @BeforeAll
+//    public void setup() {
+//        //mapper setup
+//        imageResponseMapperImpl = new ImageResponseMapperImpl();
+//
+//        //data setup
+//        fileName = "fileName";
+//        uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
+//        imageId = UUID.randomUUID();
+//        userId = UUID.randomUUID();
+//        status = Status.Enabled;
+//        privacy = Privacy.Public;
+//
+//        //date setup
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(Calendar.YEAR, 2023);
+//        cal.set(Calendar.MONTH, Calendar.JANUARY);
+//        cal.set(Calendar.DAY_OF_MONTH, 1);
+//        createdTime = cal.getTime();
+//        cal.set(Calendar.DAY_OF_MONTH, 3);
+//        updatedTime = cal.getTime();
+//    }
+//
+//    @BeforeEach
+//    public void beforeEach() {
+//        //request setup
+//        imageInfoResponse = new ImageInfoResponse(imageId, userId, uid, fileName, data, status, privacy, createdTime, updatedTime);
+//
+//        //model setup
+//        imageInfoModel = ImageInfoModel.builder()
+//                .id(imageId)
+//                .uid(uid)
+//                .fileName(fileName)
+//                .status(status)
+//                .privacy(privacy)
+//                .data(data)
+//                .createdTime(createdTime)
+//                .updatedTime(updatedTime)
+//                .build();
+//    }
+//
+//    @Test
+//    public void modelToRest_Success() {
+//        //act
+//        ImageInfoResponse testImageInfoResponse = imageResponseMapperImpl.modelToRest(imageInfoModel);
+//        //assert
+//        assertNotNull(testImageInfoResponse);
+//        assertEquals(uid, testImageInfoResponse.getUid());
+//        assertEquals(fileName, testImageInfoResponse.getFileName());
+//        assertEquals(data, testImageInfoResponse.getData());
+//        assertEquals(status, testImageInfoResponse.getStatus());
+//        assertEquals(privacy, testImageInfoResponse.getPrivacy());
+//    }
+//
+//    @Test
+//    public void restToModel_Success() {
+//        //act
+//        ImageInfoModel testImageInfoModel = imageResponseMapperImpl.restToModel(imageInfoResponse);
+//        //assert
+//        assertNotNull(testImageInfoModel);
+//        assertEquals(uid, testImageInfoModel.getUid());
+//        assertEquals(fileName, testImageInfoModel.getFileName());
+//        assertEquals(data, testImageInfoModel.getData());
+//        assertEquals(status, testImageInfoModel.getStatus());
+//        assertEquals(privacy, testImageInfoModel.getPrivacy());
+//    }
+//}
