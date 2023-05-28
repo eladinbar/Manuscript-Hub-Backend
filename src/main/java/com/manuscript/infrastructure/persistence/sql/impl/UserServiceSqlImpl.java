@@ -8,10 +8,7 @@ import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +19,10 @@ public class UserServiceSqlImpl implements IUserRepositoryService {
     @Override
     public UserModel save(UserModel model) throws IllegalArgumentException {
         final UserEntity toSave = mapper.modelToEntity(model);
+        if(toSave.getCreatedTime() == null){
+            toSave.setCreatedTime(new Date());
+            toSave.setUpdatedTime(new Date());
+        }
         final UserEntity result = repo.save(toSave);
         return mapper.entityToModel(result);
     }

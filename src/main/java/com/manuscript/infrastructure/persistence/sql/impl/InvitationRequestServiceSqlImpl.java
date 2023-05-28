@@ -41,7 +41,7 @@ public class InvitationRequestServiceSqlImpl implements IInvitationRequestReposi
 
     @Override
     public void deleteById(UUID id) {
-        //todo : need to implement
+        repo.deleteById(id);
     }
 
     @Override
