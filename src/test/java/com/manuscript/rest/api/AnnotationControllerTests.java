@@ -260,7 +260,7 @@ public class AnnotationControllerTests {
 
         //act
         ResponseEntity<List<AnnotationResponse>> responses =
-                annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageDataId(), annotationRequest.getUid());
+                annotationController.getAllAnnotationsByImageDataId(annotationRequest.getImageDataId(), annotationRequest.getUid());
 
         //assert
         assertTrue(responses.hasBody());
@@ -276,7 +276,7 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class,
-                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
+                () -> annotationController.getAllAnnotationsByImageDataId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
     }
 
     @Test
@@ -287,7 +287,7 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class,
-                () -> annotationController.getAllAnnotationsByDocumentId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
+                () -> annotationController.getAllAnnotationsByImageDataId(annotationRequest.getImageDataId(), annotationRequest.getUid()));
     }
 
     ////--------------------------------------- 'deleteAnnotation' tests
@@ -295,7 +295,7 @@ public class AnnotationControllerTests {
     @Test
     public void deleteAnnotationSuccess() {
         //act
-        annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(), annotationRequest.getUid());
+        annotationController.deleteAnnotationById(annotationRequest.getId(), annotationRequest.getImageDataId(), annotationRequest.getUid());
     }
 
     @Test
@@ -306,7 +306,7 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(),
+                annotationController.deleteAnnotationById(annotationRequest.getId(), annotationRequest.getImageDataId(),
                         annotationRequest.getUid()));
     }
 
@@ -318,7 +318,7 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(),
+                annotationController.deleteAnnotationById(annotationRequest.getId(), annotationRequest.getImageDataId(),
                         annotationRequest.getUid()));
     }
 
@@ -330,7 +330,7 @@ public class AnnotationControllerTests {
         //act
         //assert
         assertThrows(IllegalArgumentException.class, () ->
-                annotationController.deleteAnnotation(annotationRequest.getId(), annotationRequest.getImageDataId(),
+                annotationController.deleteAnnotationById(annotationRequest.getId(), annotationRequest.getImageDataId(),
                         annotationRequest.getUid()));
     }
 }

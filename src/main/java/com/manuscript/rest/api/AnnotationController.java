@@ -40,26 +40,26 @@ public class AnnotationController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAllAnnotationsByDocumentId/{documentId}/{uid}")
-    public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByDocumentId(@PathVariable UUID documentId, @PathVariable String uid) {
-        if(documentId == null || uid == null)
+    @GetMapping("/getAllAnnotationsByDocumentDataId/{imageDataId}/{uid}")
+    public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByImageDataId(@PathVariable UUID imageDataId, @PathVariable String uid) {
+        if(imageDataId == null || uid == null)
             throw new IllegalArgumentException("Invalid document or user ID.");
-        List<AnnotationResponse> result = annotationService.getAllByImageDataId(documentId, uid);
+        List<AnnotationResponse> result = annotationService.getAllByImageDataId(imageDataId, uid);
         return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping ("/deleteAnnotation/{annotationId}")
-    public ResponseEntity<String> deleteAnnotation(@PathVariable UUID annotationId) {
+    @DeleteMapping ("/deleteAnnotationById/{annotationId}")
+    public ResponseEntity<String> deleteAnnotationById(@PathVariable UUID annotationId) {
         if(annotationId == null)
             throw new IllegalArgumentException("Invalid annotation, document or user ID.");
         annotationService.delete(annotationId);
-        return ResponseEntity.ok("Annotation deleted successfully");
+        return ResponseEntity.ok("Annotation deleted successfully.");
     }
 
-    @DeleteMapping("/deleteAllAnnotationsByDocumentId/{imageDataId}")
+    @DeleteMapping("/deleteAllAnnotationsByDocumentDataId/{imageDataId}")
     public ResponseEntity<String> deleteAllAnnotationsByImageDataId(@PathVariable UUID imageDataId) {
         annotationService.deleteAllByImageDataId(imageDataId);
-        return ResponseEntity.ok("All related annotations deleted successfully");
+        return ResponseEntity.ok("All related annotations deleted successfully.");
     }
 
     private void checkNotNull(AnnotationRequest annotationRequest, boolean newRequest) {
@@ -76,12 +76,11 @@ public class AnnotationController {
 
     private void checkCoordinates(int startX, int startY, int endX, int endY) {
         if(startX < 0 || startY < 0 || endX < 0 || endY < 0)
-            throw new IllegalArgumentException("Annotation's coordinates must be non-negative");
+            throw new IllegalArgumentException("Annotation's coordinates must be non-negative.");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
-
 }
