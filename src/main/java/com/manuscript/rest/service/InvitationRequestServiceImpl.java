@@ -6,6 +6,8 @@ import com.manuscript.core.domain.user.models.UserModel;
 import com.manuscript.core.exceptions.UserAlreadyExistException;
 import com.manuscript.core.usecase.custom.invitation.*;
 import com.manuscript.core.usecase.custom.user.ICreateUser;
+import com.manuscript.core.usecase.custom.user.IDeleteUserById;
+import com.manuscript.core.usecase.custom.user.IGetByEmailUser;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.request.InvitationRequestRequest;
 import com.manuscript.rest.response.InvitationRequestResponse;
@@ -25,9 +27,10 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
     private final IGetAllInvitationRequests getAllInvitationRequest;
     private final IUpdateInvitationRequest updateInvitationRequest;
     private final IGetByEmailInvitationRequest getByEmailInvitationRequest;
+    private final IGetByEmailUser getByEmailUser;
     private final ICreateInvitationRequest createInvitationRequest;
     private final ICreateUser createUser;
-
+    private final IDeleteUserById deleteUserById;
 
     @Override
     public List<InvitationRequestResponse> getAllInvitations() {
@@ -63,6 +66,9 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
             if (invitationEnum.equals(InvitationEnum.approved)) {
                 UserModel userModel = invitationRequestModel.getUser();
                 createUser.create(userModel);
+            }else{
+                Optional<UserModel> optByEmail = getByEmailUser.getByEmail(email);
+                optByEmail.ifPresent(userModel -> deleteUserById.deleteById(userModel.getId()));
             }
             invitationRequestModel.setInvitationEnum(invitationEnum);
             updateInvitationRequest.update(invitationRequestModel);
