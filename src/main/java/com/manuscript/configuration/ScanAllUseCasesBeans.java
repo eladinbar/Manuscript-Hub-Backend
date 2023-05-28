@@ -17,13 +17,7 @@ public class ScanAllUseCasesBeans {
     @Bean
     BeanFactoryPostProcessor beanFactoryPostProcessor(ApplicationContext beanRegistry) {
         return beanFactory -> {
-//            if (beanRegistry instanceof AnnotationConfigServletWebServerApplicationContext) {
                 genericApplicationContext(beanRegistry);
-//            }
-//            else {
-//                return (AnnotationConfigServletWebServerApplicationContext) beanRegistry;
-////                throw new IllegalStateException("Expected ApplicationContext to be an instance of AnnotationConfigServletWebServerApplicationContext, but found " + beanRegistry.getClass());
-//            }
         };
     }
 
