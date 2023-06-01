@@ -52,6 +52,7 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
         currentImageEntity.setTags(newImageEntity.getTags());
         currentImageEntity.setSharedUserIds(newImageEntity.getSharedUserIds());
         currentImageEntity.setPrivacy(newImageEntity.getPrivacy());
+        currentImageEntity.setUpdatedTime(new Date());
         newImageEntity = imageRepo.save(currentImageEntity);
         return mapper.entityToModel(newImageEntity);
     }
