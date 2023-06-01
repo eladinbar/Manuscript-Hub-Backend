@@ -32,7 +32,7 @@ public class AlgorithmEntity extends BaseEntity {
     @Column(name = "description", nullable = false)
     String description;
 
-    @Column(name = "url", nullable = false, unique = true, columnDefinition = "TEXT")
+    @Column(name = "url", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
     String url;
 
     @Enumerated(EnumType.STRING)
