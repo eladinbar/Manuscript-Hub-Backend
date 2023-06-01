@@ -19,9 +19,9 @@ public class DefaultAdminUserInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String ADMIN_EMAIL = "admin@admin.com";
+        String ADMIN_EMAIL = "manuscript.hubs@gmail.com";
         String ADMIN_NAME = "admin";
-        String ADMIN_UID = "VzOz8hFCadWQ6X6gIprjc4Wde4f1";
+        String ADMIN_UID = "XikqtLvG5BfVXfp86xFzp1drzoi2";
 
         Optional<UserEntity> optionalAdmin = userRepository.findByEmail(ADMIN_EMAIL);
         if(!optionalAdmin.isPresent()) {
