@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
 
+import static com.manuscript.rest.common.Constants.RESOURCE_ACCOUNT;
+
 @RestController
-@RequestMapping("/api/accountController")
+@RequestMapping(RESOURCE_ACCOUNT)
 @CrossOrigin()
 @AllArgsConstructor
 public class AuthenticationController {
@@ -24,10 +26,9 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserRequest user) {
-        try{
+        try {
             return ResponseEntity.ok(this.userService.getByUid(user.getUid()));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // if in firebase but not in backend
             return ResponseEntity.ok(this.userService.save(user));
         }
@@ -39,8 +40,7 @@ public class AuthenticationController {
         try {
             UserResponse userResponse = this.userService.save(user);
             return ResponseEntity.ok(userResponse);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("Error creating new user: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
         }
