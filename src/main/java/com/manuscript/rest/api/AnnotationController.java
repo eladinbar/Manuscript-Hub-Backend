@@ -58,8 +58,10 @@ public class AnnotationController {
 
     @DeleteMapping("/deleteAllAnnotationsByDocumentDataId/{imageDataId}")
     public ResponseEntity<String> deleteAllAnnotationsByImageDataId(@PathVariable UUID imageDataId) {
+        if(imageDataId == null)
+            throw new IllegalArgumentException("Invalid image data ID.");
         annotationService.deleteAllByImageDataId(imageDataId);
-        return ResponseEntity.ok("All related annotations deleted successfully.");
+        return ResponseEntity.ok("All related annotations were deleted successfully.");
     }
 
     private void checkNotNull(AnnotationRequest annotationRequest, boolean newRequest) {
