@@ -83,6 +83,8 @@ public class AuthenticationControllerTests {
                 .newUser(false).build();
     }
 
+    ////--------------------------------------- 'login' tests
+
     @Test
     public void login_Success() {
         //set up
@@ -121,6 +123,8 @@ public class AuthenticationControllerTests {
         assertEquals(userRequest.getPhoneNumber(), returnedResponse.getPhoneNumber());
         assertEquals(userRequest.getEmail(), returnedResponse.getEmail());
     }
+
+    ////--------------------------------------- 'register' tests
 
     @Test
     public void register_Success() {
