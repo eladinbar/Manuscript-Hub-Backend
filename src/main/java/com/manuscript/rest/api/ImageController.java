@@ -8,23 +8,17 @@ import com.manuscript.rest.forms.response.ImageDataResponse;
 import com.manuscript.rest.forms.response.ImageInfoResponse;
 import com.manuscript.rest.service.IImageService;
 import lombok.AllArgsConstructor;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Stream;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-//import org.apache.pdfbox.pdmodel.PDDocument;
-//import org.apache.pdfbox.rendering.ImageType;
-//import org.apache.pdfbox.rendering.PDFRenderer;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_IMAGE;
 
@@ -56,10 +50,9 @@ public class ImageController {
             List<ImageDataRequest> imageDataRequestList = new ArrayList<>();
             for (int index = 0; index < correctFilesList.toArray().length; index++) {
                 MultipartFile file = correctFilesList.get(index);
-                byte[] resizedFile = resizeImage(file, 750, 512);
                 ImageDataRequest imageDataRequest = ImageDataRequest.builder()
                         .imageId(imageInfoId)
-                        .data(resizedFile)
+                        .data(file.getBytes())
                         .fileName(Objects.requireNonNull(file.getOriginalFilename()))
                         .index(index)
                         .build();
@@ -242,16 +235,4 @@ public class ImageController {
     private ResponseEntity<String> handleException(Exception exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
-
-    public byte[] resizeImage(MultipartFile originalImage, int width, int height) throws IOException {
-        try (InputStream in = originalImage.getInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Thumbnails.of(in)
-                    .size(width, height)
-                    .outputFormat("jpg") // or another format
-                    .toOutputStream(out);
-            return out.toByteArray();
-        }
-    }
-
-
 }
