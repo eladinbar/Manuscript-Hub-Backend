@@ -40,14 +40,12 @@ public class ImageServiceImpl implements IImageService {
     private final IGetImageInfoByTextSearch getImageInfoByTextSearchUseCase;
     private final ITransferOwnership transferOwnershipUseCase;
 
-
-
     @Override
     public ImageInfoResponse saveInfo(ImageInfoRequest imageInfoRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         ImageInfoModel imageInfoModel = imageInfoRequestMapper.restToModel(imageInfoRequest);
         imageInfoModel = createImageUseCase.create(imageInfoModel);
         ImageInfoResponse imageInfoResponse = imageInfoResponseMapper.modelToRest(imageInfoModel);
-        verifyPermissions(imageInfoRequest.getUid(),imageInfoResponse.getUid(),imageInfoResponse.getSharedUserIds(),imageInfoResponse.getStatus(),imageInfoResponse.getPrivacy());
+        verifyPermissions(imageInfoRequest.getUid(), imageInfoResponse.getUid(), imageInfoResponse.getSharedUserIds(), imageInfoResponse.getStatus(), imageInfoResponse.getPrivacy());
         return imageInfoResponse;
     }
 
@@ -61,7 +59,8 @@ public class ImageServiceImpl implements IImageService {
 
     @Override
     public ImageInfoResponse updateInfo(ImageInfoRequest imageInfoRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        getByIdInfo(imageInfoRequest.getId(), imageInfoRequest.getUid()); //get requested image from db to check if permissions match.
+        getByIdInfo(imageInfoRequest.getId(), imageInfoRequest.getUid()); //get requested image from db to check if it exists
+        verifyModifyPermissions(imageInfoRequest.getId(), imageInfoRequest.getUid());
         ImageInfoModel imageInfoModel = imageInfoRequestMapper.restToModel(imageInfoRequest);
         imageInfoModel = updateImageUseCase.update(imageInfoModel);
         ImageInfoResponse imageInfoResponse = imageInfoResponseMapper.modelToRest(imageInfoModel);
@@ -69,33 +68,33 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public ImageInfoResponse getByIdInfo(UUID imageInfoId, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+    public ImageInfoResponse getByIdInfo(UUID imageInfoId, String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         Optional<ImageInfoModel> optionalImageInfoModel = getByIdImageInfoUseCase.getById(imageInfoId);
         if (!optionalImageInfoModel.isPresent())
-            throw new NoImageFoundException();
+            throw new NoImageFoundException("No document was found.");
         ImageInfoModel imageInfoModel = optionalImageInfoModel.get();
         ImageInfoResponse imageInfoResponse = imageInfoResponseMapper.modelToRest(imageInfoModel);
-        verifyPermissions(userId,imageInfoResponse.getUid(),imageInfoResponse.getSharedUserIds(),imageInfoResponse.getStatus(),imageInfoResponse.getPrivacy());
+        verifyPermissions(uid, imageInfoResponse.getUid(), imageInfoResponse.getSharedUserIds(), imageInfoResponse.getStatus(), imageInfoResponse.getPrivacy());
         return imageInfoResponse;
     }
 
     @Override
-    public ImageDataResponse getByIdData(UUID imageDataId, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+    public ImageDataResponse getByIdData(UUID imageDataId, String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         Optional<ImageDataModel> optionalImageDataModel = getByIdImageDataUseCase.getById(imageDataId);
         if (!optionalImageDataModel.isPresent())
             throw new NoImageFoundException();
         ImageDataModel imageDataModel = optionalImageDataModel.get();
         ImageDataResponse imageDataResponse = imageDataResponseMapper.modelToRest(imageDataModel);
-        getByIdInfo(imageDataResponse.getInfoId(), userId); //get requested image from db to check if permissions match.
+        getByIdInfo(imageDataResponse.getInfoId(), uid); //get requested image from db to check if permissions match.
         return imageDataResponse;
     }
 
     @Override
-    public List<ImageDataResponse> getAllByImageInfoIdImageDatas(UUID imageInfoId, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        getByIdInfo(imageInfoId, userId); //get requested image from db to check if permissions match.
+    public List<ImageDataResponse> getAllByImageInfoIdImageDatas(UUID imageInfoId, String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        getByIdInfo(imageInfoId, uid); //get requested image from db to check if permissions match.
         List<ImageDataModel> imageDataModelList = getAllByImageIdImagesDataUseCase.getAllByImageId(imageInfoId);
         List<ImageDataResponse> imageDataResponseList = new ArrayList<>();
-        for (ImageDataModel imageDataModel : imageDataModelList){
+        for (ImageDataModel imageDataModel : imageDataModelList) {
             ImageDataResponse imageDataResponse = imageDataResponseMapper.modelToRest(imageDataModel);
             imageDataResponseList.add(imageDataResponse);
         }
@@ -103,11 +102,11 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public List<ImageInfoResponse> getAllByUidImageInfos(String userId) throws IllegalArgumentException, NoUserFoundException {
-        List<ImageInfoModel> imageInfoModelList = getAllByUidImagesUseCase.getAllByUidImageInfos(userId);
+    public List<ImageInfoResponse> getAllByUidImageInfos(String uid) throws IllegalArgumentException, NoUserFoundException {
+        List<ImageInfoModel> imageInfoModelList = getAllByUidImagesUseCase.getAllByUidImageInfos(uid);
         List<ImageInfoResponse> imageInfoResponseList = ImageModelListToResponseList(imageInfoModelList);
-        for (ImageInfoResponse imageInfoResponse : imageInfoResponseList){
-            verifyPermissions(userId,imageInfoResponse.getUid(),imageInfoResponse.getSharedUserIds(),imageInfoResponse.getStatus(),imageInfoResponse.getPrivacy());
+        for (ImageInfoResponse imageInfoResponse : imageInfoResponseList) {
+            verifyPermissions(uid, imageInfoResponse.getUid(), imageInfoResponse.getSharedUserIds(), imageInfoResponse.getStatus(), imageInfoResponse.getPrivacy());
         }
         return imageInfoResponseList;
     }
@@ -120,29 +119,29 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public List<ImageInfoResponse> getAllSharedImages(String userId) throws IllegalArgumentException, NoUserFoundException {
-        List<ImageInfoModel> imageInfoModelList = getAllSharedImagesUseCase.getAllSharedImages(userId);
+    public List<ImageInfoResponse> getAllSharedImages(String uid) throws IllegalArgumentException, NoUserFoundException {
+        List<ImageInfoModel> imageInfoModelList = getAllSharedImagesUseCase.getAllSharedImages(uid);
         List<ImageInfoResponse> imageInfoResponseList = ImageModelListToResponseList(imageInfoModelList);
-        for (ImageInfoResponse imageInfoResponse : imageInfoResponseList){
-            verifyPermissions(userId,imageInfoResponse.getUid(),imageInfoResponse.getSharedUserIds(),imageInfoResponse.getStatus(),imageInfoResponse.getPrivacy());
+        for (ImageInfoResponse imageInfoResponse : imageInfoResponseList) {
+            verifyPermissions(uid, imageInfoResponse.getUid(), imageInfoResponse.getSharedUserIds(), imageInfoResponse.getStatus(), imageInfoResponse.getPrivacy());
         }
         return imageInfoResponseList;
     }
 
     @Override
-    public void deleteByIdImageInfo(UUID imageInfoId, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        verifyDeletePermissions(imageInfoId, userId);
-        List<ImageDataResponse> imageDataResponseList = getAllByImageInfoIdImageDatas(imageInfoId, userId);
+    public void deleteByIdImageInfo(UUID imageInfoId, String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        verifyModifyPermissions(imageInfoId, uid);
+        List<ImageDataResponse> imageDataResponseList = getAllByImageInfoIdImageDatas(imageInfoId, uid);
         for (ImageDataResponse imageDataResponse : imageDataResponseList) {
-            deleteByIdImageData(imageDataResponse.getId(), userId, true);
+            deleteByIdImageData(imageDataResponse.getId(), uid, true);
         }
         deleteByIdImageInfoUseCase.deleteById(imageInfoId);
     }
 
     @Override
-    public void deleteByIdImageData(UUID imageDataId, String userId, boolean deleteAnnotation) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        ImageDataResponse imageDataResponse = getByIdData(imageDataId,userId); //get requested image from db to check if permissions match.
-        verifyDeletePermissions(imageDataResponse.getInfoId(), userId);
+    public void deleteByIdImageData(UUID imageDataId, String uid, boolean deleteAnnotation) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+        ImageDataResponse imageDataResponse = getByIdData(imageDataId, uid); //get requested image from db to check if permissions match.
+        verifyModifyPermissions(imageDataResponse.getInfoId(), uid);
         if (deleteAnnotation) {
             annotationService.deleteAllByImageDataId(imageDataId);
         }
@@ -150,13 +149,13 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public Map<Privacy, List<ImageInfoResponse>> getImageInfoByTextSearch(String searchText, String userId) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
+    public Map<Privacy, List<ImageInfoResponse>> getImageInfoByTextSearch(String searchText, String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         Map<Privacy, List<ImageInfoResponse>> imageInfoResponseMap = new HashMap<>();
-        Map<Privacy, List<ImageInfoModel>> imageInfoModelMap = getImageInfoByTextSearchUseCase.getImageInfoByTextSearch(searchText, userId);
-        for (Map.Entry<Privacy, List<ImageInfoModel>> entry : imageInfoModelMap.entrySet()){
+        Map<Privacy, List<ImageInfoModel>> imageInfoModelMap = getImageInfoByTextSearchUseCase.getImageInfoByTextSearch(searchText, uid);
+        for (Map.Entry<Privacy, List<ImageInfoModel>> entry : imageInfoModelMap.entrySet()) {
             List<ImageInfoResponse> imageInfoResponseList = ImageModelListToResponseList(entry.getValue());
-            for (ImageInfoResponse imageInfoResponse : imageInfoResponseList){
-                verifyPermissions(userId,imageInfoResponse.getUid(),imageInfoResponse.getSharedUserIds(),imageInfoResponse.getStatus(),imageInfoResponse.getPrivacy());
+            for (ImageInfoResponse imageInfoResponse : imageInfoResponseList) {
+                verifyPermissions(uid, imageInfoResponse.getUid(), imageInfoResponse.getSharedUserIds(), imageInfoResponse.getStatus(), imageInfoResponse.getPrivacy());
             }
             imageInfoResponseMap.put(entry.getKey(), imageInfoResponseList);
         }
@@ -172,41 +171,40 @@ public class ImageServiceImpl implements IImageService {
         return imageInfoResponse;
     }
 
-    private List<ImageInfoResponse> ImageModelListToResponseList(List<ImageInfoModel> imageInfoModelList){
+    private List<ImageInfoResponse> ImageModelListToResponseList(List<ImageInfoModel> imageInfoModelList) {
         List<ImageInfoResponse> imageInfoResponseList = new ArrayList<>();
-        for (ImageInfoModel imageInfoModel : imageInfoModelList){
+        for (ImageInfoModel imageInfoModel : imageInfoModelList) {
             ImageInfoResponse imageInfoResponse = imageInfoResponseMapper.modelToRest(imageInfoModel);
             imageInfoResponseList.add(imageInfoResponse);
         }
         return imageInfoResponseList;
     }
 
-    private void verifyPermissions(String requestUid, String responseOwnerId, List<String> responseSharedUserIds, Status responseStatus, Privacy responsePrivacy) throws UnauthorizedException {
-        if(responseStatus.equals(Status.Disabled))
+    private void verifyPermissions(String requestUid, String responseOwnerUid, List<String> responseSharedUserIds, Status responseStatus, Privacy responsePrivacy) throws UnauthorizedException {
+        if (responseStatus.equals(Status.Disabled))
             throw new NoImageFoundException("Disabled images are unavailable.");
-        if (!requestUid.equals(responseOwnerId)) {
-            if (!responsePrivacy.equals(Privacy.Shared))
-                throw new UnauthorizedException("You have no permissions to view this image.");
-            else if (!responseSharedUserIds.contains(requestUid)) {
-                throw new UnauthorizedException("This document isn't shared with you.");
+        if (!requestUid.equals(responseOwnerUid)) {
+            if(!responsePrivacy.equals(Privacy.Public)) {
+                if (!responsePrivacy.equals(Privacy.Shared))
+                    throw new UnauthorizedException("You have no permissions to view this image.");
+                else if (!responseSharedUserIds.contains(requestUid)) {
+                    throw new UnauthorizedException("This document isn't shared with you.");
+                }
             }
         }
     }
 
-    private void verifyDeletePermissions(UUID imageInfoId, String userId) throws UnauthorizedException{
-        ImageInfoResponse imageInfoResponse = getByIdInfo(imageInfoId, userId); //also checks permissions
-        if (imageInfoResponse.getPrivacy() == Privacy.Public){
-            throw new UnauthorizedException("Cannot delete public property.");
-        }
-        else if (imageInfoResponse.getPrivacy() == Privacy.Shared){
-            if (!imageInfoResponse.getUid().equals(userId)){
-                throw new IllegalArgumentException("Only the owner can delete this item");
-            }
-            else {
+    private void verifyModifyPermissions(UUID imageInfoId, String uid) throws UnauthorizedException {
+        ImageInfoResponse imageInfoResponse = getByIdInfo(imageInfoId, uid); //also checks permissions
+        if (imageInfoResponse.getPrivacy() == Privacy.Public) {
+            throw new UnauthorizedException("Cannot modify public property.");
+        } else if (imageInfoResponse.getPrivacy() == Privacy.Shared) {
+            if (!imageInfoResponse.getUid().equals(uid)) {
+                throw new IllegalArgumentException("Only the owner can modify this item");
+            } else {
                 throw new IllegalArgumentException("This item is shared with other users\n" +
-                        "please transfer item ownership or set its privacy to 'private' first.");
+                        "please transfer item ownership or set its privacy to 'Private' first.");
             }
         }
     }
-
 }

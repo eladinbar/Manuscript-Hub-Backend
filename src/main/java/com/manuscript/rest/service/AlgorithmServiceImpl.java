@@ -41,7 +41,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public void run(AlgorithmRequest algorithmRequest) {
-        verifyImagePermission(algorithmRequest.getImageId(), algorithmRequest.getUid());
+        verifyImagePermission(algorithmRequest.getImageDataId(), algorithmRequest.getUid());
         Optional<AlgorithmModel> optionalModel = getByIdAlgorithmUseCase.getById(algorithmRequest.getId());
         if(optionalModel.isPresent()) {
             AlgorithmModel algorithmModel = optionalModel.get();
@@ -49,7 +49,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             //TODO place results within a variable
             //TODO call 'addAnnotation' or 'updateAnnotation' accordingly
         }
-        throw new NoAlgorithmFoundException();
+        throw new NoAlgorithmFoundException("No algorithm found.");
     }
 
     @Override

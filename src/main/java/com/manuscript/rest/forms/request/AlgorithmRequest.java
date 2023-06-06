@@ -16,7 +16,7 @@ import java.util.UUID;
 public class AlgorithmRequest {
     UUID id;
     String uid;
-    UUID imageId;
+    UUID imageDataId;
     String title;
     AlgorithmModelType modelType;
     String description;
