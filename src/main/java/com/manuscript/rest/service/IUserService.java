@@ -11,8 +11,8 @@ public interface IUserService {
     UserResponse getByUid(String uid);
     UserResponse getByEmail(String email);
     UserResponse save(UserRequest userRequest);
-    UserResponse updateUser(UserRequest UserRequest);
-    void deleteUser(UUID id);
+    UserResponse update(UserRequest UserRequest);
+    void delete(UUID id);
 
 }
 

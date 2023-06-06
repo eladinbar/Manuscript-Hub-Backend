@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest user) {
         checkNotNull(user);
         try {
-            return ResponseEntity.ok(this.userService.updateUser(user));
+            return ResponseEntity.ok(this.userService.update(user));
         } catch (Exception e) {
             System.err.println("Error updating this user: " + e.getMessage());
         }
@@ -54,7 +54,7 @@ public class UserController {
     public void deleteUserById(@PathVariable UUID id) {
         if (id == null)
             throw new IllegalArgumentException("Invalid user ID.");
-        userService.deleteUser(id);
+        userService.delete(id);
     }
 
     @ExceptionHandler(Exception.class)

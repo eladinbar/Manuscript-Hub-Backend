@@ -83,7 +83,7 @@ public class UserControllerTests {
     @Test
     public void updateTest_Success() {
         //set up
-        when(userService.updateUser(any(UserRequest.class))).thenReturn(userResponse);
+        when(userService.update(any(UserRequest.class))).thenReturn(userResponse);
 
         //act
         ResponseEntity<UserResponse> response = userController.updateUser(userRequest);
@@ -105,7 +105,7 @@ public class UserControllerTests {
     @Test
     public void updateTest_NonExistent() {
         //set up
-        when(userService.updateUser(any(UserRequest.class))).thenReturn(null);
+        when(userService.update(any(UserRequest.class))).thenReturn(null);
 
         //act
         ResponseEntity<UserResponse> response = userController.updateUser(userRequest);
@@ -196,7 +196,7 @@ public class UserControllerTests {
     @Test
     public void deleteUserByIdTest_NullId() {
         //set up
-        doNothing().when(userService).deleteUser(any(UUID.class));
+        doNothing().when(userService).delete(any(UUID.class));
 
         //act
         //assert
