@@ -14,18 +14,14 @@ import java.util.*;
 @AllArgsConstructor
 @Service
 public class AnnotationServiceImpl implements IAnnotationService {
-    private final UUID NIL = UUID.fromString("00000000-0000-0000-0000-000000000000");
-
-    // Annotation service is expected to use image service for its various function needs
-    // (e.g. get or verify existence of a specific image)
     private final IRestMapper<AnnotationModel, AnnotationRequest> annotationRequestMapper;
     private final IRestMapper<AnnotationModel, AnnotationResponse> annotationResponseMapper;
     private final ICreateAnnotation createAnnotationUseCase;
+    private final IUpdateAnnotation updateAnnotationUseCase;
     private final IGetByIdAnnotation getByIdAnnotationUseCase;
     private final IGetAllByImageIdAnnotations getAllByImageIdAnnotationsUseCase;
-    private final IUpdateAnnotation updateAnnotationUseCase;
     private final IDeleteByIdAnnotation deleteByIdAnnotationUseCase;
-    private final IDeleteAllByImageDataId deleteAllByImageDataIdUseCase;
+    private final IDeleteAllByImageDataIdAnnotations deleteAllByImageDataIdAnnotationsUseCase;
 
     @Override
     public AnnotationResponse create(AnnotationRequest annotationRequest) {
@@ -43,13 +39,13 @@ public class AnnotationServiceImpl implements IAnnotationService {
 
     //Currently not in use
     @Override
-    public AnnotationResponse get(AnnotationRequest annotationRequest) {
+    public AnnotationResponse getById(AnnotationRequest annotationRequest) {
         Optional<AnnotationModel> optionalAnnotation = getByIdAnnotationUseCase.getById(annotationRequest.getId());
         if(optionalAnnotation.isPresent()) {
             AnnotationModel annotationModel = optionalAnnotation.get();
             return annotationResponseMapper.modelToRest(annotationModel);
         }
-        throw new NoAnnotationFoundException();
+        throw new NoAnnotationFoundException("No annotation with the given ID was found.");
     }
 
     @Override
@@ -64,14 +60,12 @@ public class AnnotationServiceImpl implements IAnnotationService {
     }
 
     @Override
-    public void delete(UUID annotationId) {
+    public void deleteById(UUID annotationId) {
         deleteByIdAnnotationUseCase.deleteById(annotationId);
     }
 
     @Override
     public void deleteAllByImageDataId(UUID imageDataId) {
-        deleteAllByImageDataIdUseCase.deleteAllByImageDataId(imageDataId);
+        deleteAllByImageDataIdAnnotationsUseCase.deleteAllByImageDataId(imageDataId);
     }
-
-
 }

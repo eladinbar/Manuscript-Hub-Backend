@@ -11,11 +11,11 @@ public interface IAnnotationService {
 
     AnnotationResponse update(AnnotationRequest annotationRequest);
 
-    AnnotationResponse get(AnnotationRequest annotationRequest);
+    AnnotationResponse getById(AnnotationRequest annotationRequest);
 
     List<AnnotationResponse> getAllByImageDataId(UUID imageDataId, String uid);
 
-    void delete(UUID annotationId);
+    void deleteById(UUID annotationId);
 
     void deleteAllByImageDataId(UUID imageDataId);
 }

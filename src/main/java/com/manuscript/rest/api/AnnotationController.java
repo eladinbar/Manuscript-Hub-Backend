@@ -52,7 +52,7 @@ public class AnnotationController {
     public ResponseEntity<String> deleteAnnotationById(@PathVariable UUID annotationId) {
         if(annotationId == null)
             throw new IllegalArgumentException("Invalid annotation, document or user ID.");
-        annotationService.delete(annotationId);
+        annotationService.deleteById(annotationId);
         return ResponseEntity.ok("Annotation deleted successfully.");
     }
 

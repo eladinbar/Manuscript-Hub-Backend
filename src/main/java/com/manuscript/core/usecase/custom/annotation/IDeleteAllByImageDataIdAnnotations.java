@@ -2,6 +2,6 @@ package com.manuscript.core.usecase.custom.annotation;
 
 import java.util.UUID;
 
-public interface IDeleteAllByImageDataId {
+public interface IDeleteAllByImageDataIdAnnotations {
     void deleteAllByImageDataId(UUID imageDataId);
 }
