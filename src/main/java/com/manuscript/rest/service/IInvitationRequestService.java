@@ -1,8 +1,8 @@
 package com.manuscript.rest.service;
 
 
-import com.manuscript.rest.request.InvitationRequestRequest;
-import com.manuscript.rest.response.InvitationRequestResponse;
+import com.manuscript.rest.forms.request.InvitationRequestRequest;
+import com.manuscript.rest.forms.response.InvitationRequestResponse;
 
 import java.util.List;
 

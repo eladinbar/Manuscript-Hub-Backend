@@ -196,8 +196,8 @@ public class ImageServiceImpl implements IImageService {
 
     private void verifyModifyPermissions(UUID imageInfoId, String uid) throws UnauthorizedException {
         ImageInfoResponse imageInfoResponse = getByIdInfo(imageInfoId, uid); //also checks permissions
-        if (imageInfoResponse.getPrivacy() == Privacy.Public) {
-            throw new UnauthorizedException("Cannot modify public property.");
+        if (imageInfoResponse.getPrivacy() == Privacy.Public && !imageInfoResponse.getUid().equals(uid)) {
+            throw new UnauthorizedException("Cannot modify public property if you are not the owner.");
         } else if (imageInfoResponse.getPrivacy() == Privacy.Shared) {
             if (!imageInfoResponse.getUid().equals(uid)) {
                 throw new IllegalArgumentException("Only the owner can modify this item");

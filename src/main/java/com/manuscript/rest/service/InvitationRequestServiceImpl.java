@@ -11,8 +11,8 @@ import com.manuscript.core.usecase.custom.user.IDeleteUserById;
 import com.manuscript.core.usecase.custom.user.IGetByEmailUser;
 import com.manuscript.core.usecase.custom.user.IUpdateUser;
 import com.manuscript.rest.mapping.IRestMapper;
-import com.manuscript.rest.request.InvitationRequestRequest;
-import com.manuscript.rest.response.InvitationRequestResponse;
+import com.manuscript.rest.forms.request.InvitationRequestRequest;
+import com.manuscript.rest.forms.response.InvitationRequestResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

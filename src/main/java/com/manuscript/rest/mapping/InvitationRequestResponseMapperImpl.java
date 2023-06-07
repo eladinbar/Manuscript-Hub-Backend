@@ -1,11 +1,10 @@
 package com.manuscript.rest.mapping;
 
-
 import com.manuscript.core.domain.common.enums.InvitationEnum;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.invitation_request.models.InvitationRequestModel;
 import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.rest.response.InvitationRequestResponse;
+import com.manuscript.rest.forms.response.InvitationRequestResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -39,5 +38,4 @@ public class InvitationRequestResponseMapperImpl implements IRestMapper<Invitati
                 .updatedTime(new Date())
                 .build();
     }
-
 }

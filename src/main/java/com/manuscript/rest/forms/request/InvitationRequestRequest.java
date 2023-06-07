@@ -1,4 +1,4 @@
-package com.manuscript.rest.request;
+package com.manuscript.rest.forms.request;
 
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.common.enums.Status;
@@ -21,5 +21,5 @@ public class InvitationRequestRequest {
     @NotNull String name;
     @NotNull Role role;
     Status status;
-    @NotNull String phoneNumber;
+    String phoneNumber;
 }

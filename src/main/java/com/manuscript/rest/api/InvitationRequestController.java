@@ -1,7 +1,7 @@
 package com.manuscript.rest.api;
 
-import com.manuscript.rest.request.InvitationRequestRequest;
-import com.manuscript.rest.response.InvitationRequestResponse;
+import com.manuscript.rest.forms.request.InvitationRequestRequest;
+import com.manuscript.rest.forms.response.InvitationRequestResponse;
 import com.manuscript.rest.service.IInvitationRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

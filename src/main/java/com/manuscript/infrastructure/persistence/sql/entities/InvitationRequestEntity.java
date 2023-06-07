@@ -20,20 +20,25 @@ import javax.persistence.*;
 public class InvitationRequestEntity extends BaseEntity {
     @Column(name = "uid", unique = true, nullable = false, updatable = false, columnDefinition = "VARCHAR(36)")
     private String uid;
+
     @Column(name = "email", unique = true, nullable = false, updatable = false, columnDefinition = "VARCHAR(255)")
     private String email;
+
     @Column(name = "name", nullable = false ,columnDefinition = "TEXT")
     private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
     @Column(name = "phone_number", columnDefinition = "TEXT")
     private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "invitation_enum", nullable = false)
     private InvitationEnum invitationEnum;
-
 }

@@ -5,7 +5,7 @@ import com.manuscript.core.domain.common.enums.InvitationEnum;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.invitation_request.models.InvitationRequestModel;
 import com.manuscript.core.domain.user.models.UserModel;
-import com.manuscript.rest.request.InvitationRequestRequest;
+import com.manuscript.rest.forms.request.InvitationRequestRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
