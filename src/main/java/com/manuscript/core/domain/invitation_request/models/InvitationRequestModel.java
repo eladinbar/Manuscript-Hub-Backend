@@ -17,8 +17,8 @@ import java.util.UUID;
 @Setter
 public class InvitationRequestModel {
     private UUID id;
-    private Date createdTime;
-    private Date updatedTime;
     private UserModel user;
     private InvitationEnum invitationEnum;
+    private Date createdTime;
+    private Date updatedTime;
 }

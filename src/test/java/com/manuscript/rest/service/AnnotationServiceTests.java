@@ -76,7 +76,7 @@ public class AnnotationServiceTests {
         deleteByIdAnnotationUseCase = Mockito.mock(IDeleteByIdAnnotation.class);
         deleteAllByImageDataIdAnnotationsUseCase = Mockito.mock(IDeleteAllByImageDataIdAnnotations.class);
 
-        // set up controller
+        // set up service
         annotationService = new AnnotationServiceImpl(annotationRequestMapper, annotationResponseMapper,
                 createAnnotationUseCase, updateAnnotationUseCase, getByIdAnnotationsUseCase,
                 getAllByImageIdAnnotationsUseCase, deleteByIdAnnotationUseCase, deleteAllByImageDataIdAnnotationsUseCase);

@@ -36,19 +36,13 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
     private final IDeleteUserById deleteUserByIdUseCase;
 
     @Override
-    public List<InvitationRequestResponse> getAllInvitations() {
-        return getAllInvitationRequestUseCase.getAll().stream().map(invitationResponseMapper::modelToRest).collect(Collectors.toList());
-    }
-
-    @Override
     public List<InvitationRequestResponse> save(InvitationRequestRequest invitationRequestRequest) {
         Optional<InvitationRequestModel> userModelByUid = getByUidInvitationRequestUseCase.getByUid(invitationRequestRequest.getUid());
         if (userModelByUid.isPresent()) {
-            throw new UserAlreadyExistException();
+            throw new UserAlreadyExistException("A user with the email address " + invitationRequestRequest.getEmail() + " already exists.");
         }
-        InvitationRequestModel invitationRequestModel =
-                invitationRequestMapper.restToModel(invitationRequestRequest);
-        invitationResponseMapper.modelToRest(createInvitationRequestUseCase.create(invitationRequestModel));
+        InvitationRequestModel invitationRequestModel = invitationRequestMapper.restToModel(invitationRequestRequest);
+        createInvitationRequestUseCase.create(invitationRequestModel);
         return getAllInvitations();
     }
 
@@ -62,6 +56,11 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
         return handleRequest(email, InvitationEnum.Denied);
     }
 
+    @Override
+    public List<InvitationRequestResponse> getAllInvitations() {
+        return getAllInvitationRequestUseCase.getAll().stream().map(invitationResponseMapper::modelToRest).collect(Collectors.toList());
+    }
+
     private List<InvitationRequestResponse> handleRequest(String email, InvitationEnum invitationEnum) {
         Optional<InvitationRequestModel> optionalInvitation = getByEmailInvitationRequestUseCase.getByEmail(email);
         if (optionalInvitation.isPresent()) {
@@ -70,7 +69,7 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
             InvitationRequestModel invitationRequestModel = optionalInvitation.get();
             if (invitationEnum.equals(InvitationEnum.Approved)) {
                 // First time approval
-                if(!optionalUser.isPresent()) {
+                if (!optionalUser.isPresent()) {
                     userModel = invitationRequestModel.getUser();
                     createUserUseCase.create(userModel);
                 } else {
