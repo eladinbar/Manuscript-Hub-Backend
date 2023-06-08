@@ -1,7 +1,6 @@
 package com.manuscript.rest.forms.request;
 
 import com.manuscript.core.domain.common.enums.Role;
-import com.manuscript.core.domain.common.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +19,5 @@ public class InvitationRequestRequest {
     @NotNull String email;
     @NotNull String name;
     @NotNull Role role;
-    Status status;
     String phoneNumber;
 }

@@ -22,24 +22,24 @@ public class InvitationRequestController {
     }
 
     @PostMapping("/createInvitation")
-    public List<InvitationRequestResponse> createInvitation(@RequestBody InvitationRequestRequest invitationRequestRequest) {
-        return requestService.save(invitationRequestRequest);
+    public ResponseEntity<List<InvitationRequestResponse>> createInvitation(@RequestBody InvitationRequestRequest invitationRequestRequest) {
+        return ResponseEntity.ok(requestService.save(invitationRequestRequest));
     }
 
     @GetMapping("/approveInvitationRequest/{email}")
-    public List<InvitationRequestResponse> approveInvitationRequest(@PathVariable String email) {
+    public ResponseEntity<List<InvitationRequestResponse>> approveInvitationRequest(@PathVariable String email) {
         if (email.isEmpty()) {
-            requestService.getAllInvitations();
+            return ResponseEntity.ok(requestService.getAllInvitations());
         }
-        return requestService.approveRequest(email);
+        return ResponseEntity.ok(requestService.approveRequest(email));
     }
 
     @GetMapping("/denyInvitationRequest/{email}")
-    public List<InvitationRequestResponse> denyInvitationRequest(@PathVariable String email) {
+    public ResponseEntity<List<InvitationRequestResponse>> denyInvitationRequest(@PathVariable String email) {
         if (email.isEmpty()) {
-            requestService.getAllInvitations();
+            return ResponseEntity.ok(requestService.getAllInvitations());
         }
-        return requestService.denyRequest(email);
+        return ResponseEntity.ok(requestService.denyRequest(email));
     }
 
     @GetMapping("/getAllInvitations")
