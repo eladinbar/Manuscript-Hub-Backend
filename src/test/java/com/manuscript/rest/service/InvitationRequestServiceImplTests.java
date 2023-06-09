@@ -174,7 +174,7 @@ public class InvitationRequestServiceImplTests {
         Mockito.when(invitationResponseMapper.modelToRest(invitationRequestModel)).thenReturn(invitationRequestResponse);
 
         //act
-        List<InvitationRequestResponse> response = invitationRequestService.approveRequest(invitationRequestRequest.getEmail());
+        List<InvitationRequestResponse> response = invitationRequestService.approve(invitationRequestRequest.getEmail());
 
         //assert
         assertFalse(response.isEmpty());
@@ -201,7 +201,7 @@ public class InvitationRequestServiceImplTests {
         Mockito.when(invitationResponseMapper.modelToRest(invitationRequestModel)).thenReturn(invitationRequestResponse);
 
         //act
-        List<InvitationRequestResponse> response = invitationRequestService.approveRequest(invitationRequestRequest.getEmail());
+        List<InvitationRequestResponse> response = invitationRequestService.approve(invitationRequestRequest.getEmail());
 
         //assert
         assertFalse(response.isEmpty());
@@ -222,7 +222,7 @@ public class InvitationRequestServiceImplTests {
         Mockito.when(invitationResponseMapper.modelToRest(invitationRequestModel)).thenReturn(invitationRequestResponse);
 
         //act
-        List<InvitationRequestResponse> response = invitationRequestService.approveRequest(invitationRequestRequest.getEmail());
+        List<InvitationRequestResponse> response = invitationRequestService.approve(invitationRequestRequest.getEmail());
 
         //assert
         assertTrue(response.isEmpty());
@@ -246,7 +246,7 @@ public class InvitationRequestServiceImplTests {
         Mockito.when(invitationResponseMapper.modelToRest(invitationRequestModel)).thenReturn(invitationRequestResponse);
 
         //act
-        List<InvitationRequestResponse> response = invitationRequestService.denyRequest(invitationRequestRequest.getEmail());
+        List<InvitationRequestResponse> response = invitationRequestService.deny(invitationRequestRequest.getEmail());
 
         //assert
         assertFalse(response.isEmpty());
@@ -273,7 +273,7 @@ public class InvitationRequestServiceImplTests {
         Mockito.when(invitationResponseMapper.modelToRest(invitationRequestModel)).thenReturn(invitationRequestResponse);
 
         //act
-        List<InvitationRequestResponse> response = invitationRequestService.denyRequest(invitationRequestRequest.getEmail());
+        List<InvitationRequestResponse> response = invitationRequestService.deny(invitationRequestRequest.getEmail());
 
         //assert
         assertFalse(response.isEmpty());
@@ -294,7 +294,7 @@ public class InvitationRequestServiceImplTests {
         Mockito.when(invitationResponseMapper.modelToRest(invitationRequestModel)).thenReturn(invitationRequestResponse);
 
         //act
-        List<InvitationRequestResponse> response = invitationRequestService.denyRequest(invitationRequestRequest.getEmail());
+        List<InvitationRequestResponse> response = invitationRequestService.deny(invitationRequestRequest.getEmail());
 
         //assert
         assertTrue(response.isEmpty());
@@ -312,7 +312,7 @@ public class InvitationRequestServiceImplTests {
         Mockito.when(invitationResponseMapper.modelToRest(invitationRequestModel)).thenReturn(invitationRequestResponse);
 
         //act
-        List<InvitationRequestResponse> response = invitationRequestService.getAllInvitations();
+        List<InvitationRequestResponse> response = invitationRequestService.getAll();
 
         //assert
         assertTrue(response.isEmpty());

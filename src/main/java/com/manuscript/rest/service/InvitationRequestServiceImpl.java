@@ -43,21 +43,21 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
         }
         InvitationRequestModel invitationRequestModel = invitationRequestMapper.restToModel(invitationRequestRequest);
         createInvitationRequestUseCase.create(invitationRequestModel);
-        return getAllInvitations();
+        return getAll();
     }
 
     @Override
-    public List<InvitationRequestResponse> approveRequest(String email) {
+    public List<InvitationRequestResponse> approve(String email) {
         return handleRequest(email, InvitationEnum.Approved);
     }
 
     @Override
-    public List<InvitationRequestResponse> denyRequest(String email) {
+    public List<InvitationRequestResponse> deny(String email) {
         return handleRequest(email, InvitationEnum.Denied);
     }
 
     @Override
-    public List<InvitationRequestResponse> getAllInvitations() {
+    public List<InvitationRequestResponse> getAll() {
         return getAllInvitationRequestUseCase.getAll().stream().map(invitationResponseMapper::modelToRest).collect(Collectors.toList());
     }
 
@@ -88,7 +88,7 @@ public class InvitationRequestServiceImpl implements IInvitationRequestService {
             invitationRequestModel.setInvitationEnum(invitationEnum);
             updateInvitationRequestUseCase.update(invitationRequestModel);
         }
-        return getAllInvitations();
+        return getAll();
         //TODO: need to handle it
     }
 }

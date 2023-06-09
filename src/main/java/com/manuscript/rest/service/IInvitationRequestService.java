@@ -7,11 +7,11 @@ import com.manuscript.rest.forms.response.InvitationRequestResponse;
 import java.util.List;
 
 public interface IInvitationRequestService {
-    List<InvitationRequestResponse> getAllInvitations();
+    List<InvitationRequestResponse> getAll();
     List<InvitationRequestResponse> save(InvitationRequestRequest invitationRequestRequest);
-    List<InvitationRequestResponse> approveRequest(String email);
+    List<InvitationRequestResponse> approve(String email);
 
-    List<InvitationRequestResponse> denyRequest(String email);
+    List<InvitationRequestResponse> deny(String email);
 }
 
 

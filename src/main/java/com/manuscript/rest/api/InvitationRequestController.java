@@ -29,22 +29,22 @@ public class InvitationRequestController {
     @GetMapping("/approveInvitationRequest/{email}")
     public ResponseEntity<List<InvitationRequestResponse>> approveInvitationRequest(@PathVariable String email) {
         if (email.isEmpty()) {
-            return ResponseEntity.ok(requestService.getAllInvitations());
+            return ResponseEntity.ok(requestService.getAll());
         }
-        return ResponseEntity.ok(requestService.approveRequest(email));
+        return ResponseEntity.ok(requestService.approve(email));
     }
 
     @GetMapping("/denyInvitationRequest/{email}")
     public ResponseEntity<List<InvitationRequestResponse>> denyInvitationRequest(@PathVariable String email) {
         if (email.isEmpty()) {
-            return ResponseEntity.ok(requestService.getAllInvitations());
+            return ResponseEntity.ok(requestService.getAll());
         }
-        return ResponseEntity.ok(requestService.denyRequest(email));
+        return ResponseEntity.ok(requestService.deny(email));
     }
 
     @GetMapping("/getAllInvitations")
     public ResponseEntity<List<InvitationRequestResponse>> getAllInvitations() {
-        return ResponseEntity.ok(requestService.getAllInvitations());
+        return ResponseEntity.ok(requestService.getAll());
     }
 
     @ExceptionHandler(Exception.class)

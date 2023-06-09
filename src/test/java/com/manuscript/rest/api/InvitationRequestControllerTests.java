@@ -94,7 +94,7 @@ public class InvitationRequestControllerTests {
         invitationRequestResponse.setInvitationEnum(InvitationEnum.Approved);
         List<InvitationRequestResponse> invitationRequestResponses = new ArrayList<>();
         invitationRequestResponses.add(invitationRequestResponse);
-        when(invitationRequestService.approveRequest(any(String.class))).thenReturn(invitationRequestResponses);
+        when(invitationRequestService.approve(any(String.class))).thenReturn(invitationRequestResponses);
 
         //act
         ResponseEntity<List<InvitationRequestResponse>> response = invitationRequestController.approveInvitationRequest(email);
@@ -114,7 +114,7 @@ public class InvitationRequestControllerTests {
     public void approveInvitation_emptyEmail_success() {
         //set up
         List<InvitationRequestResponse> invitationRequestResponses = new ArrayList<>();
-        when(invitationRequestService.getAllInvitations()).thenReturn(invitationRequestResponses);
+        when(invitationRequestService.getAll()).thenReturn(invitationRequestResponses);
 
         //act
         ResponseEntity<List<InvitationRequestResponse>> response = invitationRequestController.approveInvitationRequest(emptyEmail);
@@ -134,7 +134,7 @@ public class InvitationRequestControllerTests {
         invitationRequestResponse.setInvitationEnum(InvitationEnum.Denied);
         List<InvitationRequestResponse> invitationRequestResponses = new ArrayList<>();
         invitationRequestResponses.add(invitationRequestResponse);
-        when(invitationRequestService.denyRequest(any(String.class))).thenReturn(invitationRequestResponses);
+        when(invitationRequestService.deny(any(String.class))).thenReturn(invitationRequestResponses);
 
         //act
         ResponseEntity<List<InvitationRequestResponse>> response = invitationRequestController.denyInvitationRequest(email);
@@ -154,7 +154,7 @@ public class InvitationRequestControllerTests {
     public void denyInvitation_emptyEmail_success() {
         //set up
         List<InvitationRequestResponse> invitationRequestResponses = new ArrayList<>();
-        when(invitationRequestService.getAllInvitations()).thenReturn(invitationRequestResponses);
+        when(invitationRequestService.getAll()).thenReturn(invitationRequestResponses);
 
         //act
         ResponseEntity<List<InvitationRequestResponse>> response = invitationRequestController.denyInvitationRequest(emptyEmail);
@@ -173,7 +173,7 @@ public class InvitationRequestControllerTests {
         //set up
         List<InvitationRequestResponse> invitationRequestResponses = new ArrayList<>();
         invitationRequestResponses.add(invitationRequestResponse);
-        when(invitationRequestService.getAllInvitations()).thenReturn(invitationRequestResponses);
+        when(invitationRequestService.getAll()).thenReturn(invitationRequestResponses);
 
         //act
         ResponseEntity<List<InvitationRequestResponse>> response = invitationRequestController.getAllInvitations();
