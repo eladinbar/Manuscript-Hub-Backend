@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserAuthModel implements Authentication {
-
     private Boolean isAuthenticated;
     private String uid;
     List<SimpleGrantedAuthority> authorityList;
@@ -18,7 +17,6 @@ public class UserAuthModel implements Authentication {
         authorityList = authorities;
         setAuthenticated(true);
     }
-
 
     public String getUid() {
         return uid;
@@ -71,6 +69,4 @@ public class UserAuthModel implements Authentication {
         }
         return false;
     }
-
-
 }

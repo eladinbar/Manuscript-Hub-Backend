@@ -27,7 +27,6 @@ public class AuthenticationService implements IAuthenticationService {
     @Value("classpath:firebase/serviceAccount.json")
     Resource accountPath;
 
-
     @PostConstruct
     private void postConstruct() throws IOException {
         System.out.println(accountPath);

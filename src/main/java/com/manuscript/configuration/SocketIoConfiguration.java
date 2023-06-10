@@ -23,5 +23,4 @@ public class SocketIoConfiguration implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(MAIN_END_POINT).setAllowedOriginPatterns("*").withSockJS();
     }
-
 }
