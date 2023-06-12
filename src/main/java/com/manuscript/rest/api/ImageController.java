@@ -80,7 +80,7 @@ public class ImageController {
         return ResponseEntity.ok(imageInfoResponse);
     }
 
-    @PatchMapping("/shareImage/{sharedUserEmails}")
+    @PatchMapping("/shareDocument/{sharedUserEmails}")
     public ResponseEntity<ImageInfoResponse> shareImage(@RequestBody ImageInfoRequest imageInfoRequest, @PathVariable String[] sharedUserEmails) {
         checkRequestNotNull(imageInfoRequest, false);
         if (sharedUserEmails == null || sharedUserEmails.length == 0)
