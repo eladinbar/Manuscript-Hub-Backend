@@ -11,6 +11,7 @@ import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IImageRepo;
 import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
+import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,13 +91,22 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
 
     @Override
     public List<ImageInfoModel> getAllSharedImages(String userId) {
-        Optional<UserEntity> optionalUser = userRepo.findByUid(userId);
-        if(!optionalUser.isPresent())
-            throw new IllegalArgumentException("No user found.\n" +
-                    "This should not happen, please contact an administrator.");
-        UserEntity user = optionalUser.get();
-        List<ImageEntity> imageEntityList = imageRepo.findAllByPrivacyAndUser(Privacy.Shared, user);
-        List<ImageInfoModel> result = ImageEntityListToModelList(imageEntityList);
+        List<ImageEntity> imageEntityList = imageRepo.findAll();
+        List<ImageEntity> filteredList = imageEntityList.stream()
+                .filter(imageEntity -> {
+                    String sharedUserIdsString = imageEntity.getSharedUserIds();
+                    if (sharedUserIdsString != null) {
+                        JSONArray sharedUserIds = new JSONArray(sharedUserIdsString);
+                        for (int i = 0; i < sharedUserIds.length(); i++) {
+                            if (sharedUserIds.getString(i).equals(userId)) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+        List<ImageInfoModel> result = ImageEntityListToModelList(filteredList);
         return result;
     }
 
