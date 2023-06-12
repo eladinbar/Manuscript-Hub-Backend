@@ -70,7 +70,7 @@ public class UserServiceImpl implements IUserService {
             UserModel userModel = userModelOptional.get();
             return userResponseMapper.modelToRest(userModel);
         }
-        throw new NoUserFoundException("No user was found with the given user ID.");
+        throw new NoUserFoundException("No user was found with the given email.");
     }
 
     @Override

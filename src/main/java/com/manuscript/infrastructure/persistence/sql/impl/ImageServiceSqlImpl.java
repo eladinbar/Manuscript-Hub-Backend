@@ -11,6 +11,7 @@ import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import com.manuscript.infrastructure.persistence.sql.repositories.IImageRepo;
 import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
+import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -126,12 +127,13 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
             throw new IllegalArgumentException("No user found.\n" +
                     "This should not happen, please contact an administrator.");
         UserEntity user = optionalUser.get();
-        Predicate<ImageEntity> filterPredicate = (ImageEntity image) ->
-                            image.getStatus() != Status.Disabled &&
-                            image.getTitle().contains(searchText) ||
-                            image.getAuthor().contains(searchText) ||
-                            image.getDescription().contains(searchText) ||
-                            image.getTags().toList().contains(searchText);
+        Predicate<ImageEntity> filterPredicate = (ImageEntity imageEntity) ->
+                            imageEntity.getStatus() != Status.Disabled &&
+                            imageEntity.getTitle().toLowerCase().contains(searchText.toLowerCase()) ||
+                            imageEntity.getAuthor().toLowerCase().contains(searchText.toLowerCase()) ||
+                            imageEntity.getDescription().toLowerCase().contains(searchText.toLowerCase()) ||
+                            getNullableList(imageEntity.getTags()).stream().map(String::toLowerCase)
+                                    .anyMatch(tag -> tag.contains(searchText.toLowerCase()));
         Map<Privacy, List<ImageInfoModel>> imageEntityDict = new HashMap<>();
         imageEntityDict.put(Privacy.Private, imageRepo.findAllByUser(user)
                                             .stream().filter(filterPredicate).collect(Collectors.toList())
@@ -169,5 +171,16 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
             imageInfoModelList.add(imageInfoModel);
         }
         return imageInfoModelList;
+    }
+
+    private List<String> getNullableList(JSONArray jsonArray) {
+        if (jsonArray != null) {
+            return jsonArray.toList()
+                    .stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

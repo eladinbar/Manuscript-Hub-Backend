@@ -10,6 +10,7 @@ import com.manuscript.core.exceptions.UnauthorizedException;
 import com.manuscript.core.usecase.custom.image.*;
 import com.manuscript.rest.forms.request.ImageDataRequest;
 import com.manuscript.rest.forms.response.ImageDataResponse;
+import com.manuscript.rest.forms.response.UserResponse;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.ImageInfoRequest;
 import com.manuscript.rest.forms.response.ImageInfoResponse;
@@ -25,6 +26,7 @@ public class ImageServiceImpl implements IImageService {
     private final IRestMapper<ImageInfoModel, ImageInfoResponse> imageInfoResponseMapper;
     private final IRestMapper<ImageDataModel, ImageDataRequest> imageDataRequestMapper;
     private final IRestMapper<ImageDataModel, ImageDataResponse> imageDataResponseMapper;
+    private final IUserService userService;
     private final IAnnotationService annotationService;
     private final ICreateImage createImageUseCase;
     private final ICreateImageData createImageDataUseCase;
@@ -53,8 +55,7 @@ public class ImageServiceImpl implements IImageService {
     public ImageDataResponse saveData(ImageDataRequest imageDataRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         ImageDataModel imageDataModel = imageDataRequestMapper.restToModel(imageDataRequest);
         imageDataModel = createImageDataUseCase.create(imageDataModel);
-        ImageDataResponse imageDataResponse = imageDataResponseMapper.modelToRest(imageDataModel);
-        return imageDataResponse;
+        return imageDataResponseMapper.modelToRest(imageDataModel);
     }
 
     @Override
@@ -63,8 +64,31 @@ public class ImageServiceImpl implements IImageService {
         verifyModifyPermissions(imageInfoRequest.getId(), imageInfoRequest.getUid());
         ImageInfoModel imageInfoModel = imageInfoRequestMapper.restToModel(imageInfoRequest);
         imageInfoModel = updateImageUseCase.update(imageInfoModel);
-        ImageInfoResponse imageInfoResponse = imageInfoResponseMapper.modelToRest(imageInfoModel);
-        return imageInfoResponse;
+        return imageInfoResponseMapper.modelToRest(imageInfoModel);
+    }
+
+    @Override
+    public ImageInfoResponse shareImage(ImageInfoRequest imageInfoRequest, String[] sharedUserEmails) {
+        getByIdInfo(imageInfoRequest.getId(), imageInfoRequest.getUid()); //get requested image from db to check if it exists
+        verifyModifyPermissions(imageInfoRequest.getId(), imageInfoRequest.getUid());
+        ImageInfoModel imageInfoModel = imageInfoRequestMapper.restToModel(imageInfoRequest);
+
+        //List to keep track of users that weren't found in the database
+        //Can potentially be used to return an appropriate partial error message
+        List<String> nonExistingUsers = new ArrayList<>();
+        for (String email : sharedUserEmails) {
+            try {
+                UserResponse userResponse = userService.getByEmail(email);
+                imageInfoModel.getSharedUserIds().add(userResponse.getUid());
+            } catch (NoUserFoundException exception) {
+                nonExistingUsers.add(email);
+            }
+        }
+        if (nonExistingUsers.size() == sharedUserEmails.length)
+            throw new NoUserFoundException("No valid users were found given the provided email addresses.");
+
+        imageInfoModel = updateImageUseCase.update(imageInfoModel);
+        return imageInfoResponseMapper.modelToRest(imageInfoModel);
     }
 
     @Override
@@ -184,7 +208,7 @@ public class ImageServiceImpl implements IImageService {
         if (responseStatus.equals(Status.Disabled))
             throw new NoImageFoundException("Disabled images are unavailable.");
         if (!requestUid.equals(responseOwnerUid)) {
-            if(!responsePrivacy.equals(Privacy.Public)) {
+            if (!responsePrivacy.equals(Privacy.Public)) {
                 if (!responsePrivacy.equals(Privacy.Shared))
                     throw new UnauthorizedException("You have no permissions to view this image.");
                 else if (!responseSharedUserIds.contains(requestUid)) {

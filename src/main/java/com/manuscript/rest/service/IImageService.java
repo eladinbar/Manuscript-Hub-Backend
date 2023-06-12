@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface IImageService {
-
     ImageInfoResponse saveInfo(ImageInfoRequest imageInfoRequest)                                       throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageDataResponse saveData(ImageDataRequest imageDataRequest)                                       throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageInfoResponse updateInfo(ImageInfoRequest imageInfoRequest)                                     throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
+    ImageInfoResponse shareImage(ImageInfoRequest imageInfoRequest, String[] sharedUserEmails);
     ImageInfoResponse getByIdInfo(UUID imageInfoId, String uid)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageDataResponse getByIdData(UUID imageDataId, String uid)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     List<ImageDataResponse> getAllByImageInfoIdImageDatas(UUID imageId, String uid)                  throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;

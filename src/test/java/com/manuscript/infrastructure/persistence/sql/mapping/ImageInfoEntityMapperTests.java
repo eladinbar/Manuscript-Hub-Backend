@@ -1,10 +1,12 @@
-package com.manuscript.rest.mapping;
+package com.manuscript.infrastructure.persistence.sql.mapping;
 
 import com.manuscript.core.domain.common.enums.Privacy;
+import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageInfoModel;
-import com.manuscript.rest.forms.response.ImageInfoResponse;
-import com.manuscript.rest.mapping.response.ImageResponseMapperImpl;
+import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
+import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
+import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,11 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ImageInfoResponseMapperTests {
+public class ImageInfoEntityMapperTests {
     //test classes
-    private ImageResponseMapperImpl imageResponseMapperImpl;
-    private ImageInfoResponse imageInfoResponse;
+    private final ImageEntityMapperImpl imageEntityMapperImpl = new ImageEntityMapperImpl();
+    private ImageEntity imageInfoEntity;
     private ImageInfoModel imageInfoModel;
+    private UserEntity userEntity;
 
     //test data
     private final String uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
@@ -28,23 +31,31 @@ public class ImageInfoResponseMapperTests {
     private final String author = "author";
     private final String description = "description";
     private final Date publicationDate = new Date();
+    private final String tag = "tag";
     private final List<String> tags = new ArrayList<>();
+    private JSONArray jsonTags;
+    private final String addedUid = "2UYxH92SpBQfkRgEeN75EBdvM9r2";
     private final List<String> sharedUserIds = new ArrayList<>();
+    private JSONArray jsonSharedUserIds;
     private final UUID imageId = UUID.randomUUID();
     private final Status status = Status.Enabled;
     private final Privacy privacy = Privacy.Public;
     private Date createdTime;
     private Date updatedTime;
+    private final UUID userId = UUID.randomUUID();
+    private final String email = "email@email.com";
+    private final String name = "Bob";
+    private final String phoneNumber = "0541234567";
+    private final Role role = Role.User;
 
 
     @BeforeAll
     public void setup() {
-        //mapper setup
-        imageResponseMapperImpl = new ImageResponseMapperImpl();
-
         //data setup
-        tags.add("tag");
-        sharedUserIds.add("2UYxH92SpBQfkRgEeN75EBdvM9r2");
+        tags.add(tag);
+        sharedUserIds.add(addedUid);
+        jsonTags = new JSONArray(tags);
+        jsonSharedUserIds = new JSONArray(sharedUserIds);
 
         //date setup
         Calendar cal = Calendar.getInstance();
@@ -58,8 +69,32 @@ public class ImageInfoResponseMapperTests {
 
     @BeforeEach
     public void beforeEach() {
-        //response setup
-        imageInfoResponse = new ImageInfoResponse(imageId, uid, title, author, publicationDate, description, tags, sharedUserIds, status, privacy, createdTime, updatedTime);
+        //user setup
+        userEntity = UserEntity.builder()
+                .id(userId)
+                .uid(uid)
+                .email(email)
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .status(status)
+                .role(role)
+                .build();
+
+        //entity setup
+        imageInfoEntity = ImageEntity.builder()
+                .id(imageId)
+                .user(userEntity)
+                .title(title)
+                .author(author)
+                .description(description)
+                .publicationDate(publicationDate)
+                .status(status)
+                .privacy(privacy)
+                .tags(jsonTags)
+                .sharedUserIds(jsonSharedUserIds)
+                .createdTime(createdTime)
+                .updatedTime(updatedTime)
+                .build();
 
         //model setup
         imageInfoModel = ImageInfoModel.builder()
@@ -79,31 +114,31 @@ public class ImageInfoResponseMapperTests {
     }
 
     @Test
-    public void modelToRest_Success() {
+    public void modelToEntity_Success() {
         //act
-        ImageInfoResponse testImageInfoResponse = imageResponseMapperImpl.modelToRest(imageInfoModel);
+        ImageEntity testImageInfoEntity = imageEntityMapperImpl.modelToEntity(imageInfoModel);
 
         //assert
-        assertNotNull(testImageInfoResponse);
-        assertEquals(uid, testImageInfoResponse.getUid());
-        assertEquals(title, testImageInfoResponse.getTitle());
-        assertEquals(author, testImageInfoResponse.getAuthor());
-        assertEquals(description, testImageInfoResponse.getDescription());
-        assertEquals(publicationDate, testImageInfoResponse.getPublicationDate());
-        assertEquals(status, testImageInfoResponse.getStatus());
-        assertEquals(privacy, testImageInfoResponse.getPrivacy());
-        assertEquals(tags, testImageInfoResponse.getTags());
-        assertEquals(sharedUserIds, testImageInfoResponse.getSharedUserIds());
-        assertEquals(status, testImageInfoResponse.getStatus());
-        assertEquals(privacy, testImageInfoResponse.getPrivacy());
-        assertEquals(createdTime, testImageInfoResponse.getCreatedTime());
-        assertEquals(updatedTime, testImageInfoResponse.getUpdatedTime());
+        assertNotNull(testImageInfoEntity);
+        assertEquals(uid, testImageInfoEntity.getUser().getUid());
+        assertEquals(title, testImageInfoEntity.getTitle());
+        assertEquals(author, testImageInfoEntity.getAuthor());
+        assertEquals(description, testImageInfoEntity.getDescription());
+        assertEquals(publicationDate, testImageInfoEntity.getPublicationDate());
+        assertEquals(status, testImageInfoEntity.getStatus());
+        assertEquals(privacy, testImageInfoEntity.getPrivacy());
+        assertEquals(jsonTags.toList(), testImageInfoEntity.getTags().toList());
+        assertEquals(jsonSharedUserIds.toList(), testImageInfoEntity.getSharedUserIds().toList());
+        assertEquals(status, testImageInfoEntity.getStatus());
+        assertEquals(privacy, testImageInfoEntity.getPrivacy());
+        assertEquals(createdTime, testImageInfoEntity.getCreatedTime());
+        assertEquals(updatedTime, testImageInfoEntity.getUpdatedTime());
     }
 
     @Test
-    public void restToModel_Success() {
+    public void entityToModel_Success() {
         //act
-        ImageInfoModel testImageInfoModel = imageResponseMapperImpl.restToModel(imageInfoResponse);
+        ImageInfoModel testImageInfoModel = imageEntityMapperImpl.entityToModel(imageInfoEntity);
 
         //assert
         assertNotNull(testImageInfoModel);

@@ -80,6 +80,15 @@ public class ImageController {
         return ResponseEntity.ok(imageInfoResponse);
     }
 
+    @PatchMapping("/shareImage/{sharedUserEmails}")
+    public ResponseEntity<ImageInfoResponse> shareImage(@RequestBody ImageInfoRequest imageInfoRequest, @PathVariable String[] sharedUserEmails) {
+        checkRequestNotNull(imageInfoRequest, false);
+        if (sharedUserEmails == null || sharedUserEmails.length == 0)
+            throw new IllegalArgumentException("Cannot share document with no users.");
+        ImageInfoResponse imageInfoResponse = imageService.shareImage(imageInfoRequest, sharedUserEmails);
+        return ResponseEntity.ok(imageInfoResponse);
+    }
+
     @GetMapping("/getDocumentInfoById/{imageInfoId}/{uid}")
     public ResponseEntity<ImageInfoResponse> getImageInfoById(@PathVariable UUID imageInfoId, @PathVariable String uid) {
         checkIdNotNull(imageInfoId);
