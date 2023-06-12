@@ -154,7 +154,7 @@ public class ImageServiceImpl implements IImageService {
 
     @Override
     public void deleteByIdImageInfo(UUID imageInfoId, String uid) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
-        verifyModifyPermissions(imageInfoId, uid);
+        verifyDeletePermissions(imageInfoId, uid);
         List<ImageDataResponse> imageDataResponseList = getAllByImageInfoIdImageDatas(imageInfoId, uid);
         for (ImageDataResponse imageDataResponse : imageDataResponseList) {
             deleteByIdImageData(imageDataResponse.getId(), uid, true);
@@ -165,7 +165,7 @@ public class ImageServiceImpl implements IImageService {
     @Override
     public void deleteByIdImageData(UUID imageDataId, String uid, boolean deleteAnnotation) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
         ImageDataResponse imageDataResponse = getByIdData(imageDataId, uid); //get requested image from db to check if permissions match.
-        verifyModifyPermissions(imageDataResponse.getInfoId(), uid);
+        verifyDeletePermissions(imageDataResponse.getInfoId(), uid);
         if (deleteAnnotation) {
             annotationService.deleteAllByImageDataId(imageDataId);
         }
@@ -225,9 +225,20 @@ public class ImageServiceImpl implements IImageService {
         } else if (imageInfoResponse.getPrivacy() == Privacy.Shared) {
             if (!imageInfoResponse.getUid().equals(uid)) {
                 throw new IllegalArgumentException("Only the owner can modify this item");
+            }
+        }
+    }
+
+    private void verifyDeletePermissions(UUID imageInfoId, String uid) throws UnauthorizedException {
+        ImageInfoResponse imageInfoResponse = getByIdInfo(imageInfoId, uid); //also checks permissions
+        if (imageInfoResponse.getPrivacy() == Privacy.Public && !imageInfoResponse.getUid().equals(uid)) {
+            throw new UnauthorizedException("Cannot delete public property if you are not the owner.");
+        } else if (imageInfoResponse.getPrivacy() == Privacy.Shared) {
+            if (!imageInfoResponse.getUid().equals(uid)) {
+                throw new IllegalArgumentException("Only the owner can delete this item");
             } else {
                 throw new IllegalArgumentException("This item is shared with other users\n" +
-                        "please transfer item ownership or set its privacy to 'Private' first.");
+                        "please transfer item ownership or set its privacy to 'Private' first before attempting to delete it.");
             }
         }
     }

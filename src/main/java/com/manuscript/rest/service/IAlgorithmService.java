@@ -30,5 +30,5 @@ public interface IAlgorithmService {
     /**Annotation section**/
     AnnotationResponse createAnnotation(AnnotationRequest annotationRequest);
     AnnotationResponse updateAnnotation(AnnotationRequest annotationRequest);
-    void deleteByIdAnnotation(UUID annotationId);
+    void deleteByIdAnnotation(UUID annotationId, String uid, UUID imageDataId);
 }

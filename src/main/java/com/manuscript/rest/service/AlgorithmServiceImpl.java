@@ -1,10 +1,9 @@
 package com.manuscript.rest.service;
 
-import com.google.api.client.json.Json;
-import com.google.gson.JsonObject;
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.domain.common.enums.AlgorithmStatus;
+import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.exceptions.NoAlgorithmFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
@@ -18,7 +17,6 @@ import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.AlgorithmRequest;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -28,8 +26,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 @AllArgsConstructor
 @Service
@@ -63,7 +59,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public void run(AlgorithmRequest algorithmRequest) throws Exception {
-        verifyImagePermission(algorithmRequest.getImageDataId(), algorithmRequest.getUid());
+        verifyImageModificationPermission(algorithmRequest.getImageDataId(), algorithmRequest.getUid());
         Optional<AlgorithmModel> optionalModel = getByIdAlgorithmUseCase.getById(algorithmRequest.getId());
         if (optionalModel.isPresent()) {
             /** get relevant information from the request **/
@@ -245,11 +241,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             throw new IllegalArgumentException("An algorithm with the given URL already exists.");
     }
 
-    private void verifyImagePermission(UUID imageId, String uid) {
-        //TODO when workspace sharing is added, permission verification needs to be modified
-        ImageInfoResponse image = imageService.getByIdInfo(imageId, uid);
-        if (!image.getUid().equals(uid))
-            throw new UnauthorizedException();
+    private void verifyImageModificationPermission(UUID imageDataId, String uid) {
+        ImageDataResponse imageData = imageService.getByIdData(imageDataId, uid);
+        ImageInfoResponse imageInfo = imageService.getByIdInfo(imageData.getInfoId(), uid);
+        if (imageInfo.getPrivacy() == Privacy.Shared) {
+            if (!imageInfo.getUid().equals(uid) && !imageInfo.getSharedUserIds().contains(uid))
+                throw new UnauthorizedException("User is not authorized to make modifications to this image.");
+        } else if(!imageInfo.getUid().equals(uid))
+            throw new UnauthorizedException("User is not authorized to make modifications to this image.");
     }
 
     /** Docker related functions:**/
@@ -341,6 +340,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     /**Annotation section**/
     @Override
     public AnnotationResponse createAnnotation(AnnotationRequest annotationRequest) {
+        verifyImageModificationPermission(annotationRequest.getImageDataId(), annotationRequest.getUid());
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
         annotationModel = createAnnotationUseCase.create(annotationModel);
         return annotationResponseMapper.modelToRest(annotationModel);
@@ -348,14 +348,15 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     @Override
     public AnnotationResponse updateAnnotation(AnnotationRequest annotationRequest) {
+        verifyImageModificationPermission(annotationRequest.getImageDataId(), annotationRequest.getUid());
         AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
         annotationModel = updateAnnotationUseCase.update(annotationModel);
         return annotationResponseMapper.modelToRest(annotationModel);
     }
 
     @Override
-    public void deleteByIdAnnotation(UUID annotationId) {
+    public void deleteByIdAnnotation(UUID annotationId, String uid, UUID imageDataId) {
+        verifyImageModificationPermission(imageDataId, uid);
         deleteByIdAnnotationUseCase.deleteById(annotationId);
     }
-
 }
