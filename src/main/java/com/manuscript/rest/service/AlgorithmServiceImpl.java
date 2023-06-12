@@ -3,17 +3,19 @@ package com.manuscript.rest.service;
 import com.google.api.client.json.Json;
 import com.google.gson.JsonObject;
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
+import com.manuscript.core.domain.annotation.models.AnnotationModel;
 import com.manuscript.core.domain.common.enums.AlgorithmStatus;
 import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.core.exceptions.NoAlgorithmFoundException;
 import com.manuscript.core.exceptions.UnauthorizedException;
 import com.manuscript.core.usecase.custom.algorithm.*;
-import com.manuscript.rest.forms.response.ImageDataResponse;
+import com.manuscript.core.usecase.custom.annotation.ICreateAnnotation;
+import com.manuscript.core.usecase.custom.annotation.IDeleteByIdAnnotation;
+import com.manuscript.core.usecase.custom.annotation.IUpdateAnnotation;
+import com.manuscript.rest.forms.request.AnnotationRequest;
+import com.manuscript.rest.forms.response.*;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.AlgorithmRequest;
-import com.manuscript.rest.forms.response.AlgorithmResponse;
-import com.manuscript.rest.forms.response.ImageInfoResponse;
-import com.manuscript.rest.forms.response.UserResponse;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
@@ -49,6 +51,15 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     private final IDeleteByIdAlgorithm deleteByIdAlgorithmUseCase;
     private final IDeleteByUrlAlgorithm deleteByUrlAlgorithmUseCase;
     private final String defaultRepoPath = "C:\\Users\\Public\\Repositories";
+
+
+    /**Annotation section**/
+    private final IRestMapper<AnnotationModel, AnnotationRequest> annotationRequestMapper;
+    private final IRestMapper<AnnotationModel, AnnotationResponse> annotationResponseMapper;
+    private final ICreateAnnotation createAnnotationUseCase;
+    private final IUpdateAnnotation updateAnnotationUseCase;
+    private final IDeleteByIdAnnotation deleteByIdAnnotationUseCase;
+
 
     @Override
     public void run(AlgorithmRequest algorithmRequest) throws Exception {
@@ -326,5 +337,25 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         }
     }
 
+
+    /**Annotation section**/
+    @Override
+    public AnnotationResponse createAnnotation(AnnotationRequest annotationRequest) {
+        AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
+        annotationModel = createAnnotationUseCase.create(annotationModel);
+        return annotationResponseMapper.modelToRest(annotationModel);
+    }
+
+    @Override
+    public AnnotationResponse updateAnnotation(AnnotationRequest annotationRequest) {
+        AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
+        annotationModel = updateAnnotationUseCase.update(annotationModel);
+        return annotationResponseMapper.modelToRest(annotationModel);
+    }
+
+    @Override
+    public void deleteByIdAnnotation(UUID annotationId) {
+        deleteByIdAnnotationUseCase.deleteById(annotationId);
+    }
 
 }

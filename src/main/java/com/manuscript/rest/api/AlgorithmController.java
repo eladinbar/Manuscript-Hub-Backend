@@ -1,8 +1,10 @@
 package com.manuscript.rest.api;
 
 import com.manuscript.rest.forms.request.AlgorithmRequest;
+import com.manuscript.rest.forms.request.AnnotationRequest;
 import com.manuscript.rest.forms.response.AlgorithmResponse;
 import com.manuscript.core.domain.common.enums.AlgorithmStatus;
+import com.manuscript.rest.forms.response.AnnotationResponse;
 import com.manuscript.rest.service.IAlgorithmService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -66,8 +68,8 @@ public class AlgorithmController {
         return ResponseEntity.ok(algorithmService.getAllByUid(uid));
     }
 
-    @GetMapping("/getAllRunnable/{uid}")
-    public ResponseEntity<List<AlgorithmResponse>> getAllRunnable(@PathVariable String uid) {
+    @GetMapping("/getAllRunnableAlgorithms/{uid}")
+    public ResponseEntity<List<AlgorithmResponse>> getAllRunnableAlgorithms(@PathVariable String uid) {
         if(uid == null)
             throw new IllegalArgumentException("Invalid user ID.");
         return ResponseEntity.ok(algorithmService.getAllRunnable(uid));
@@ -120,5 +122,49 @@ public class AlgorithmController {
                 algorithmRequest.getModelType(), algorithmRequest.getStatus(),
                 algorithmRequest.getUrl()).anyMatch(Objects::isNull))
             throw new IllegalArgumentException("Algorithm request's fields must not be null.");
+    }
+
+    /**Annotation section**/
+    @PostMapping("/addManualAnnotation")
+    public ResponseEntity<AnnotationResponse> addManualAnnotation(@RequestBody AnnotationRequest annotationRequest) {
+        checkNotNull(annotationRequest, true);
+        checkCoordinates(annotationRequest.getStartX(), annotationRequest.getStartY(),
+                annotationRequest.getEndX(), annotationRequest.getEndY());
+        AnnotationResponse result = algorithmService.createAnnotation(annotationRequest);
+        return ResponseEntity.ok(result);
+    }
+
+    @PatchMapping("/updateAnnotation")
+    public ResponseEntity<AnnotationResponse> updateAnnotation(@RequestBody AnnotationRequest annotationRequest) {
+        checkNotNull(annotationRequest, false);
+        checkCoordinates(annotationRequest.getStartX(), annotationRequest.getStartY(),
+                annotationRequest.getEndX(), annotationRequest.getEndY());
+        AnnotationResponse result = algorithmService.updateAnnotation(annotationRequest);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping ("/deleteAnnotationById/{annotationId}")
+    public ResponseEntity<String> deleteAnnotationById(@PathVariable UUID annotationId) {
+        if(annotationId == null)
+            throw new IllegalArgumentException("Invalid annotation, document or user ID.");
+        algorithmService.deleteByIdAnnotation(annotationId);
+        return ResponseEntity.ok("Annotation deleted successfully.");
+    }
+
+    private void checkNotNull(AnnotationRequest annotationRequest, boolean newRequest) {
+        if(newRequest) {
+            if (Stream.of(annotationRequest.getUid(),  annotationRequest.getImageDataId(),
+                    annotationRequest.getAlgorithmId(), annotationRequest.getContent()).anyMatch(Objects::isNull))
+                throw new IllegalArgumentException("Annotation request's fields must not be null.");
+        }
+
+        else if(Stream.of(annotationRequest.getId(), annotationRequest.getUid(), annotationRequest.getImageDataId(),
+                annotationRequest.getAlgorithmId(), annotationRequest.getContent()).anyMatch(Objects::isNull))
+            throw new IllegalArgumentException("Annotation request's fields must not be null.");
+    }
+
+    private void checkCoordinates(int startX, int startY, int endX, int endY) {
+        if(startX < 0 || startY < 0 || endX < 0 || endY < 0)
+            throw new IllegalArgumentException("Annotation's coordinates must be non-negative.");
     }
 }

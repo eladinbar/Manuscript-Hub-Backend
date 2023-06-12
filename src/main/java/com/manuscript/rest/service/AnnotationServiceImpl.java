@@ -14,28 +14,12 @@ import java.util.*;
 @AllArgsConstructor
 @Service
 public class AnnotationServiceImpl implements IAnnotationService {
-    private final IRestMapper<AnnotationModel, AnnotationRequest> annotationRequestMapper;
     private final IRestMapper<AnnotationModel, AnnotationResponse> annotationResponseMapper;
-    private final ICreateAnnotation createAnnotationUseCase;
-    private final IUpdateAnnotation updateAnnotationUseCase;
     private final IGetByIdAnnotation getByIdAnnotationUseCase;
     private final IGetAllByImageIdAnnotations getAllByImageIdAnnotationsUseCase;
-    private final IDeleteByIdAnnotation deleteByIdAnnotationUseCase;
     private final IDeleteAllByImageDataIdAnnotations deleteAllByImageDataIdAnnotationsUseCase;
 
-    @Override
-    public AnnotationResponse create(AnnotationRequest annotationRequest) {
-        AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
-        annotationModel = createAnnotationUseCase.create(annotationModel);
-        return annotationResponseMapper.modelToRest(annotationModel);
-    }
 
-    @Override
-    public AnnotationResponse update(AnnotationRequest annotationRequest) {
-        AnnotationModel annotationModel = annotationRequestMapper.restToModel(annotationRequest);
-        annotationModel = updateAnnotationUseCase.update(annotationModel);
-        return annotationResponseMapper.modelToRest(annotationModel);
-    }
 
     //Currently not in use
     @Override
@@ -52,16 +36,11 @@ public class AnnotationServiceImpl implements IAnnotationService {
     public List<AnnotationResponse> getAllByImageDataId(UUID imageDataId, String uid) {
         List<AnnotationModel> annotationModels = getAllByImageIdAnnotationsUseCase.getAllByImageId(imageDataId);
         List<AnnotationResponse> annotationResponses = new ArrayList<>();
-        for(AnnotationModel annotationModel : annotationModels) {
+        for (AnnotationModel annotationModel : annotationModels) {
             AnnotationResponse annotationResponse = annotationResponseMapper.modelToRest(annotationModel);
             annotationResponses.add(annotationResponse);
         }
         return annotationResponses;
-    }
-
-    @Override
-    public void deleteById(UUID annotationId) {
-        deleteByIdAnnotationUseCase.deleteById(annotationId);
     }
 
     @Override

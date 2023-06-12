@@ -2,7 +2,9 @@ package com.manuscript.rest.service;
 
 import com.manuscript.core.domain.common.enums.AlgorithmStatus;
 import com.manuscript.rest.forms.request.AlgorithmRequest;
+import com.manuscript.rest.forms.request.AnnotationRequest;
 import com.manuscript.rest.forms.response.AlgorithmResponse;
+import com.manuscript.rest.forms.response.AnnotationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -23,4 +25,10 @@ public interface IAlgorithmService {
     void deleteById(UUID id, String uid);
     void deleteByUrl(String url, String uid);
     void deleteAllByUid(String uid, String adminUid);
+
+
+    /**Annotation section**/
+    AnnotationResponse createAnnotation(AnnotationRequest annotationRequest);
+    AnnotationResponse updateAnnotation(AnnotationRequest annotationRequest);
+    void deleteByIdAnnotation(UUID annotationId);
 }
