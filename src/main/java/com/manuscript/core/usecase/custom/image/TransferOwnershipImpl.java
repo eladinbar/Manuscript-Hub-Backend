@@ -7,8 +7,11 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-public class TransferOwnershipImpl implements ITransferOwnership{
+public class TransferOwnershipImpl implements ITransferOwnership {
     private final IImageRepositoryService _serviceRepo;
+
     @Override
-    public ImageInfoModel transferOwnership(ImageInfoModel imageInfoModel, String newOwnerUid) { return _serviceRepo.transferOwnership(imageInfoModel, newOwnerUid); }
+    public ImageInfoModel transferOwnership(ImageInfoModel imageInfoModel, String newOwnerUid) {
+        return _serviceRepo.transferOwnership(imageInfoModel, newOwnerUid);
+    }
 }

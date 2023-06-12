@@ -7,8 +7,11 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-public class GetAllSharedImagesImpl implements IGetAllSharedImages{
+public class GetAllSharedImagesImpl implements IGetAllSharedImages {
     private final IImageRepositoryService _serviceRepo;
+
     @Override
-    public List<ImageInfoModel> getAllSharedImages(String userId) { return _serviceRepo.getAllSharedImages(userId); }
+    public List<ImageInfoModel> getAllSharedImages(String userId) {
+        return _serviceRepo.getAllSharedImages(userId);
+    }
 }

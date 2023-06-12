@@ -18,6 +18,7 @@ public interface IImageService {
     ImageDataResponse saveData(ImageDataRequest imageDataRequest)                                       throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageInfoResponse updateInfo(ImageInfoRequest imageInfoRequest)                                     throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageInfoResponse shareImage(ImageInfoRequest imageInfoRequest, String[] sharedUserEmails);
+    List<String> getAllEmailsByImageInfoId(UUID imageInfoId, String ownerUid);
     ImageInfoResponse getByIdInfo(UUID imageInfoId, String uid)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     ImageDataResponse getByIdData(UUID imageDataId, String uid)                                      throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;
     List<ImageDataResponse> getAllByImageInfoIdImageDatas(UUID imageId, String uid)                  throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException;

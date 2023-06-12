@@ -7,8 +7,11 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-public class GetAllByUidImagesImpl implements IGetAllByUidImages{
+public class GetAllByUidImagesImpl implements IGetAllByUidImages {
     private final IImageRepositoryService _serviceRepo;
+
     @Override
-    public List<ImageInfoModel> getAllByUidImageInfos(String userId) { return _serviceRepo.getAllByUidImageInfos(userId); }
+    public List<ImageInfoModel> getAllByUidImageInfos(String userId) {
+        return _serviceRepo.getAllByUidImageInfos(userId);
+    }
 }

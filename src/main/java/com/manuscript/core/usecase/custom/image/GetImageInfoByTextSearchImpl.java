@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
-public class GetImageInfoByTextSearchImpl implements IGetImageInfoByTextSearch{
+public class GetImageInfoByTextSearchImpl implements IGetImageInfoByTextSearch {
     private final IImageRepositoryService _serviceRepo;
+
     @Override
-    public Map<Privacy, List<ImageInfoModel>> getImageInfoByTextSearch(String searchText, String userId) { return _serviceRepo.getImageInfoByTextSearch(searchText, userId); }
+    public Map<Privacy, List<ImageInfoModel>> getImageInfoByTextSearch(String searchText, String userId) {
+        return _serviceRepo.getImageInfoByTextSearch(searchText, userId);
+    }
 }

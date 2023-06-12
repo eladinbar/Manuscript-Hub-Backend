@@ -95,6 +95,14 @@ public class ImageController {
         return ResponseEntity.ok(imageInfoResponse);
     }
 
+    @GetMapping("/getAllSharedEmailsByDocumentInfoId/{imageInfoId}/{ownerUid}")
+    public ResponseEntity<List<String>> getAllSharedEmailsByImageInfoId(@PathVariable UUID imageInfoId, @PathVariable String ownerUid) {
+        if(imageInfoId == null || ownerUid == null)
+            throw new IllegalArgumentException("Cannot retrieve documents with no document ID or user ID.");
+        List<String> sharedEmails = imageService.getAllEmailsByImageInfoId(imageInfoId, ownerUid);
+        return ResponseEntity.ok(sharedEmails);
+    }
+
     @GetMapping("/getDocumentInfoById/{imageInfoId}/{uid}")
     public ResponseEntity<ImageInfoResponse> getImageInfoById(@PathVariable UUID imageInfoId, @PathVariable String uid) {
         checkIdNotNull(imageInfoId);

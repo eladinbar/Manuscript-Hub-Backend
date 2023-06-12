@@ -145,7 +145,7 @@ public class AlgorithmController {
 
     @DeleteMapping ("/deleteAnnotationById/{annotationId}/{uid}/{imageDataId}")
     public ResponseEntity<String> deleteAnnotationById(@PathVariable UUID annotationId, @PathVariable String uid, @PathVariable UUID imageDataId) {
-        if(annotationId == null)
+        if(annotationId == null || uid == null || imageDataId == null)
             throw new IllegalArgumentException("Invalid annotation, document or user ID.");
         algorithmService.deleteByIdAnnotation(annotationId, uid, imageDataId);
         return ResponseEntity.ok("Annotation deleted successfully.");

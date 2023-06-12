@@ -111,6 +111,30 @@ public class ImageServiceSqlImpl implements IImageRepositoryService {
     }
 
     @Override
+    public List<String> getAllEmailsByImageInfoId(UUID imageInfoId, String ownerUid) {
+        Optional<ImageEntity> optionalImage = imageRepo.findById(imageInfoId);
+        if(!optionalImage.isPresent())
+            throw new IllegalArgumentException("No document with the given ID exists.");
+        ImageEntity imageEntity = optionalImage.get();
+        List<String> emails = new ArrayList<>();
+        List<String> sharedUserIdsList = new ArrayList<>();
+        if(imageEntity.getSharedUserIds() != null && imageEntity.getSharedUserIds().length() > 2) {
+            sharedUserIdsList = Arrays.stream(imageEntity.getSharedUserIds().substring(1, imageEntity.getSharedUserIds().length() - 1).split(","))
+                    .map(element -> element.trim().replaceAll("^\"|\"$", ""))
+                    .collect(Collectors.toList());
+        }
+        for(String uid : sharedUserIdsList) {
+            Optional<UserEntity> optionalUser = userRepo.findByUid(uid);
+            if(!optionalUser.isPresent())
+                continue; //Skip potentially deleted users
+            UserEntity user = optionalUser.get();
+            emails.add(user.getEmail());
+        }
+
+        return emails;
+    }
+
+    @Override
     public void deleteById(UUID id) {
         imageRepo.deleteById(id);
     }

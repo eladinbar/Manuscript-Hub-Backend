@@ -41,6 +41,7 @@ public class ImageServiceImpl implements IImageService {
     private final IDeleteByIdImageData deleteByIdImageDataUseCase;
     private final IGetImageInfoByTextSearch getImageInfoByTextSearchUseCase;
     private final ITransferOwnership transferOwnershipUseCase;
+    private final IGetAllEmailsByImageInfoId getAllEmailsByImageInfoIdUseCase;
 
     @Override
     public ImageInfoResponse saveInfo(ImageInfoRequest imageInfoRequest) throws IllegalArgumentException, NoImageFoundException, NoUserFoundException, UnauthorizedException {
@@ -90,6 +91,12 @@ public class ImageServiceImpl implements IImageService {
 
         imageInfoModel = updateImageUseCase.update(imageInfoModel);
         return imageInfoResponseMapper.modelToRest(imageInfoModel);
+    }
+
+    @Override
+    public List<String> getAllEmailsByImageInfoId(UUID imageInfoId, String ownerUid) {
+        verifyOwnerPermissions(imageInfoId, ownerUid);
+        return getAllEmailsByImageInfoIdUseCase.getAllEmailsByImageInfoIdImpl(imageInfoId, ownerUid);
     }
 
     @Override
