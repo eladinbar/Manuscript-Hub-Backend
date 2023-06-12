@@ -25,7 +25,7 @@ public class AlgorithmController {
     private final IAlgorithmService algorithmService;
 
     @PostMapping("/runAlgorithm")
-    public ResponseEntity<String> runAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
+    public ResponseEntity<String> runAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) throws Exception{
         checkNotNull(algorithmRequest);
         algorithmService.run(algorithmRequest);
         return ResponseEntity.ok("Algorithm was executed successfully.");
@@ -64,6 +64,13 @@ public class AlgorithmController {
         if(uid == null)
             throw new IllegalArgumentException("Invalid user ID.");
         return ResponseEntity.ok(algorithmService.getAllByUid(uid));
+    }
+
+    @GetMapping("/getAllRunnable/{uid}")
+    public ResponseEntity<List<AlgorithmResponse>> getAllRunnable(@PathVariable String uid) {
+        if(uid == null)
+            throw new IllegalArgumentException("Invalid user ID.");
+        return ResponseEntity.ok(algorithmService.getAllRunnable(uid));
     }
 
     @GetMapping("/getAllAlgorithmsByUid/{algorithmStatuses}/{uid}")

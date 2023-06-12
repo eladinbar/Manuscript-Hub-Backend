@@ -3,6 +3,7 @@ package com.manuscript.infrastructure.persistence.sql.impl;
 import com.manuscript.core.domain.algorithm.models.AlgorithmModel;
 import com.manuscript.core.domain.algorithm.repository.IAlgorithmRepositoryService;
 import com.manuscript.core.domain.common.enums.AlgorithmStatus;
+import com.manuscript.core.domain.common.enums.Role;
 import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import com.manuscript.infrastructure.persistence.sql.entities.AlgorithmEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -83,6 +85,25 @@ public class AlgorithmServiceSqlImpl implements IAlgorithmRepositoryService {
         UserEntity user = optionalUser.get();
         List<AlgorithmModel> result = new ArrayList<>();
         repo.findAllByUser(user).forEach(invitationRequest -> result.add(mapper.entityToModel(invitationRequest)));
+        return result;
+    }
+
+    @Override
+    public List<AlgorithmModel> getAllRunnable(String uid) {
+        Optional<UserEntity> optionalUser = userRepo.findByUid(uid);
+        if(!optionalUser.isPresent())
+            throw new IllegalArgumentException("No user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity user = optionalUser.get();
+        List<AlgorithmEntity> algorithms = repo.findAllByStatus(AlgorithmStatus.Production);
+        if (user.getRole() == Role.Admin){
+            algorithms.addAll(repo.findAllByStatus(AlgorithmStatus.Trial));
+        }
+        else if (user.getRole() == Role.Developer) {
+            algorithms.addAll(repo.findAllByStatus(AlgorithmStatus.Trial).stream().filter(algorithm -> algorithm.getUser().getUid()== user.getUid()).collect(Collectors.toList()));
+        }
+        List<AlgorithmModel> result = new ArrayList<>();
+        algorithms.forEach(algorithm -> result.add(mapper.entityToModel(algorithm)));
         return result;
     }
 

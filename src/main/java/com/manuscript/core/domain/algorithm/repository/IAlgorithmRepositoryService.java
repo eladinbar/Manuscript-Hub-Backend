@@ -11,6 +11,7 @@ import java.util.Set;
 public interface IAlgorithmRepositoryService extends IBaseRepositoryService<AlgorithmModel> {
     Optional<AlgorithmModel> getByUrl(String url);
     List<AlgorithmModel> getAllByUid(String uid);
+    List<AlgorithmModel> getAllRunnable(String uid);
     List<AlgorithmModel> getAllByAlgorithmStatuses(Set<AlgorithmStatus> statuses);
     void deleteByUrl(String url);
 }
