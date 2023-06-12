@@ -5,7 +5,6 @@ import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.infrastructure.persistence.sql.common.entities.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.json.JSONArray;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -37,15 +36,11 @@ public class ImageEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Lob
-    @Column(name = "tags", columnDefinition = "JSON")
-    @org.hibernate.annotations.Type(type = "json")
-    private JSONArray tags;
+    @Column(name = "tags", columnDefinition = "TEXT")
+    private String tags;
 
-    @Lob
-    @Column(name = "shared_user_ids", columnDefinition = "JSON")
-    @org.hibernate.annotations.Type(type = "json")
-    private JSONArray sharedUserIds;
+    @Column(name = "shared_user_ids", columnDefinition = "TEXT")
+    private String sharedUserIds;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

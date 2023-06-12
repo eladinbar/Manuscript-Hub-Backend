@@ -5,10 +5,11 @@ import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryE
 import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.json.JSONArray;
+import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,8 +28,8 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageInfoM
                 .author(imageInfoModel.getAuthor())
                 .publicationDate(imageInfoModel.getPublicationDate())
                 .description(imageInfoModel.getDescription())
-                .tags(new JSONArray(imageInfoModel.getTags()))
-                .sharedUserIds(new JSONArray(imageInfoModel.getSharedUserIds()))
+                .tags(new JSONArray(imageInfoModel.getTags()).toString())
+                .sharedUserIds(new JSONArray(imageInfoModel.getSharedUserIds()).toString())
                 .status(imageInfoModel.getStatus())
                 .privacy(imageInfoModel.getPrivacy())
                 .createdTime(imageInfoModel.getCreatedTime())
@@ -37,8 +38,21 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageInfoM
     }
 
     public ImageInfoModel entityToModel(ImageEntity imageEntity) {
-        List<String> tagsList = getNullableList(imageEntity.getTags());
-        List<String> sharedUserIdsList = getNullableList(imageEntity.getSharedUserIds());
+        List<String> tagsList = new ArrayList<>();
+        List<String> sharedUserIdsList = new ArrayList<>();
+
+        //Ensure the lists are not empty ("[]" is considered as empty)
+        if(imageEntity.getTags() != null && imageEntity.getTags().length() > 2) {
+            tagsList = Arrays.stream(imageEntity.getTags().substring(1, imageEntity.getTags().length() - 1).split(","))
+                    .map(element -> element.trim().replaceAll("^\"|\"$", ""))
+                    .collect(Collectors.toList());
+        }
+
+        if(imageEntity.getSharedUserIds() != null && imageEntity.getSharedUserIds().length() > 2) {
+            sharedUserIdsList = Arrays.stream(imageEntity.getSharedUserIds().substring(1, imageEntity.getSharedUserIds().length() - 1).split(","))
+                    .map(element -> element.trim().replaceAll("^\"|\"$", ""))
+                    .collect(Collectors.toList());
+        }
 
         return ImageInfoModel.builder()
                 .id(imageEntity.getId())
@@ -54,16 +68,5 @@ public class ImageEntityMapperImpl implements IRepositoryEntityMapper<ImageInfoM
                 .createdTime(imageEntity.getCreatedTime())
                 .updatedTime(imageEntity.getUpdatedTime())
                 .build();
-    }
-
-    private List<String> getNullableList(JSONArray jsonArray) {
-        if (jsonArray != null) {
-            return jsonArray.toList()
-                    .stream()
-                    .map(Object::toString)
-                    .collect(Collectors.toList());
-        } else {
-            return Collections.emptyList();
-        }
     }
 }
