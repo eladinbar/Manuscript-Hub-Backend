@@ -36,6 +36,8 @@ public class ImageController {
         ImageInfoResponse imageInfoResponse = imageService.saveInfo(imageInfoRequest);
         if (imageInfoResponse == null)
             throw new FailedUploadException("Failed to upload document information.");
+        // Field should not be returned to the frontend
+        imageInfoResponse.setSharedUserIds(null);
         return ResponseEntity.ok(imageInfoResponse);
     }
 
@@ -77,6 +79,8 @@ public class ImageController {
     public ResponseEntity<ImageInfoResponse> updateImageInfo(@RequestBody ImageInfoRequest imageInfoRequest) {
         checkRequestNotNull(imageInfoRequest, false);
         ImageInfoResponse imageInfoResponse = imageService.updateInfo(imageInfoRequest);
+        // Field should not be returned to the frontend
+        imageInfoResponse.setSharedUserIds(null);
         return ResponseEntity.ok(imageInfoResponse);
     }
 
@@ -86,6 +90,8 @@ public class ImageController {
         if (sharedUserEmails == null || sharedUserEmails.length == 0)
             throw new IllegalArgumentException("Cannot share document with no users.");
         ImageInfoResponse imageInfoResponse = imageService.shareImage(imageInfoRequest, sharedUserEmails);
+        // Field should not be returned to the frontend
+        imageInfoResponse.setSharedUserIds(null);
         return ResponseEntity.ok(imageInfoResponse);
     }
 
@@ -93,8 +99,10 @@ public class ImageController {
     public ResponseEntity<ImageInfoResponse> getImageInfoById(@PathVariable UUID imageInfoId, @PathVariable String uid) {
         checkIdNotNull(imageInfoId);
         checkUserIdNotNull(uid);
-        ImageInfoResponse result = imageService.getByIdInfo(imageInfoId, uid);
-        return ResponseEntity.ok(result);
+        ImageInfoResponse imageInfoResponse = imageService.getByIdInfo(imageInfoId, uid);
+        // Field should not be returned to the frontend
+        imageInfoResponse.setSharedUserIds(null);
+        return ResponseEntity.ok(imageInfoResponse);
     }
 
     @GetMapping("/getDocumentDataById/{imageDataId}/{uid}")
@@ -116,21 +124,30 @@ public class ImageController {
     @GetMapping("/getAllDocumentInfosByUid/{uid}")
     public ResponseEntity<List<ImageInfoResponse>> getAllImageInfosByUid(@PathVariable String uid) {
         checkUserIdNotNull(uid);
-        List<ImageInfoResponse> result = imageService.getAllByUidImageInfos(uid);
-        return ResponseEntity.ok(result);
+        List<ImageInfoResponse> imageInfoResponses = imageService.getAllByUidImageInfos(uid);
+        // Field should not be returned to the frontend
+        for (ImageInfoResponse imageInfoResponse : imageInfoResponses)
+            imageInfoResponse.setSharedUserIds(null);
+        return ResponseEntity.ok(imageInfoResponses);
     }
 
     @GetMapping("/getAllPublicDocumentInfos")
     public ResponseEntity<List<ImageInfoResponse>> getAllPublicImageInfos() {
-        List<ImageInfoResponse> result = imageService.getAllPublicImages();
-        return ResponseEntity.ok(result);
+        List<ImageInfoResponse> imageInfoResponses = imageService.getAllPublicImages();
+        // Field should not be returned to the frontend
+        for (ImageInfoResponse imageInfoResponse : imageInfoResponses)
+            imageInfoResponse.setSharedUserIds(null);
+        return ResponseEntity.ok(imageInfoResponses);
     }
 
     @GetMapping("/getAllSharedDocumentInfosByUid/{uid}")
     public ResponseEntity<List<ImageInfoResponse>> getAllSharedImageInfosByUid(@PathVariable String uid) {
         checkUserIdNotNull(uid);
-        List<ImageInfoResponse> result = imageService.getAllSharedImages(uid);
-        return ResponseEntity.ok(result);
+        List<ImageInfoResponse> imageInfoResponses = imageService.getAllSharedImages(uid);
+        // Field should not be returned to the frontend
+        for (ImageInfoResponse imageInfoResponse : imageInfoResponses)
+            imageInfoResponse.setSharedUserIds(null);
+        return ResponseEntity.ok(imageInfoResponses);
     }
 
     @DeleteMapping("/deleteDocumentInfoById/{imageInfoId}/{uid}")
@@ -153,6 +170,8 @@ public class ImageController {
     public ResponseEntity<ImageInfoResponse> transferOwnership(@RequestBody ImageInfoRequest imageInfoRequest, @PathVariable String newOwnerUid) {
         checkRequestNotNull(imageInfoRequest, false);
         ImageInfoResponse imageInfoResponse = imageService.transferOwnership(imageInfoRequest, newOwnerUid);
+        // Field should not be returned to the frontend
+        imageInfoResponse.setSharedUserIds(null);
         return ResponseEntity.ok(imageInfoResponse);
     }
 
@@ -160,6 +179,9 @@ public class ImageController {
     public ResponseEntity<Map<Privacy, List<ImageInfoResponse>>> getImageInfoByTextSearch(@PathVariable String searchText, @PathVariable String uid) {
         checkSearchTextNoNull(uid);
         Map<Privacy, List<ImageInfoResponse>> result = imageService.getImageInfoByTextSearch(searchText, uid);
+        for (List<ImageInfoResponse> imageInfoResponses : result.values())
+            for (ImageInfoResponse imageInfoResponse : imageInfoResponses)
+                imageInfoResponse.setSharedUserIds(null);
         return ResponseEntity.ok(result);
     }
 

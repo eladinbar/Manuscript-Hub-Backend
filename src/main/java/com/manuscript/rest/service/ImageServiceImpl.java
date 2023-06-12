@@ -70,12 +70,13 @@ public class ImageServiceImpl implements IImageService {
     @Override
     public ImageInfoResponse shareImage(ImageInfoRequest imageInfoRequest, String[] sharedUserEmails) {
         getByIdInfo(imageInfoRequest.getId(), imageInfoRequest.getUid()); //get requested image from db to check if it exists
-        verifyModifyPermissions(imageInfoRequest.getId(), imageInfoRequest.getUid());
+        verifyOwnerPermissions(imageInfoRequest.getId(), imageInfoRequest.getUid());
         ImageInfoModel imageInfoModel = imageInfoRequestMapper.restToModel(imageInfoRequest);
 
         //List to keep track of users that weren't found in the database
         //Can potentially be used to return an appropriate partial error message
         List<String> nonExistingUsers = new ArrayList<>();
+        imageInfoModel.setSharedUserIds(new ArrayList<>());
         for (String email : sharedUserEmails) {
             try {
                 UserResponse userResponse = userService.getByEmail(email);
@@ -235,11 +236,18 @@ public class ImageServiceImpl implements IImageService {
             throw new UnauthorizedException("Cannot delete public property if you are not the owner.");
         } else if (imageInfoResponse.getPrivacy() == Privacy.Shared) {
             if (!imageInfoResponse.getUid().equals(uid)) {
-                throw new IllegalArgumentException("Only the owner can delete this item");
+                throw new IllegalArgumentException("Only the owner can delete this item.");
             } else {
                 throw new IllegalArgumentException("This item is shared with other users\n" +
                         "please transfer item ownership or set its privacy to 'Private' first before attempting to delete it.");
             }
+        }
+    }
+
+    private void verifyOwnerPermissions(UUID imageInfoId, String uid) throws UnauthorizedException {
+        ImageInfoResponse imageInfoResponse = getByIdInfo(imageInfoId, uid); //also checks permissions
+        if (!imageInfoResponse.getUid().equals(uid)) {
+            throw new IllegalArgumentException("Only the owner can modify this item.");
         }
     }
 }
