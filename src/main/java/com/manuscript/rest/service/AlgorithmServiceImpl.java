@@ -91,7 +91,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         verifyUserDeveloperRole(algorithmRequest.getUid());
         verifyAlgorithmAuthorization(algorithmRequest.getUid(), algorithmRequest.getId(), algorithmRequest.getUrl());
         AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
-        AlgorithmModel oldModel = getByIdAlgorithmUseCase.getById(algorithmModel.getId()).get();
+        AlgorithmModel oldModel = getByUrlAlgorithmUseCase.getByUrl(algorithmModel.getUrl()).get();
         algorithmModel = updateAlgorithmUseCase.update(algorithmModel);
         if (algorithmModel.getStatus() == AlgorithmStatus.Trial && oldModel.getStatus() == AlgorithmStatus.CloudStaging) {
             cloneRepo(algorithmModel.getUrl());
