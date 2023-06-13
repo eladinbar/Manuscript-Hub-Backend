@@ -269,7 +269,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             return repoPath;
         }
         catch (IOException | GitAPIException e) {
-            throw new NoAlgorithmFoundException("unable to clone repository");
+            throw new NoAlgorithmFoundException("Unable to clone repository.");
         }
     }
     private boolean clearOldRepo(File fileToDelete){
@@ -327,11 +327,11 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             **/
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                throw new Exception("docker build failed");
+                throw new Exception("Docker build failed.");
             }
         }
         catch (IOException | InterruptedException e) {
-            throw new Exception("docker build failed");
+            throw new Exception("Docker build failed.");
         }
     }
 
@@ -387,7 +387,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                throw new Exception("docker run failed");
+                throw new Exception("Docker run failed.");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
