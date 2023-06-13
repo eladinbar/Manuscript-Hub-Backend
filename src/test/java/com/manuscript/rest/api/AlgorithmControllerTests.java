@@ -53,6 +53,214 @@
 //        this.algorithmRequest = new AlgorithmRequest(id, uid, imageId, url);
 //        this.newAlgorithmRequest = new AlgorithmRequest(null, uid, imageId, url);
 //    }
+
+////--------------------------------------- 'addAnnotation' tests
+//
+//@Test
+//public void addAnnotationSuccess() {
+//        //set up
+//        AnnotationResponse newAnnotation = new AnnotationResponse(id, uid, imageId, manualAlgorithmId,
+//        content, startX, startY, endX, endY, createdTime, updatedTime);
+//
+//        ////mock service
+//        when(annotationService.create(any())).thenReturn(newAnnotation);
+//
+//        //act
+//        ResponseEntity<AnnotationResponse> response = annotationController.addAnnotation(newAnnotationRequest);
+//
+//        //assert
+//        assertTrue(response.hasBody());
+//        AnnotationResponse annotationResponse = response.getBody();
+//        assertNotNull(annotationResponse);
+//        assertEquals(uid, annotationResponse.getUid());
+//        assertEquals(imageId, annotationResponse.getImageDataId());
+//        assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
+//        assertEquals(content, annotationResponse.getContent());
+//        assertEquals(startX, annotationResponse.getStartX());
+//        assertEquals(startY, annotationResponse.getStartY());
+//        assertEquals(endX, annotationResponse.getEndX());
+//        assertEquals(endY, annotationResponse.getEndY());
+//        assertTrue(annotationResponse.getCreatedTime().before(new Date())
+//        || annotationResponse.getCreatedTime().equals(new Date()));
+//        assertTrue(annotationResponse.getUpdatedTime().after(createdTime)
+//        || annotationResponse.getUpdatedTime().equals(createdTime));
+//        }
+//
+//@Test
+//public void addAnnotationNullUid() {
+//        //set up
+//        newAnnotationRequest.setUid(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
+//        }
+//
+//@Test
+//public void addAnnotationNullDocumentId() {
+//        //set up
+//        newAnnotationRequest.setImageDataId(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
+//        }
+//
+//@Test
+//public void addAnnotationNullAlgorithmId() {
+//        //set up
+//        newAnnotationRequest.setAlgorithmId(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
+//        }
+//
+//@Test
+//public void addAnnotationNullContent() {
+//        //set up
+//        newAnnotationRequest.setContent(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
+//        }
+//
+//@ParameterizedTest
+//@CsvSource({"-1, 0, 0, 0", "0, -1, 0, 0", "0, 0, -1, 0", "0, 0, 0, -1",
+//        "-1, -1, 0, 0", "-1, 0, -1, 0", "-1, 0, 0, -1", "0, -1, -1, 0", "0, -1, 0, -1", "0, 0, -1, -1",
+//        "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
+//        "-1, -1, -1, -1"})
+//public void addAnnotationNegativeCoordinates(int startX, int startY, int endX, int endY) {
+//        //set up
+//        newAnnotationRequest.setStartX(startX);
+//        newAnnotationRequest.setStartY(startY);
+//        newAnnotationRequest.setEndX(endX);
+//        newAnnotationRequest.setEndY(endY);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.addAnnotation(newAnnotationRequest));
+//        }
+
+////--------------------------------------- 'updateAnnotation' tests
+//
+//@Test
+//public void updateAnnotationSuccess() {
+//        //set up
+//        AnnotationResponse updatedAnnotation = new AnnotationResponse(id, uid, imageId, manualAlgorithmId,
+//        content, startX, startY, endX, endY, createdTime, updatedTime);
+//
+//        ////mock service
+//        when(annotationService.update(any())).thenReturn(updatedAnnotation);
+//
+//        //act
+//        ResponseEntity<AnnotationResponse> response = annotationController.updateAnnotation(annotationRequest);
+//
+//        //assert
+//        assertTrue(response.hasBody());
+//        AnnotationResponse annotationResponse = response.getBody();
+//        assertNotNull(annotationResponse);
+//        assertEquals(uid, annotationResponse.getUid());
+//        assertEquals(imageId, annotationResponse.getImageDataId());
+//        assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
+//        assertEquals(content, annotationResponse.getContent());
+//        assertEquals(startX, annotationResponse.getStartX());
+//        assertEquals(startY, annotationResponse.getStartY());
+//        assertEquals(endX, annotationResponse.getEndX());
+//        assertEquals(endY, annotationResponse.getEndY());
+//        assertTrue(annotationResponse.getCreatedTime().before(new Date())
+//        || annotationResponse.getCreatedTime().equals(new Date()));
+//        assertTrue(annotationResponse.getUpdatedTime().after(createdTime));
+//        }
+//
+//@Test
+//public void updateAnnotationNullId() {
+//        //set up
+//        annotationRequest.setId(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
+//        }
+//
+//@Test
+//public void updateAnnotationNullUid() {
+//        //set up
+//        annotationRequest.setUid(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
+//        }
+//
+//@Test
+//public void updateAnnotationNullDocumentId() {
+//        //set up
+//        annotationRequest.setImageDataId(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
+//        }
+//
+//@Test
+//public void updateAnnotationNullAlgorithmId() {
+//        //set up
+//        annotationRequest.setAlgorithmId(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
+//        }
+//
+//@Test
+//public void updateAnnotationNullContent() {
+//        //set up
+//        annotationRequest.setContent(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
+//        }
+//
+//@ParameterizedTest
+//@CsvSource({"-1, 0, 0, 0", "0, -1, 0, 0", "0, 0, -1, 0", "0, 0, 0, -1",
+//        "-1, -1, 0, 0", "-1, 0, -1, 0", "-1, 0, 0, -1", "0, -1, -1, 0", "0, -1, 0, -1", "0, 0, -1, -1",
+//        "-1, -1, -1, 0", "-1, -1, 0, -1", "-1, 0, -1, -1", "0, -1, -1, -1",
+//        "-1, -1, -1, -1"})
+//public void updateAnnotationNegativeCoordinates(int startX, int startY, int endX, int endY) {
+//        //set up
+//        annotationRequest.setStartX(startX);
+//        annotationRequest.setStartY(startY);
+//        annotationRequest.setEndX(endX);
+//        annotationRequest.setEndY(endY);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () -> annotationController.updateAnnotation(annotationRequest));
+//        }
+
+
+////--------------------------------------- 'deleteAnnotationById' tests
+//
+//@Test
+//public void deleteAnnotationByIdSuccess() {
+//        //act
+//        annotationController.deleteAnnotationById(annotationRequest.getId());
+//        }
+//
+//@Test
+//public void deleteAnnotationByIdNullId() {
+//        //set up
+//        annotationRequest.setId(null);
+//
+//        //act
+//        //assert
+//        assertThrows(IllegalArgumentException.class, () ->
+//        annotationController.deleteAnnotationById(annotationRequest.getId()));
+//        }
+
 //
 //    ////--------------------------------------- 'uploadAlgorithm' tests
 //

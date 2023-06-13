@@ -1,6 +1,5 @@
 package com.manuscript.rest.api;
 
-import com.manuscript.rest.forms.request.AnnotationRequest;
 import com.manuscript.rest.forms.response.AnnotationResponse;
 import com.manuscript.rest.service.IAnnotationService;
 import lombok.AllArgsConstructor;
@@ -9,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import static com.manuscript.rest.common.Constants.RESOURCE_ANNOTATION;
 
@@ -21,8 +18,6 @@ import static com.manuscript.rest.common.Constants.RESOURCE_ANNOTATION;
 @AllArgsConstructor
 public class AnnotationController {
     private final IAnnotationService annotationService;
-
-
 
     @GetMapping("/getAllAnnotationsByDocumentDataId/{imageDataId}/{uid}")
     public ResponseEntity<List<AnnotationResponse>> getAllAnnotationsByImageDataId(@PathVariable UUID imageDataId, @PathVariable String uid) {
@@ -39,8 +34,6 @@ public class AnnotationController {
         annotationService.deleteAllByImageDataId(imageDataId);
         return ResponseEntity.ok("All related annotations were deleted successfully.");
     }
-
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception exception) {

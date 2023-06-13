@@ -77,9 +77,8 @@ public class AnnotationServiceTests {
         deleteAllByImageDataIdAnnotationsUseCase = Mockito.mock(IDeleteAllByImageDataIdAnnotations.class);
 
         // set up service
-        annotationService = new AnnotationServiceImpl(annotationRequestMapper, annotationResponseMapper,
-                createAnnotationUseCase, updateAnnotationUseCase, getByIdAnnotationsUseCase,
-                getAllByImageIdAnnotationsUseCase, deleteByIdAnnotationUseCase, deleteAllByImageDataIdAnnotationsUseCase);
+        annotationService = new AnnotationServiceImpl(annotationResponseMapper,
+                getByIdAnnotationsUseCase, getAllByImageIdAnnotationsUseCase, deleteAllByImageDataIdAnnotationsUseCase);
     }
 
     @BeforeEach
@@ -97,69 +96,6 @@ public class AnnotationServiceTests {
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
                 .build();
-    }
-
-    ////--------------------------------------- 'create' tests
-
-    @Test
-    public void createSuccess() {
-        //set up
-        AnnotationResponse newAnnotation = new AnnotationResponse(id, uid, imageInfoId, manualAlgorithmId,
-                content, startX, startY, endX, endY, createdTime, updatedTime);
-
-        ////mock mappers, assisting services and create use case
-        when(annotationRequestMapper.restToModel(any(AnnotationRequest.class))).thenReturn(annotationModel);
-        when(createAnnotationUseCase.create(any(AnnotationModel.class))).thenReturn(annotationModel);
-        when(annotationResponseMapper.modelToRest(any(AnnotationModel.class))).thenReturn(newAnnotation);
-
-        //act
-        AnnotationResponse annotationResponse = annotationService.create(newAnnotationRequest);
-
-        //assert
-        assertNotNull(annotationResponse);
-        assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageInfoId, annotationResponse.getImageDataId());
-        assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
-        assertEquals(content, annotationResponse.getContent());
-        assertEquals(startX, annotationResponse.getStartX());
-        assertEquals(startY, annotationResponse.getStartY());
-        assertEquals(endX, annotationResponse.getEndX());
-        assertEquals(endY, annotationResponse.getEndY());
-        assertTrue(annotationResponse.getCreatedTime().before(new Date())
-                || annotationResponse.getCreatedTime().equals(new Date()));
-        assertTrue(annotationResponse.getUpdatedTime().after(createdTime)
-                || annotationResponse.getUpdatedTime().equals(createdTime));
-    }
-
-    ////--------------------------------------- 'update' tests
-
-    @Test
-    public void updateSuccess() {
-        //set up
-        AnnotationResponse updatedAnnotation = new AnnotationResponse(id, uid, imageInfoId, manualAlgorithmId,
-                content, startX, startY, endX, endY, createdTime, updatedTime);
-
-        ////mock mappers and update use case
-        when(annotationRequestMapper.restToModel(any(AnnotationRequest.class))).thenReturn(annotationModel);
-        when(updateAnnotationUseCase.update(any(AnnotationModel.class))).thenReturn(annotationModel);
-        when(annotationResponseMapper.modelToRest(any(AnnotationModel.class))).thenReturn(updatedAnnotation);
-
-        //act
-        AnnotationResponse annotationResponse = annotationService.update(annotationRequest);
-
-        //assert
-        assertNotNull(annotationResponse);
-        assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageInfoId, annotationResponse.getImageDataId());
-        assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
-        assertEquals(content, annotationResponse.getContent());
-        assertEquals(startX, annotationResponse.getStartX());
-        assertEquals(startY, annotationResponse.getStartY());
-        assertEquals(endX, annotationResponse.getEndX());
-        assertEquals(endY, annotationResponse.getEndY());
-        assertTrue(annotationResponse.getCreatedTime().before(new Date())
-                || annotationResponse.getCreatedTime().equals(new Date()));
-        assertTrue(annotationResponse.getUpdatedTime().after(createdTime));
     }
 
     ////--------------------------------------- 'getAllByImageId' tests
@@ -183,25 +119,7 @@ public class AnnotationServiceTests {
         assertNotNull(annotationResponses);
     }
 
-    ////--------------------------------------- 'delete' tests
-
-    @Test
-    public void deleteSuccess() {
-        //act
-        annotationService.deleteById(annotationRequest.getId());
-    }
-
-    @Test
-    //Still expect this to not throw any exception
-    public void deleteInvalidIdSuccess() {
-        //set up
-        annotationRequest.setId(invalidId);
-
-        //act
-        annotationService.deleteById(annotationRequest.getId());
-    }
-
-    ////--------------------------------------- 'delete' tests
+    ////--------------------------------------- 'deleteAllByImageData' tests
 
     @Test
     public void deleteAllByImageDataSuccess() {

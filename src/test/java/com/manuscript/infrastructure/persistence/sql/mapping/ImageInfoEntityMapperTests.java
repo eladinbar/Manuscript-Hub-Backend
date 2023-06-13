@@ -6,7 +6,6 @@ import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.core.domain.image.models.ImageInfoModel;
 import com.manuscript.infrastructure.persistence.sql.entities.ImageEntity;
 import com.manuscript.infrastructure.persistence.sql.entities.UserEntity;
-import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,10 +32,10 @@ public class ImageInfoEntityMapperTests {
     private final Date publicationDate = new Date();
     private final String tag = "tag";
     private final List<String> tags = new ArrayList<>();
-    private JSONArray jsonTags;
+    private final String jsonTags = "[\"tag\"]";
     private final String addedUid = "2UYxH92SpBQfkRgEeN75EBdvM9r2";
     private final List<String> sharedUserIds = new ArrayList<>();
-    private JSONArray jsonSharedUserIds;
+    private final String jsonSharedUserIds = "[\"2UYxH92SpBQfkRgEeN75EBdvM9r2\"]";
     private final UUID imageId = UUID.randomUUID();
     private final Status status = Status.Enabled;
     private final Privacy privacy = Privacy.Public;
@@ -54,8 +53,6 @@ public class ImageInfoEntityMapperTests {
         //data setup
         tags.add(tag);
         sharedUserIds.add(addedUid);
-        jsonTags = new JSONArray(tags);
-        jsonSharedUserIds = new JSONArray(sharedUserIds);
 
         //date setup
         Calendar cal = Calendar.getInstance();
@@ -127,8 +124,8 @@ public class ImageInfoEntityMapperTests {
         assertEquals(publicationDate, testImageInfoEntity.getPublicationDate());
         assertEquals(status, testImageInfoEntity.getStatus());
         assertEquals(privacy, testImageInfoEntity.getPrivacy());
-        assertEquals(jsonTags.toList(), testImageInfoEntity.getTags().toList());
-        assertEquals(jsonSharedUserIds.toList(), testImageInfoEntity.getSharedUserIds().toList());
+        assertEquals(jsonTags, testImageInfoEntity.getTags());
+        assertEquals(jsonSharedUserIds, testImageInfoEntity.getSharedUserIds());
         assertEquals(status, testImageInfoEntity.getStatus());
         assertEquals(privacy, testImageInfoEntity.getPrivacy());
         assertEquals(createdTime, testImageInfoEntity.getCreatedTime());

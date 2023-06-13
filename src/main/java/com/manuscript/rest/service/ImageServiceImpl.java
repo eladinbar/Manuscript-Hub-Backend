@@ -94,7 +94,7 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public List<String> getAllEmailsByImageInfoId(UUID imageInfoId, String ownerUid) {
+    public List<String> getAllSharedEmailsByImageInfoId(UUID imageInfoId, String ownerUid) {
         verifyOwnerPermissions(imageInfoId, ownerUid);
         return getAllEmailsByImageInfoIdUseCase.getAllEmailsByImageInfoIdImpl(imageInfoId, ownerUid);
     }

@@ -99,7 +99,7 @@ public class ImageController {
     public ResponseEntity<List<String>> getAllSharedEmailsByImageInfoId(@PathVariable UUID imageInfoId, @PathVariable String ownerUid) {
         if(imageInfoId == null || ownerUid == null)
             throw new IllegalArgumentException("Cannot retrieve documents with no document ID or user ID.");
-        List<String> sharedEmails = imageService.getAllEmailsByImageInfoId(imageInfoId, ownerUid);
+        List<String> sharedEmails = imageService.getAllSharedEmailsByImageInfoId(imageInfoId, ownerUid);
         return ResponseEntity.ok(sharedEmails);
     }
 
