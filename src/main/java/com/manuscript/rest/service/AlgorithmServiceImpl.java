@@ -69,12 +69,15 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
             String userEmail = userService.getByUid(algorithmRequest.getUid()).getEmail();
             String algorithmInput = makeDataJsonString(algorithmRequest.getImageDataId(),algorithmRequest.getUid());
-            makeAlgorithmDockerfile(repoPath, algorithmInput, userEmail);     //create dockerfile
-            buildDockerImage(repoPath, repoName);           //build docker
-            runDockerContainer(repoName);                   //run docker
+            Path ioPath = makeInputOutputDirectory(repoPath, userEmail, algorithmInput);
+            String dockerImageName = getDockerImageName(repoName);      //build docker
+            runDockerContainer(dockerImageName, userEmail, ioPath);                   //run docker
             //algorithm should print its json into "output.txt" file
+            //delete io folder
         }
-        throw new NoAlgorithmFoundException("No algorithm found.");
+        else{
+            throw new NoAlgorithmFoundException("No algorithm found.");
+        }
     }
 
     @Override
@@ -87,14 +90,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public AlgorithmResponse update(AlgorithmRequest algorithmRequest) {
+    public AlgorithmResponse update(AlgorithmRequest algorithmRequest) throws Exception {
         verifyUserDeveloperRole(algorithmRequest.getUid());
         verifyAlgorithmAuthorization(algorithmRequest.getUid(), algorithmRequest.getId(), algorithmRequest.getUrl());
         AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
         AlgorithmModel oldModel = getByUrlAlgorithmUseCase.getByUrl(algorithmModel.getUrl()).get();
         algorithmModel = updateAlgorithmUseCase.update(algorithmModel);
         if (algorithmModel.getStatus() == AlgorithmStatus.Trial && oldModel.getStatus() == AlgorithmStatus.CloudStaging) {
-            cloneRepo(algorithmModel.getUrl());
+            initDockerImageBuildProcess(algorithmModel.getUrl());
         }
         return algorithmResponseMapper.modelToRest(algorithmModel);
     }
@@ -251,9 +254,9 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             throw new UnauthorizedException("User is not authorized to make modifications to this image.");
     }
 
-    /** Docker related functions:**/
 
-    private void cloneRepo(String url) {
+    /** Docker related functions:**/
+    private Path cloneRepo(String url) {
         try {
             String repoName = url.substring(url.lastIndexOf('/') + 1);
             Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
@@ -263,6 +266,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                     .setURI(url + ".git")
                     .setDirectory(repoPath.toFile())
                     .call();
+            return repoPath;
         }
         catch (IOException | GitAPIException e) {
             throw new NoAlgorithmFoundException("unable to clone repository");
@@ -277,6 +281,59 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         }
         return fileToDelete.delete();
     }
+    private void initDockerImageBuildProcess(String url) throws Exception{
+        Path repoPath = cloneRepo(url);
+        makeAlgorithmDockerfile(repoPath);
+        String repoName = url.substring(url.lastIndexOf('/') + 1);
+        buildDockerImage(repoPath, repoName);
+    }
+    private void makeAlgorithmDockerfile(Path repoPath) {
+        try {
+            File dockerfile = new File(repoPath.toString(), "Dockerfile");
+            FileWriter fileWriter = new FileWriter(dockerfile);
+            BufferedWriter writer = new BufferedWriter(fileWriter);
+            writer.write("FROM python:3.10\n");
+            writer.write("WORKDIR /app\n");
+            writer.write("COPY . /app\n");
+            //TODO placeholder for main function of the code
+            writer.write("ENTRYPOINT [\"python\", \"main.py\"]");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private String getDockerImageName(String repoName){
+        String dockerImageName = repoName.toLowerCase().replace('@', '-').replace('.', '-');
+        return dockerImageName;
+    }
+    private void buildDockerImage(Path cmdRunLocation, String repoName) throws Exception {
+            File workingDirectory = new File(cmdRunLocation.toString());
+            String dockerImageName = getDockerImageName(repoName);
+            String[] cmd = {"docker", "build", "-t", dockerImageName, "."};
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+            processBuilder.directory(workingDirectory);
+            Process process = processBuilder.start();
+            /**
+            String outputStream;
+            BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((outputStream = stdoutReader.readLine()) != null) {
+                System.out.println(outputStream);
+            }
+            BufferedReader stderrReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            while ((outputStream = stderrReader.readLine()) != null) {
+                System.out.println(outputStream);
+            }
+            **/
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new Exception("docker build failed");
+            }
+        }
+        catch (IOException | InterruptedException e) {
+            throw new Exception("docker build failed");
+        }
+    }
 
     private String makeDataJsonString(UUID imageDataId, String uid){
         ImageDataResponse imageDataResponse = imageService.getByIdData(imageDataId,uid);
@@ -287,46 +344,47 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         String stringRequest =  jsonRequest.toString();
         return stringRequest;
     }
-    private void makeAlgorithmDockerfile(Path repoPath, String algorithmInput, String userEmail) {
+    private Path makeInputOutputDirectory(Path repoPath, String userEmail, String algorithmInput){
+        Path userDirPath = Paths.get(repoPath.toString() + "\\" + userEmail);
         try {
-            File dockerfile = new File(repoPath.toString(), "Dockerfile");
-            FileWriter fileWriter = new FileWriter(dockerfile);
+            Files.createDirectory(userDirPath);
+            File inputFile = new File(userDirPath.toString(), "input.txt");
+            FileWriter fileWriter = new FileWriter(inputFile);
             BufferedWriter writer = new BufferedWriter(fileWriter);
-            writer.write("FROM python:3.9\n");
-            writer.write("WORKDIR /app/" + userEmail + "\n");
-            writer.write("COPY . /app/" + userEmail + "\n");
-            writer.write("RUN pip install\n");
-            writer.write("CMD echo \"" + algorithmInput + "\" | python myCode.py\n");
+            writer.write(algorithmInput);
             writer.close();
-        } catch (IOException e) {
+            File outputFile = new File(userDirPath.toString(), "output.txt");
+            fileWriter = new FileWriter(outputFile);
+            writer = new BufferedWriter(fileWriter);
+            writer.write("");
+            writer.close();
+        }
+        catch (IOException e){
             e.printStackTrace();
         }
+        return userDirPath;
     }
-    public void buildDockerImage(Path repoPath, String repoName) throws Exception {
+    public void runDockerContainer(String dockerImageName, String userEmail, Path IOPath) throws Exception{
         try {
-            File workingDirectory = new File(repoPath.toString());
-            String[] cmd = {"docker", "build", "-t", repoName, "."};
-            ProcessBuilder processBuilder = new ProcessBuilder(cmd);
-            processBuilder.directory(workingDirectory);
-            Process process = processBuilder.start();
-            process.waitFor();
-            BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader stderrReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                throw new Exception("docker build failed");
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void runDockerContainer(String repoName) throws Exception{
-        try {
-            String[] cmd = {"docker", "run", repoName};
+            String containerName = userEmail.toLowerCase().replace('@', '-').replace('.', '-');
+            String[] cmd = {"docker", "run",
+                    "--name", containerName,
+                    "--mount", "type=bind,source="+IOPath.toString()+",target=/app/"+userEmail,
+                    "--rm",
+                    dockerImageName, "/app/"+userEmail};
             ProcessBuilder processBuilder = new ProcessBuilder(cmd);
             Process process = processBuilder.start();
-            BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader stderrReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+             String outputStream;
+             BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+             while ((outputStream = stdoutReader.readLine()) != null) {
+             System.out.println(outputStream);
+             }
+             BufferedReader stderrReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+             while ((outputStream = stderrReader.readLine()) != null) {
+             System.out.println(outputStream);
+             }
+
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 throw new Exception("docker run failed");

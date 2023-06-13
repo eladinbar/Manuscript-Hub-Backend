@@ -41,7 +41,7 @@ public class AlgorithmController {
     }
 
     @PatchMapping("/updateAlgorithm")
-    public ResponseEntity<AlgorithmResponse> updateAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
+    public ResponseEntity<AlgorithmResponse> updateAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) throws Exception{
         checkNotNull(algorithmRequest);
         AlgorithmResponse result = algorithmService.update(algorithmRequest);
         return ResponseEntity.ok(result);

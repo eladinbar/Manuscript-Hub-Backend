@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface IAlgorithmService {
     void run(AlgorithmRequest algorithmRequest) throws Exception;
     AlgorithmResponse create(AlgorithmRequest algorithmRequest);
-    AlgorithmResponse update(AlgorithmRequest algorithmRequest);
+    AlgorithmResponse update(AlgorithmRequest algorithmRequest) throws Exception;
     AlgorithmResponse getById(UUID algorithmId);
     AlgorithmResponse getByUrl(String url);
     List<AlgorithmResponse> getAllByUid(String uid);
