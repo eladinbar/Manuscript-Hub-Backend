@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ImageDataModel {
-    private UUID imageDataId;
+    private UUID id;
     @NotNull private UUID imageId;
     @NotNull private String fileName;
     @NotNull private byte[] data;

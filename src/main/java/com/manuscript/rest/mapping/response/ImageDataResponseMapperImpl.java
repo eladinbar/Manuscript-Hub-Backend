@@ -11,7 +11,7 @@ public class ImageDataResponseMapperImpl implements IRestMapper<ImageDataModel, 
     @Override
     public ImageDataResponse modelToRest(ImageDataModel imageDataModel){
         return ImageDataResponse.builder()
-                .id(imageDataModel.getImageDataId())
+                .id(imageDataModel.getId())
                 .infoId(imageDataModel.getImageId())
                 .fileName(imageDataModel.getFileName())
                 .data(imageDataModel.getData())
@@ -22,7 +22,7 @@ public class ImageDataResponseMapperImpl implements IRestMapper<ImageDataModel, 
     @Override
     public ImageDataModel restToModel(ImageDataResponse imageDataResponse){
         return ImageDataModel.builder()
-                .imageDataId(imageDataResponse.getId())
+                .id(imageDataResponse.getId())
                 .imageId(imageDataResponse.getInfoId())
                 .fileName(imageDataResponse.getFileName())
                 .data(imageDataResponse.getData())

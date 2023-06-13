@@ -4,7 +4,6 @@ import com.manuscript.core.domain.image.models.ImageDataModel;
 import com.manuscript.infrastructure.persistence.nosql.common.mapping.IRepositoryDocumentMapper;
 import com.manuscript.infrastructure.persistence.nosql.documents.ImageDataDocument;
 import com.manuscript.infrastructure.persistence.nosql.service.IImageUtils;
-import com.manuscript.infrastructure.persistence.sql.common.mapping.IRepositoryEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +17,11 @@ public class ImageDataEntityMapperImpl implements IRepositoryDocumentMapper<Imag
 
     @Override
     public ImageDataDocument modelToDocument(ImageDataModel imageDataModel) {
-        if (imageDataModel.getImageDataId() == null) {
-            imageDataModel.setImageDataId(UUID.randomUUID());
+        if (imageDataModel.getId() == null) {
+            imageDataModel.setId(UUID.randomUUID());
         }
         return ImageDataDocument.builder()
-                .id(imageDataModel.getImageDataId())
+                .id(imageDataModel.getId())
                 .imageId(imageDataModel.getImageId())
                 .fileName(imageDataModel.getFileName())
                 .data(imageUtils.encodeBase64String(imageDataModel.getData()))
@@ -38,7 +37,7 @@ public class ImageDataEntityMapperImpl implements IRepositoryDocumentMapper<Imag
             imageDataDocument.setId(UUID.randomUUID());
         }
         return ImageDataModel.builder()
-                .imageDataId(imageDataDocument.getId())
+                .id(imageDataDocument.getId())
                 .imageId(imageDataDocument.getImageId())
                 .fileName(imageDataDocument.getFileName())
                 .data(imageUtils.decodeBase64(imageDataDocument.getData()))

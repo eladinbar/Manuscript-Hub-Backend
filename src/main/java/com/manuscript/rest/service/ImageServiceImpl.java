@@ -214,7 +214,7 @@ public class ImageServiceImpl implements IImageService {
 
     private void verifyPermissions(String requestUid, String responseOwnerUid, List<String> responseSharedUserIds, Status responseStatus, Privacy responsePrivacy) throws UnauthorizedException {
         if (responseStatus.equals(Status.Disabled))
-            throw new NoImageFoundException("Disabled images are unavailable.");
+            throw new UnauthorizedException("Disabled images are unavailable.");
         if (!requestUid.equals(responseOwnerUid)) {
             if (!responsePrivacy.equals(Privacy.Public)) {
                 if (!responsePrivacy.equals(Privacy.Shared))
