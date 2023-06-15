@@ -75,13 +75,13 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             String repoName = repoUrl.substring(repoUrl.lastIndexOf('/') + 1);
             Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
             String userEmail = userService.getByUid(algorithmRequest.getUid()).getEmail();
-            BufferedImage algorithmInput = makeImage(algorithmRequest.getImageDataId(),algorithmRequest.getUid());
+            BufferedImage algorithmInput = makeInputImage(algorithmRequest.getImageDataId(),algorithmRequest.getUid());
             Path ioPath = makeInputOutputDirectory(repoPath, userEmail, algorithmInput);
             String dockerImageName = getDockerImageName(repoName);      //build docker
             runDockerContainer(dockerImageName, userEmail, ioPath);//run docker
             List<JSONObject> output = readOutput(ioPath);
             List<AnnotationResponse> annotationResponsesList = convertJsonToAnnotation(output, algorithmRequest);
-            clearIO(ioPath);//delete io folder
+            clearDir(ioPath.toFile());//delete io folder
         }
         else{
             throw new NoAlgorithmFoundException("No algorithm found.");
@@ -105,6 +105,13 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         AlgorithmModel oldModel = getByUrlAlgorithmUseCase.getByUrl(algorithmModel.getUrl()).get();
         if (algorithmModel.getStatus() == AlgorithmStatus.Trial && oldModel.getStatus() == AlgorithmStatus.CloudStaging) {
             initDockerImageBuildProcess(algorithmModel.getUrl());
+        }
+        else if (algorithmModel.getStatus() == AlgorithmStatus.Declined && oldModel.getStatus() != AlgorithmStatus.Declined) {
+            String repoUrl = algorithmModel.getUrl();
+            String repoName = repoUrl.substring(repoUrl.lastIndexOf('/') + 1);
+            Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
+            deleteDockerImage(repoPath, repoName);
+            //clearDir(repoPath.toFile());
         }
         algorithmModel = updateAlgorithmUseCase.update(algorithmModel);
         return algorithmResponseMapper.modelToRest(algorithmModel);
@@ -268,7 +275,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         try {
             String repoName = url.substring(url.lastIndexOf('/') + 1);
             Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
-            clearOldRepo(repoPath.toFile());
+            //clearDir(repoPath.toFile());
             repoPath = Files.createDirectory(repoPath);
             Git.cloneRepository()
                     .setURI(url + ".git")
@@ -280,11 +287,11 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             throw new NoAlgorithmFoundException("Unable to clone repository.");
         }
     }
-    private boolean clearOldRepo(File fileToDelete){
+    private boolean clearDir(File fileToDelete){
         File[] contents = fileToDelete.listFiles();
         if (contents != null) {
             for (File file : contents) {
-                clearOldRepo(file);
+                clearDir(file);
             }
         }
         return fileToDelete.delete();
@@ -347,7 +354,36 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         }
     }
 
-    private BufferedImage makeImage(UUID imageDataId, String uid) throws Exception {
+    private void deleteDockerImage(Path cmdRunLocation, String repoName) throws Exception {
+        File workingDirectory = new File(cmdRunLocation.toString());
+        String dockerImageName = getDockerImageName(repoName);
+        String[] cmd = {"docker", "rmi", dockerImageName, "."};
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+            processBuilder.directory(workingDirectory);
+            Process process = processBuilder.start();
+
+            String outputStream;
+            BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((outputStream = stdoutReader.readLine()) != null) {
+                System.out.println(outputStream);
+            }
+            BufferedReader stderrReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            while ((outputStream = stderrReader.readLine()) != null) {
+                System.out.println(outputStream);
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new Exception("Docker delete failed.");
+            }
+        }
+        catch (IOException | InterruptedException e) {
+            throw new Exception("Docker delete failed.");
+        }
+    }
+
+    private BufferedImage makeInputImage(UUID imageDataId, String uid) throws Exception {
         try{
             ImageDataResponse imageDataResponse = imageService.getByIdData(imageDataId,uid);
             byte[] data = imageDataResponse.getData();
