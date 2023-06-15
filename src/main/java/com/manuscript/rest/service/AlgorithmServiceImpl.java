@@ -16,16 +16,23 @@ import com.manuscript.rest.forms.response.*;
 import com.manuscript.rest.mapping.IRestMapper;
 import com.manuscript.rest.forms.request.AlgorithmRequest;
 import lombok.AllArgsConstructor;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+
+import javax.imageio.ImageIO;
 
 @AllArgsConstructor
 @Service
@@ -68,12 +75,13 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             String repoName = repoUrl.substring(repoUrl.lastIndexOf('/') + 1);
             Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
             String userEmail = userService.getByUid(algorithmRequest.getUid()).getEmail();
-            String algorithmInput = makeDataJsonString(algorithmRequest.getImageDataId(),algorithmRequest.getUid());
+            BufferedImage algorithmInput = makeImage(algorithmRequest.getImageDataId(),algorithmRequest.getUid());
             Path ioPath = makeInputOutputDirectory(repoPath, userEmail, algorithmInput);
             String dockerImageName = getDockerImageName(repoName);      //build docker
-            runDockerContainer(dockerImageName, userEmail, ioPath);                   //run docker
-            //algorithm should print its json into "output.txt" file
-            //delete io folder
+            runDockerContainer(dockerImageName, userEmail, ioPath);//run docker
+            List<JSONObject> output = readOutput(ioPath);
+            List<AnnotationResponse> annotationResponsesList = convertJsonToAnnotation(output, algorithmRequest);
+            clearIO(ioPath);//delete io folder
         }
         else{
             throw new NoAlgorithmFoundException("No algorithm found.");
@@ -292,9 +300,13 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             File dockerfile = new File(repoPath.toString(), "Dockerfile");
             FileWriter fileWriter = new FileWriter(dockerfile);
             BufferedWriter writer = new BufferedWriter(fileWriter);
-            writer.write("FROM python:3.10\n");
-            writer.write("WORKDIR /app\n");
-            writer.write("COPY . /app\n");
+            writer.write("FROM python:3.10\n\n");
+            writer.write("RUN apt-get update && apt-get install -y tesseract-ocr\n");
+            writer.write("RUN apt-get update && apt-get install -y libtesseract-dev\n");
+            writer.write("RUN rm -rf /var/lib/apt/lists/*\n\n");
+            writer.write("WORKDIR /app\n\n");
+            writer.write("COPY . /app\n\n");
+            writer.write("RUN pip install -r requirements.txt\n\n");
             //TODO placeholder for main function of the code
             writer.write("ENTRYPOINT [\"python\", \"main.py\"]");
             writer.close();
@@ -314,7 +326,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             ProcessBuilder processBuilder = new ProcessBuilder(cmd);
             processBuilder.directory(workingDirectory);
             Process process = processBuilder.start();
-            /**
+
             String outputStream;
             BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((outputStream = stdoutReader.readLine()) != null) {
@@ -324,7 +336,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             while ((outputStream = stderrReader.readLine()) != null) {
                 System.out.println(outputStream);
             }
-            **/
+
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 throw new Exception("Docker build failed.");
@@ -335,27 +347,32 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         }
     }
 
-    private String makeDataJsonString(UUID imageDataId, String uid){
-        ImageDataResponse imageDataResponse = imageService.getByIdData(imageDataId,uid);
-        byte[] data = imageDataResponse.getData();
-        String stringData = Base64.getEncoder().encodeToString(data);
-        JSONObject jsonRequest = new JSONObject();
-        jsonRequest.put("DATA", stringData);
-        String stringRequest =  jsonRequest.toString();
-        return stringRequest;
+    private BufferedImage makeImage(UUID imageDataId, String uid) throws Exception {
+        try{
+            ImageDataResponse imageDataResponse = imageService.getByIdData(imageDataId,uid);
+            byte[] data = imageDataResponse.getData();
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+            //String stringData = Base64.getEncoder().encodeToString(data);
+            //JSONObject jsonRequest = new JSONObject();
+            //jsonRequest.put("DATA", stringData);
+            //String stringRequest =  jsonRequest.toString();
+            return image;
+        }
+        catch (IOException e) {
+            throw new Exception("image creation failed");
+        }
     }
-    private Path makeInputOutputDirectory(Path repoPath, String userEmail, String algorithmInput){
+    private Path makeInputOutputDirectory(Path repoPath, String userEmail, BufferedImage algorithmInput){
         Path userDirPath = Paths.get(repoPath.toString() + "\\" + userEmail);
         try {
-            Files.createDirectory(userDirPath);
-            File inputFile = new File(userDirPath.toString(), "input.txt");
-            FileWriter fileWriter = new FileWriter(inputFile);
-            BufferedWriter writer = new BufferedWriter(fileWriter);
-            writer.write(algorithmInput);
-            writer.close();
+            //make image input file
+            userDirPath = Files.createDirectory(userDirPath);
+            FileOutputStream fos = new FileOutputStream(userDirPath.toString()+"\\input.png");
+            ImageIO.write(algorithmInput,"png",fos);
+            //make empty output file
             File outputFile = new File(userDirPath.toString(), "output.txt");
-            fileWriter = new FileWriter(outputFile);
-            writer = new BufferedWriter(fileWriter);
+            FileWriter fileWriter = new FileWriter(outputFile);
+            BufferedWriter  writer = new BufferedWriter(fileWriter);
             writer.write("");
             writer.close();
         }
@@ -393,6 +410,50 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             e.printStackTrace();
         }
     }
+
+    private List<JSONObject> readOutput(Path ioPath) throws Exception{
+        try {
+            Path outputFilePath = ioPath.resolve("output.txt");
+            byte[] bytes = Files.readAllBytes(outputFilePath);
+            String outputData = new String(bytes, StandardCharsets.UTF_8);
+            JSONObject temp = new JSONObject(outputData);
+            JSONArray annotationJsonArray = temp.getJSONArray("data");
+            List<JSONObject> annotationJsons = new ArrayList<>();
+            for (int i = 0; i < annotationJsonArray.length(); i++) {
+                if (annotationJsonArray.get(i) instanceof JSONObject) {
+                    annotationJsons.add(annotationJsonArray.getJSONObject(i));
+                }
+            }
+            return annotationJsons;
+        }
+        catch (IOException e){
+            throw new Exception("failed to write");
+        }
+    }
+
+    private List<AnnotationResponse> convertJsonToAnnotation(List<JSONObject> jsons, AlgorithmRequest algorithmRequest){
+        List<AnnotationResponse> annotationResponsesList = new ArrayList<>();
+        for (JSONObject json : jsons){
+            AnnotationRequest annotationModel = AnnotationRequest.builder()
+                    .uid(algorithmRequest.getUid())
+                    .imageDataId(algorithmRequest.getImageDataId())
+                    .algorithmId(algorithmRequest.getId())
+                    .content(json.getString("content"))
+                    .startX(json.getInt("startX"))
+                    .startY(json.getInt("startY"))
+                    .endX(json.getInt("endX"))
+                    .endY(json.getInt("endY"))
+                    .build();
+            AnnotationResponse annotationResponse = createAnnotation(annotationModel);
+            annotationResponsesList.add(annotationResponse);
+        }
+        return annotationResponsesList;
+    }
+
+    private void clearIO (Path ioPath) {
+
+    }
+
 
 
     /**Annotation section**/
