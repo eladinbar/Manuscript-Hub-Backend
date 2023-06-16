@@ -36,15 +36,15 @@ public class AlgorithmController {
     @PostMapping("/uploadAlgorithm")
     public ResponseEntity<AlgorithmResponse> uploadAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) {
         checkNotNull(algorithmRequest);
-        AlgorithmResponse result = algorithmService.create(algorithmRequest);
-        return ResponseEntity.ok(result);
+        AlgorithmResponse algorithmResponse = algorithmService.create(algorithmRequest);
+        return ResponseEntity.ok(algorithmResponse);
     }
 
     @PatchMapping("/updateAlgorithm")
     public ResponseEntity<AlgorithmResponse> updateAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) throws Exception{
         checkNotNull(algorithmRequest);
-        AlgorithmResponse result = algorithmService.update(algorithmRequest);
-        return ResponseEntity.ok(result);
+        AlgorithmResponse algorithmResponse = algorithmService.update(algorithmRequest);
+        return ResponseEntity.ok(algorithmResponse);
     }
 
     @GetMapping("/getAlgorithmById/{algorithmId}")
@@ -130,8 +130,8 @@ public class AlgorithmController {
         checkNotNull(annotationRequest, true);
         checkCoordinates(annotationRequest.getStartX(), annotationRequest.getStartY(),
                 annotationRequest.getEndX(), annotationRequest.getEndY());
-        AnnotationResponse result = algorithmService.createAnnotation(annotationRequest);
-        return ResponseEntity.ok(result);
+        AnnotationResponse annotationResponse = algorithmService.createAnnotation(annotationRequest);
+        return ResponseEntity.ok(annotationResponse);
     }
 
     @PatchMapping("/updateAnnotation")
@@ -139,8 +139,8 @@ public class AlgorithmController {
         checkNotNull(annotationRequest, false);
         checkCoordinates(annotationRequest.getStartX(), annotationRequest.getStartY(),
                 annotationRequest.getEndX(), annotationRequest.getEndY());
-        AnnotationResponse result = algorithmService.updateAnnotation(annotationRequest);
-        return ResponseEntity.ok(result);
+        AnnotationResponse annotationResponse = algorithmService.updateAnnotation(annotationRequest);
+        return ResponseEntity.ok(annotationResponse);
     }
 
     @DeleteMapping ("/deleteAnnotationById/{annotationId}/{uid}/{imageDataId}")
