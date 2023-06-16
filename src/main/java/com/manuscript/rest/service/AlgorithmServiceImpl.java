@@ -65,7 +65,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
 
     @Override
-    public void run(AlgorithmRequest algorithmRequest) throws Exception {
+    public List<AnnotationResponse> run(AlgorithmRequest algorithmRequest) throws Exception {
         verifyImageModificationPermission(algorithmRequest.getImageDataId(), algorithmRequest.getUid());
         Optional<AlgorithmModel> optionalModel = getByIdAlgorithmUseCase.getById(algorithmRequest.getId());
         if (optionalModel.isPresent()) {
@@ -82,6 +82,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             List<JSONObject> output = readOutput(ioPath);
             List<AnnotationResponse> annotationResponsesList = convertJsonToAnnotation(output, algorithmRequest);
             clearDir(ioPath.toFile());//delete io folder
+            return annotationResponsesList;
         }
         else{
             throw new NoAlgorithmFoundException("No algorithm found.");
