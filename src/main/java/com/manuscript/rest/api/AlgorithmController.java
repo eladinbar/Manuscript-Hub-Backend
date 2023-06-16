@@ -29,8 +29,8 @@ public class AlgorithmController {
     @PostMapping("/runAlgorithm")
     public ResponseEntity<List<AnnotationResponse>> runAlgorithm(@RequestBody AlgorithmRequest algorithmRequest) throws Exception{
         checkNotNull(algorithmRequest);
-        List<AnnotationResponse> result = algorithmService.run(algorithmRequest);
-        return ResponseEntity.ok(result);
+        List<AnnotationResponse> annotationResponses = algorithmService.run(algorithmRequest);
+        return ResponseEntity.ok(annotationResponses);
     }
 
     @PostMapping("/uploadAlgorithm")
