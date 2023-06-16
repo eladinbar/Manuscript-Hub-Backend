@@ -103,7 +103,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         verifyAlgorithmAuthorization(algorithmRequest.getUid(), algorithmRequest.getId(), algorithmRequest.getUrl());
         AlgorithmModel algorithmModel = algorithmRequestMapper.restToModel(algorithmRequest);
         AlgorithmModel oldModel = getByUrlAlgorithmUseCase.getByUrl(algorithmModel.getUrl()).get();
-        if (algorithmModel.getStatus() == AlgorithmStatus.Trial && oldModel.getStatus() == AlgorithmStatus.CloudStaging) {
+        if (algorithmModel.getStatus() == AlgorithmStatus.CloudStaging && oldModel.getStatus() == AlgorithmStatus.Approved) {
             initDockerImageBuildProcess(algorithmModel.getUrl());
         }
         else if (algorithmModel.getStatus() == AlgorithmStatus.Declined && oldModel.getStatus() != AlgorithmStatus.Declined) {
