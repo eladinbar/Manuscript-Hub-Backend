@@ -56,7 +56,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     private final String defaultRepoPath = "C:\\Users\\Public\\Repositories";
 
 
-    /**Annotation section**/
+    /** Annotation section **/
     private final IRestMapper<AnnotationModel, AnnotationRequest> annotationRequestMapper;
     private final IRestMapper<AnnotationModel, AnnotationResponse> annotationResponseMapper;
     private final ICreateAnnotation createAnnotationUseCase;
@@ -75,7 +75,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             String repoName = repoUrl.substring(repoUrl.lastIndexOf('/') + 1);
             Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
             String userEmail = userService.getByUid(algorithmRequest.getUid()).getEmail();
-            BufferedImage algorithmInput = makeInputImage(algorithmRequest.getImageDataId(),algorithmRequest.getUid());
+            BufferedImage algorithmInput = makeInputImage(algorithmRequest.getImageDataId(), algorithmRequest.getUid());
             Path ioPath = makeInputOutputDirectory(repoPath, userEmail, algorithmInput);
             String dockerImageName = getDockerImageName(repoName);      //build docker
             runDockerContainer(dockerImageName, userEmail, ioPath);//run docker
@@ -83,8 +83,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             List<AnnotationResponse> annotationResponsesList = convertJsonToAnnotation(output, algorithmRequest);
             clearDir(ioPath.toFile());//delete io folder
             return annotationResponsesList;
-        }
-        else{
+        } else {
             throw new NoAlgorithmFoundException("No algorithm found.");
         }
     }
@@ -106,13 +105,12 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         AlgorithmModel oldModel = getByUrlAlgorithmUseCase.getByUrl(algorithmModel.getUrl()).get();
         if (algorithmModel.getStatus() == AlgorithmStatus.CloudStaging && oldModel.getStatus() == AlgorithmStatus.Approved) {
             initDockerImageBuildProcess(algorithmModel.getUrl());
-        }
-        else if (algorithmModel.getStatus() == AlgorithmStatus.Declined && oldModel.getStatus() != AlgorithmStatus.Declined) {
+        } else if (algorithmModel.getStatus() == AlgorithmStatus.Declined && oldModel.getStatus() != AlgorithmStatus.Declined) {
             String repoUrl = algorithmModel.getUrl();
             String repoName = repoUrl.substring(repoUrl.lastIndexOf('/') + 1);
             Path repoPath = Paths.get(defaultRepoPath + "\\" + repoName);
             deleteDockerImage(repoPath, repoName);
-            //clearDir(repoPath.toFile());
+            clearDir(repoPath.toFile());
         }
         algorithmModel = updateAlgorithmUseCase.update(algorithmModel);
         return algorithmResponseMapper.modelToRest(algorithmModel);
@@ -145,7 +143,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     }
 
     @Override
-    public List<AlgorithmResponse> getAllRunnable(String uid){
+    public List<AlgorithmResponse> getAllRunnable(String uid) {
         return getAllByUidRunnableAlgorithmsUseCase.getAllRunnable(uid).stream().map(algorithmResponseMapper::modelToRest).collect(Collectors.toList());
     }
 
@@ -266,12 +264,12 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         if (imageInfo.getPrivacy() == Privacy.Shared) {
             if (!imageInfo.getUid().equals(uid) && !imageInfo.getSharedUserIds().contains(uid))
                 throw new UnauthorizedException("User is not authorized to make modifications to this image.");
-        } else if(!imageInfo.getUid().equals(uid))
+        } else if (!imageInfo.getUid().equals(uid))
             throw new UnauthorizedException("User is not authorized to make modifications to this image.");
     }
 
 
-    /** Docker related functions:**/
+    /** Docker related functions: **/
     private Path cloneRepo(String url) {
         try {
             String repoName = url.substring(url.lastIndexOf('/') + 1);
@@ -281,14 +279,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             Git.cloneRepository()
                     .setURI(url + ".git")
                     .setDirectory(repoPath.toFile())
-                    .call();
+                    .call().close();
             return repoPath;
-        }
-        catch (IOException | GitAPIException e) {
+        } catch (IOException | GitAPIException e) {
             throw new NoAlgorithmFoundException("Unable to clone repository.");
         }
     }
-    private boolean clearDir(File fileToDelete){
+
+    private boolean clearDir(File fileToDelete) {
         File[] contents = fileToDelete.listFiles();
         if (contents != null) {
             for (File file : contents) {
@@ -297,12 +295,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         }
         return fileToDelete.delete();
     }
-    private void initDockerImageBuildProcess(String url) throws Exception{
+
+    private void initDockerImageBuildProcess(String url) throws Exception {
         Path repoPath = cloneRepo(url);
         makeAlgorithmDockerfile(repoPath);
         String repoName = url.substring(url.lastIndexOf('/') + 1);
         buildDockerImage(repoPath, repoName);
     }
+
     private void makeAlgorithmDockerfile(Path repoPath) {
         try {
             File dockerfile = new File(repoPath.toString(), "Dockerfile");
@@ -322,14 +322,16 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             e.printStackTrace();
         }
     }
-    private String getDockerImageName(String repoName){
+
+    private String getDockerImageName(String repoName) {
         String dockerImageName = repoName.toLowerCase().replace('@', '-').replace('.', '-');
         return dockerImageName;
     }
+
     private void buildDockerImage(Path cmdRunLocation, String repoName) throws Exception {
-            File workingDirectory = new File(cmdRunLocation.toString());
-            String dockerImageName = getDockerImageName(repoName);
-            String[] cmd = {"docker", "build", "-t", dockerImageName, "."};
+        File workingDirectory = new File(cmdRunLocation.toString());
+        String dockerImageName = getDockerImageName(repoName);
+        String[] cmd = {"docker", "build", "-t", dockerImageName, "."};
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(cmd);
             processBuilder.directory(workingDirectory);
@@ -349,8 +351,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             if (exitCode != 0) {
                 throw new Exception("Docker build failed.");
             }
-        }
-        catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new Exception("Docker build failed.");
         }
     }
@@ -358,7 +359,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
     private void deleteDockerImage(Path cmdRunLocation, String repoName) throws Exception {
         File workingDirectory = new File(cmdRunLocation.toString());
         String dockerImageName = getDockerImageName(repoName);
-        String[] cmd = {"docker", "rmi", dockerImageName, "."};
+        String[] cmd = {"docker", "rmi", dockerImageName};
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(cmd);
             processBuilder.directory(workingDirectory);
@@ -378,15 +379,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             if (exitCode != 0) {
                 throw new Exception("Docker delete failed.");
             }
-        }
-        catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new Exception("Docker delete failed.");
         }
     }
 
     private BufferedImage makeInputImage(UUID imageDataId, String uid) throws Exception {
-        try{
-            ImageDataResponse imageDataResponse = imageService.getByIdData(imageDataId,uid);
+        try {
+            ImageDataResponse imageDataResponse = imageService.getByIdData(imageDataId, uid);
             byte[] data = imageDataResponse.getData();
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
             //String stringData = Base64.getEncoder().encodeToString(data);
@@ -394,50 +394,51 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
             //jsonRequest.put("DATA", stringData);
             //String stringRequest =  jsonRequest.toString();
             return image;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new Exception("image creation failed");
         }
     }
-    private Path makeInputOutputDirectory(Path repoPath, String userEmail, BufferedImage algorithmInput){
+
+    private Path makeInputOutputDirectory(Path repoPath, String userEmail, BufferedImage algorithmInput) {
         Path userDirPath = Paths.get(repoPath.toString() + "\\" + userEmail);
         try {
             //make image input file
             userDirPath = Files.createDirectory(userDirPath);
-            FileOutputStream fos = new FileOutputStream(userDirPath.toString()+"\\input.png");
-            ImageIO.write(algorithmInput,"png",fos);
+            FileOutputStream fos = new FileOutputStream(userDirPath.toString() + "\\input.png");
+            ImageIO.write(algorithmInput, "png", fos);
             //make empty output file
             File outputFile = new File(userDirPath.toString(), "output.txt");
             FileWriter fileWriter = new FileWriter(outputFile);
-            BufferedWriter  writer = new BufferedWriter(fileWriter);
+            BufferedWriter writer = new BufferedWriter(fileWriter);
             writer.write("");
             writer.close();
-        }
-        catch (IOException e){
+            fos.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return userDirPath;
     }
-    public void runDockerContainer(String dockerImageName, String userEmail, Path IOPath) throws Exception{
+
+    public void runDockerContainer(String dockerImageName, String userEmail, Path IOPath) throws Exception {
         try {
             String containerName = userEmail.toLowerCase().replace('@', '-').replace('.', '-');
             String[] cmd = {"docker", "run",
                     "--name", containerName,
-                    "--mount", "type=bind,source="+IOPath.toString()+",target=/app/"+userEmail,
+                    "--mount", "type=bind,source=" + IOPath.toString() + ",target=/app/" + userEmail,
                     "--rm",
-                    dockerImageName, "/app/"+userEmail};
+                    dockerImageName, "/app/" + userEmail};
             ProcessBuilder processBuilder = new ProcessBuilder(cmd);
             Process process = processBuilder.start();
 
-             String outputStream;
-             BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-             while ((outputStream = stdoutReader.readLine()) != null) {
-             System.out.println(outputStream);
-             }
-             BufferedReader stderrReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-             while ((outputStream = stderrReader.readLine()) != null) {
-             System.out.println(outputStream);
-             }
+            String outputStream;
+            BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((outputStream = stdoutReader.readLine()) != null) {
+                System.out.println(outputStream);
+            }
+            BufferedReader stderrReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            while ((outputStream = stderrReader.readLine()) != null) {
+                System.out.println(outputStream);
+            }
 
             int exitCode = process.waitFor();
             if (exitCode != 0) {
@@ -448,7 +449,7 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         }
     }
 
-    private List<JSONObject> readOutput(Path ioPath) throws Exception{
+    private List<JSONObject> readOutput(Path ioPath) throws Exception {
         try {
             Path outputFilePath = ioPath.resolve("output.txt");
             byte[] bytes = Files.readAllBytes(outputFilePath);
@@ -462,15 +463,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
                 }
             }
             return annotationJsons;
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             throw new Exception("failed to write");
         }
     }
 
-    private List<AnnotationResponse> convertJsonToAnnotation(List<JSONObject> jsons, AlgorithmRequest algorithmRequest){
+    private List<AnnotationResponse> convertJsonToAnnotation(List<JSONObject> jsons, AlgorithmRequest algorithmRequest) {
         List<AnnotationResponse> annotationResponsesList = new ArrayList<>();
-        for (JSONObject json : jsons){
+        for (JSONObject json : jsons) {
             AnnotationRequest annotationModel = AnnotationRequest.builder()
                     .uid(algorithmRequest.getUid())
                     .imageDataId(algorithmRequest.getImageDataId())
@@ -487,13 +487,12 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         return annotationResponsesList;
     }
 
-    private void clearIO (Path ioPath) {
+    private void clearIO(Path ioPath) {
 
     }
 
 
-
-    /**Annotation section**/
+    /** Annotation section **/
     @Override
     public AnnotationResponse createAnnotation(AnnotationRequest annotationRequest) {
         verifyImageModificationPermission(annotationRequest.getImageDataId(), annotationRequest.getUid());
