@@ -14,7 +14,11 @@ public class AlgorithmEntityMapperImpl implements IRepositoryEntityMapper<Algori
     public AlgorithmEntity modelToEntity(AlgorithmModel algorithmModel) {
         AlgorithmEntity algorithmEntity = AlgorithmEntity.builder()
                 .user(new UserEntity())
+                .title(algorithmModel.getTitle())
+                .modelType(algorithmModel.getModelType())
+                .description(algorithmModel.getDescription())
                 .url(algorithmModel.getUrl())
+                .status(algorithmModel.getStatus())
                 .createdTime(algorithmModel.getCreatedTime())
                 .updatedTime(algorithmModel.getUpdatedTime())
                 .build();
@@ -25,7 +29,11 @@ public class AlgorithmEntityMapperImpl implements IRepositoryEntityMapper<Algori
     public AlgorithmEntity modelToEntity(AlgorithmModel algorithmModel, UserEntity user) {
         return AlgorithmEntity.builder()
                 .user(user)
+                .title(algorithmModel.getTitle())
+                .modelType(algorithmModel.getModelType())
+                .description(algorithmModel.getDescription())
                 .url(algorithmModel.getUrl())
+                .status(algorithmModel.getStatus())
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .build();
@@ -38,7 +46,11 @@ public class AlgorithmEntityMapperImpl implements IRepositoryEntityMapper<Algori
         return AlgorithmModel.builder()
                 .id(algorithmEntity.getId())
                 .uid(algorithmEntity.getUser().getUid())
+                .title(algorithmEntity.getTitle())
+                .modelType(algorithmEntity.getModelType())
+                .description(algorithmEntity.getDescription())
                 .url(algorithmEntity.getUrl())
+                .status(algorithmEntity.getStatus())
                 .createdTime(algorithmEntity.getCreatedTime())
                 .updatedTime(algorithmEntity.getUpdatedTime())
                 .build();

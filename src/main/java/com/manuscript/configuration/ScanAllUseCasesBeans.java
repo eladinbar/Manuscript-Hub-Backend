@@ -2,7 +2,6 @@ package com.manuscript.configuration;
 
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
@@ -17,12 +16,12 @@ public class ScanAllUseCasesBeans {
     @Bean
     BeanFactoryPostProcessor beanFactoryPostProcessor(ApplicationContext beanRegistry) {
         return beanFactory -> {
-            genericApplicationContext((BeanDefinitionRegistry) ((AnnotationConfigServletWebServerApplicationContext) beanRegistry).getBeanFactory());
+            genericApplicationContext(beanRegistry);
         };
     }
 
-    void genericApplicationContext(BeanDefinitionRegistry beanRegistry) {
-        ClassPathBeanDefinitionScanner beanDefinitionScanner = new ClassPathBeanDefinitionScanner(beanRegistry);
+    void genericApplicationContext(ApplicationContext beanRegistry) {
+        ClassPathBeanDefinitionScanner beanDefinitionScanner = new ClassPathBeanDefinitionScanner((BeanDefinitionRegistry) beanRegistry);
         beanDefinitionScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
         beanDefinitionScanner.scan("com.manuscript.core.usecase.custom");
         beanDefinitionScanner.scan("com.manuscript.rest.service");
@@ -30,6 +29,4 @@ public class ScanAllUseCasesBeans {
         beanDefinitionScanner.scan("com.manuscript.persistence.nosql.service");
         beanDefinitionScanner.scan("com.manuscript.infrastructure");
     }
-
-
 }

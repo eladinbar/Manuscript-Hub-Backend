@@ -39,7 +39,7 @@ public class AnnotationEntityMapperTests {
     private final String email = "email@gmail.com";
     private final String name = "name";
     private final String phoneNumber = "0541234567";
-    private final Status status = Status.active;
+    private final Status status = Status.Enabled;
     private final Role role = Role.User;
     private UserEntity user;
     private final String url = "url";
@@ -78,7 +78,7 @@ public class AnnotationEntityMapperTests {
 
         // set up annotation entity
         this.annotationEntity = AnnotationEntity.builder()
-                .id(id).user(user).imageId(imageId).algorithm(algorithm)
+                .id(id).user(user).imageDataId(imageId).algorithm(algorithm)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -87,7 +87,7 @@ public class AnnotationEntityMapperTests {
 
         // set up annotation model
         this.annotationModel = AnnotationModel.builder()
-                .id(id).uid(uid).imageId(imageId).algorithmId(algorithmId)
+                .id(id).uid(uid).imageDataId(imageId).algorithmId(algorithmId)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -104,7 +104,7 @@ public class AnnotationEntityMapperTests {
         //assert
         assertNotNull(annotationEntity);
         assertEquals(uid, annotationEntity.getUser().getUid());
-        assertEquals(imageId, annotationEntity.getImageId());
+        assertEquals(imageId, annotationEntity.getImageDataId());
         assertEquals(algorithmId, annotationEntity.getAlgorithm().getId());
         assertEquals(content, annotationEntity.getContent());
         assertEquals(startX, annotationEntity.getStartX());
@@ -128,7 +128,7 @@ public class AnnotationEntityMapperTests {
         //assert
         assertNotNull(annotationEntity);
         assertEquals(uid, annotationEntity.getUser().getUid());
-        assertEquals(imageId, annotationEntity.getImageId());
+        assertEquals(imageId, annotationEntity.getImageDataId());
         assertEquals(algorithmId, annotationEntity.getAlgorithm().getId());
         assertEquals(content, annotationEntity.getContent());
         assertEquals(startX, annotationEntity.getStartX());
@@ -152,7 +152,7 @@ public class AnnotationEntityMapperTests {
         //assert
         assertNotNull(annotationEntity);
         assertEquals(uid, annotationEntity.getUser().getUid());
-        assertEquals(imageId, annotationEntity.getImageId());
+        assertEquals(imageId, annotationEntity.getImageDataId());
         assertNull(annotationEntity.getAlgorithm());
         assertEquals(content, annotationEntity.getContent());
         assertEquals(startX, annotationEntity.getStartX());
@@ -176,7 +176,7 @@ public class AnnotationEntityMapperTests {
         //assert
         assertNotNull(annotationEntity);
         assertEquals(uid, annotationEntity.getUser().getUid());
-        assertEquals(imageId, annotationEntity.getImageId());
+        assertEquals(imageId, annotationEntity.getImageDataId());
         assertEquals(algorithmId, annotationEntity.getAlgorithm().getId());
         assertEquals(startX, annotationEntity.getStartX());
         assertEquals(startY, annotationEntity.getStartY());
@@ -199,7 +199,7 @@ public class AnnotationEntityMapperTests {
         assertNotNull(annotationModel);
         assertEquals(id, annotationModel.getId());
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(algorithmId, annotationModel.getAlgorithmId());
         assertEquals(content, annotationModel.getContent());
         assertEquals(startX, annotationModel.getStartX());
@@ -234,7 +234,7 @@ public class AnnotationEntityMapperTests {
         assertNotNull(annotationModel);
         assertEquals(id, annotationModel.getId());
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(algorithmId, annotationModel.getAlgorithmId());
         assertEquals(startX, annotationModel.getStartX());
         assertEquals(startY, annotationModel.getStartY());

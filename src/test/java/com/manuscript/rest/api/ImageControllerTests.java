@@ -1,77 +1,71 @@
 package com.manuscript.rest.api;
 
-import com.google.cloud.ByteArray;
 import com.manuscript.core.domain.common.enums.Privacy;
 import com.manuscript.core.domain.common.enums.Status;
-import com.manuscript.core.exceptions.UnauthorizedException;
-import com.manuscript.rest.request.ImageRequest;
-import com.manuscript.rest.api.ImageController;
-import com.manuscript.rest.response.AnnotationResponse;
-import com.manuscript.rest.response.ImageResponse;
+import com.manuscript.rest.forms.request.ImageDataRequest;
+import com.manuscript.rest.forms.request.ImageInfoRequest;
+import com.manuscript.rest.forms.response.ImageDataResponse;
+import com.manuscript.rest.forms.response.ImageInfoResponse;
 import com.manuscript.rest.service.IImageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.mockito.internal.stubbing.BaseStubbing;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
-import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ImageControllerTests {
-
     //test classes
     private IImageService imageService;
     private ImageController imageController;
-    private ImageRequest imageRequest;
-    private ImageResponse testImageResponse;
+    private ImageInfoRequest imageInfoRequest;
+    private ImageInfoResponse testImageInfoResponse;
+    private ImageDataRequest imageDataRequest;
+    private ImageDataResponse testImageDataResponse;
 
-    //test data
-    private UUID imageId;
-    private UUID userId;
-    private String uid;
-    private String fileName;
-    private Status status;
-    private final byte[] data = {0};
-    private Privacy privacy;
+    //test data image info
+    private final UUID imageInfoId = UUID.randomUUID();
+    private final UUID userId = UUID.randomUUID();
+    private final String uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
+    private final String title = "title";
+    private final String description = "description";
+    private final String author = "author";
+    private final Date publicationDate = new Date();
+    private final List<String> tags = new ArrayList<>();
+    private final List<String> sharedUserIds = new ArrayList<>();
+    private final Status status = Status.Enabled;
+    private final Privacy privacy = Privacy.Public;
     private Date createdTime;
     private Date updatedTime;
-    private MockMultipartFile multipartFile;
+    private List<ImageInfoResponse> testImageInfoResponseList;
+    private final String email = "example@email.com";
+    private final String[] sharedUserEmails = new String[1];
 
-    //test fail case data
-    private UUID invalidImageId;
-    private UUID invalidUserId;
-    private String invalidUid;
-    private String invalidFileName;
-    private byte[] invalidData;
+    //test data image data
+    private final UUID imageDataId = UUID.randomUUID();
+    private final String fileName = "file name";
+    private final byte[] data = {0};
+    private final int index = 0;
+    private MockMultipartFile multipartFile;
+    private List<ImageDataResponse> testImageDataResponseList;
 
     @BeforeAll
-    public void setup(){
+    public void setup() {
         //controller setup
         imageService = Mockito.mock(IImageService.class);
         imageController = new ImageController(imageService);
 
         //data setup
-        fileName = "fileName";
-        status = Status.active;
-        uid = "2UYxH92SpBQfkRgEeN75EBdvM9r1";
-        multipartFile = new MockMultipartFile(fileName,data);
-        imageId = UUID.randomUUID();
-        userId = UUID.randomUUID();
-        privacy = Privacy.Public;
+        multipartFile = new MockMultipartFile(fileName, data);
+        sharedUserEmails[0] = email;
 
         //date setup
         Calendar cal = Calendar.getInstance();
@@ -82,187 +76,405 @@ public class ImageControllerTests {
         cal.set(Calendar.DAY_OF_MONTH, 3);
         updatedTime = cal.getTime();
 
-        //fail case data setup
-        invalidImageId = null;
-        invalidUserId = null;
-        invalidUid = null;
-        invalidFileName = null;
-        invalidData = null;
-
         //mocks
-        when(imageService.update(any())).thenReturn(testImageResponse);
+        when(imageService.updateInfo(any())).thenReturn(testImageInfoResponse);
     }
 
     @BeforeEach
     public void beforeEach() {
         //request setup
-        imageRequest = new ImageRequest(imageId,uid,fileName,status,privacy,data);
+        imageInfoRequest = new ImageInfoRequest(imageInfoId, uid, title, author, publicationDate, description,
+                tags, sharedUserIds, status, privacy);
+
+        imageDataRequest = new ImageDataRequest(imageDataId, imageInfoId, fileName, data, index);
 
         //test response setup
-        testImageResponse = new ImageResponse(imageId,userId,uid,fileName,data,status,privacy,createdTime,updatedTime);
+        testImageInfoResponse = ImageInfoResponse.builder()
+                .id(imageInfoId)
+                .uid(uid)
+                .title(title).author(author).publicationDate(publicationDate).description(description)
+                .tags(tags).sharedUserIds(sharedUserIds)
+                .status(status).privacy(privacy)
+                .createdTime(createdTime).updatedTime(updatedTime)
+                .build();
+        testImageInfoResponseList = new ArrayList<>();
+        testImageInfoResponseList.add(testImageInfoResponse);
+
+        testImageDataResponse = ImageDataResponse.builder()
+                .id(imageDataId)
+                .infoId(imageInfoId)
+                .fileName(fileName)
+                .data(data)
+                .index(index)
+                .build();
+        testImageDataResponseList = new ArrayList<>();
+        testImageDataResponseList.add(testImageDataResponse);
     }
 
+    /////////--------------ImageInfo tests----------------------------
 
-//---------------------uploadDocument tests:---------------------
+    //---------------------uploadImageInfo tests:---------------------
     @Test
-    public void uploadDocument_Success() {
-        try{
-            //act
-            ResponseEntity<ImageResponse> responseEntity = imageController.uploadDocument(multipartFile,uid);
-            ImageResponse imageResponse = responseEntity.getBody();
-            //assert
-            assertTrue(responseEntity.hasBody());
-            assertNotNull(imageResponse);
-            assertEquals(uid,imageResponse.getUid());
-            assertEquals(fileName,imageResponse.getFileName());
-            assertEquals(data,imageResponse.getData());
-            assertEquals(status,imageResponse.getStatus());
-            assertEquals(privacy,imageResponse.getPrivacy());
-            assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-            assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
-        }
-        catch (Exception e){
-            fail("exception detected:" + e);
-        }
-    }
+    public void uploadImageInfo_success() {
+        //mocks
+        when(imageService.saveInfo(any())).thenReturn(testImageInfoResponse);
 
-    @Test
-    public void uploadDocument_InvalidData() {
-        MockMultipartFile invalidMultipartFile = new MockMultipartFile(fileName,invalidData);
-        imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
-    }
-
-    @Test
-    public void uploadDocument_InvalidFilename() {
-        MockMultipartFile invalidMultipartFile = new MockMultipartFile(invalidFileName,data);
-        imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(invalidMultipartFile,uid));
-    }
-
-    @Test
-    public void uploadDocumentInvalidUid() {
-        imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.uploadDocument(multipartFile,invalidUid));
-    }
-
-
-//---------------------updateDocument tests:---------------------
-    @Test
-    public void updateDocument_Success() {
         //act
-        ResponseEntity<ImageResponse> responseEntity = imageController.updateDocument(imageRequest);
-        ImageResponse imageResponse = responseEntity.getBody();
+        ResponseEntity<ImageInfoResponse> responseEntity = imageController.uploadImageInfo(imageInfoRequest);
+        ImageInfoResponse imageInfoResponse = responseEntity.getBody();
+
         //assert
         assertTrue(responseEntity.hasBody());
-        assertNotNull(imageResponse);
-        assertEquals(uid,imageResponse.getUid());
-        assertEquals(fileName,imageResponse.getFileName());
-        assertEquals(data,imageResponse.getData());
-        assertEquals(status,imageResponse.getStatus());
-        assertEquals(privacy,imageResponse.getPrivacy());
-        assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-        assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertEquals(description, imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
     }
 
     @Test
-    public void updateDocument_InvalidId() {
-        imageRequest.setDocumentId(invalidImageId);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
-    }
+    public void uploadImageInfo_nullDescription_success() {
+        //set up
+        imageInfoRequest.setDescription(null);
+        testImageInfoResponse.setDescription(null);
+        //mocks
+        when(imageService.saveInfo(any())).thenReturn(testImageInfoResponse);
 
-    @Test
-    public void updateDocument_InvalidUid() {
-        imageRequest.setUid(invalidUid);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
-    }
-
-    @Test
-    public void updateDocument_InvalidFileName() {
-        imageRequest.setFileName(invalidFileName);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
-    }
-
-    @Test
-    public void updateDocument_InvalidData() {
-        imageRequest.setData(invalidData);
-        assertThrows(UnauthorizedException.class, () -> imageController.updateDocument(imageRequest));
-    }
-
-
-//---------------------deleteDocumentById tests:---------------------
-    @Test
-    public void deleteDocumentById_Success() {
-        imageController.deleteDocumentById(userId);
-    }
-
-    @Test
-    public void deleteDocumentById_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.deleteDocumentById(invalidUserId));
-    }
-
-
-//---------------------getDocumentById tests:---------------------
-    @Test
-    public void getDocumentById_Success() {
         //act
-        ResponseEntity<byte[]> responseEntity = imageController.getDocumentById(userId);
+        ResponseEntity<ImageInfoResponse> responseEntity = imageController.uploadImageInfo(imageInfoRequest);
+        ImageInfoResponse imageInfoResponse = responseEntity.getBody();
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertNull(imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+
+    //---------------------updateImageInfo tests:---------------------
+    @Test
+    public void updateImageInfo_success() {
+        //mock
+        when(imageService.updateInfo(imageInfoRequest)).thenReturn(testImageInfoResponse);
+
+        //act
+        ResponseEntity<ImageInfoResponse> responseEntity = imageController.updateImageInfo(imageInfoRequest);
+        ImageInfoResponse imageInfoResponse = responseEntity.getBody();
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertEquals(description, imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    @Test
+    public void updateImageInfo_nullDescription_success() {
+        //set up
+        imageInfoRequest.setDescription(null);
+        testImageInfoResponse.setDescription(null);
+        //mock
+        when(imageService.updateInfo(imageInfoRequest)).thenReturn(testImageInfoResponse);
+
+        //act
+        ResponseEntity<ImageInfoResponse> responseEntity = imageController.updateImageInfo(imageInfoRequest);
+        ImageInfoResponse imageInfoResponse = responseEntity.getBody();
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertNull(imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    //---------------------shareImage tests:---------------------
+
+    @Test
+    public void shareImage_success() {
+        //mock
+        when(imageService.shareImage(any(ImageInfoRequest.class), any(String[].class))).thenReturn(testImageInfoResponse);
+
+        //act
+        ResponseEntity<ImageInfoResponse> responseEntity = imageController.shareImage(imageInfoRequest, sharedUserEmails);
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        ImageInfoResponse imageInfoResponse = responseEntity.getBody();
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertEquals(description, imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+
+    //---------------------getAllSharedEmailsByImageInfoId tests:---------------------
+
+    @Test
+    public void getAllSharedEmailsByImageInfoId_success() {
+        //set up
+        List<String> sharedUserEmails = new ArrayList<>();
+        sharedUserEmails.add(email);
+
+        //mock
+        when(imageService.getAllSharedEmailsByImageInfoId(any(UUID.class), any(String.class))).thenReturn(sharedUserEmails);
+
+        //act
+        ResponseEntity<List<String>> responseEntity = imageController.getAllSharedEmailsByImageInfoId(imageInfoId, uid);
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        List<String> returnedEmails = responseEntity.getBody();
+        assertEquals(sharedUserEmails, returnedEmails);
+    }
+
+
+    //---------------------getImageInfoById tests:---------------------
+    @Test
+    public void getImageInfoById_success() {
+        //mock
+        when(imageService.getByIdInfo(any(UUID.class), any(String.class))).thenReturn(testImageInfoResponse);
+
+        //act
+        ResponseEntity<ImageInfoResponse> responseEntity = imageController.getImageInfoById(imageInfoId, uid);
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        ImageInfoResponse imageInfoResponse = responseEntity.getBody();
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertEquals(description, imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+
+    //---------------------getAllImageInfosByUid tests:---------------------
+    @Test
+    public void getAllImageInfosByUid_success() {
+        //mock
+        when(imageService.getAllByUidImageInfos(any(String.class))).thenReturn(testImageInfoResponseList);
+
+        //act
+        ResponseEntity<List<ImageInfoResponse>> responseEntity = imageController.getAllImageInfosByUid(uid);
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        List<ImageInfoResponse> imageInfoResponses = responseEntity.getBody();
+        assertNotNull(imageInfoResponses);
+        assertFalse(imageInfoResponses.isEmpty());
+        ImageInfoResponse imageInfoResponse = imageInfoResponses.get(0);
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertEquals(description, imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(privacy, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+
+    //---------------------getAllPublicImageInfos tests:---------------------
+    @Test
+    public void getAllPublicImages_success() {
+        //set up
+        testImageInfoResponseList.get(0).setPrivacy(Privacy.Public);
+
+        //mock
+        when(imageService.getAllPublicImages()).thenReturn(testImageInfoResponseList);
+
+        //act
+        ResponseEntity<List<ImageInfoResponse>> responseEntity = imageController.getAllPublicImageInfos();
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        List<ImageInfoResponse> imageInfoResponses = responseEntity.getBody();
+        assertNotNull(imageInfoResponses);
+        assertFalse(imageInfoResponses.isEmpty());
+        ImageInfoResponse imageInfoResponse = imageInfoResponses.get(0);
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertEquals(description, imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(Privacy.Public, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    //---------------------getAllSharedImageInfosByUid tests:---------------------
+
+    @Test
+    public void getAllSharedImageInfosByUid_success() {
+        //set up
+        testImageInfoResponseList.get(0).setPrivacy(Privacy.Shared);
+
+        //mock
+        when(imageService.getAllSharedImages(any(String.class))).thenReturn(testImageInfoResponseList);
+
+        //act
+        ResponseEntity<List<ImageInfoResponse>> responseEntity = imageController.getAllSharedImageInfosByUid(uid);
+
+        //assert
+        assertTrue(responseEntity.hasBody());
+        List<ImageInfoResponse> imageInfoResponses = responseEntity.getBody();
+        assertNotNull(imageInfoResponses);
+        assertFalse(imageInfoResponses.isEmpty());
+        ImageInfoResponse imageInfoResponse = imageInfoResponses.get(0);
+        assertNotNull(imageInfoResponse);
+        assertEquals(uid, imageInfoResponse.getUid());
+        assertEquals(title, imageInfoResponse.getTitle());
+        assertEquals(author, imageInfoResponse.getAuthor());
+        assertEquals(publicationDate, imageInfoResponse.getPublicationDate());
+        assertEquals(description, imageInfoResponse.getDescription());
+        assertEquals(tags, imageInfoResponse.getTags());
+        assertNull(imageInfoResponse.getSharedUserIds());
+        assertEquals(status, imageInfoResponse.getStatus());
+        assertEquals(Privacy.Shared, imageInfoResponse.getPrivacy());
+        assertTrue(imageInfoResponse.getCreatedTime().before(new Date()) ||
+                imageInfoResponse.getCreatedTime().equals(new Date()));
+        assertTrue(imageInfoResponse.getUpdatedTime().after(createdTime) ||
+                imageInfoResponse.getUpdatedTime().equals(createdTime));
+    }
+
+    //---------------------deleteImageInfoById tests:---------------------
+    @Test
+    public void deleteImageInfoById_success() {
+        //assert
+        imageController.deleteImageInfoById(imageInfoId, uid);
+    }
+
+    @Test
+    public void deleteImageInfoById_InvalidUid_fail() {
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> imageController.deleteImageInfoById(imageInfoId, null));
+    }
+
+    /////////--------------ImageData tests----------------------------
+
+    //---------------------getImageDataById tests:---------------------
+    @Test
+    public void getImageDataById_success() {
+        //mock
+        when(imageService.getByIdData(any(UUID.class), any(String.class))).thenReturn(testImageDataResponse);
+
+        //act
+        ResponseEntity<byte[]> responseEntity = imageController.getImageDataById(imageDataId, uid);
         byte[] bytesResponse = responseEntity.getBody();
+
         //assert
         assertTrue(responseEntity.hasBody());
         assertNotNull(bytesResponse);
-        assertEquals(data,bytesResponse);
-    }
-
-    @Test
-    public void getDocumentById_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.getDocumentById(invalidUserId));
+        assertEquals(data, bytesResponse);
     }
 
 
-//---------------------getDocumentById tests:---------------------
+    //---------------------getImageDatasByImageInfoId tests:---------------------
     @Test
-    public void getAllDocumentsByUid_Success() {
+    public void getImageDatasByImageInfoId_success() {
+        //mock
+        when(imageService.getAllByImageInfoIdImageDatas(any(UUID.class), any(String.class))).thenReturn(testImageDataResponseList);
+
         //act
-        ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllDocumentsByUid(uid);
-        List<ImageResponse> imageResponseList = responseEntity.getBody();
-        ImageResponse imageResponse = imageResponseList.get(0);
+        ResponseEntity<List<ImageDataResponse>> responseEntity = imageController.getImageDatasByImageInfoId(imageInfoId, uid);
+
         //assert
         assertTrue(responseEntity.hasBody());
-        assertEquals(imageResponseList.size(),1);
-        assertNotNull(imageResponse);
-        assertEquals(uid,imageResponse.getUid());
-        assertEquals(fileName,imageResponse.getFileName());
-        assertEquals(data,imageResponse.getData());
-        assertEquals(status,imageResponse.getStatus());
-        assertEquals(privacy,imageResponse.getPrivacy());
-        assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-        assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
+        List<ImageDataResponse> imageDataResponses = responseEntity.getBody();
+        assertNotNull(imageDataResponses);
+        assertFalse(imageDataResponses.isEmpty());
+        ImageDataResponse imageDataResponse = imageDataResponses.get(0);
+        assertNotNull(imageDataResponse);
+        assertEquals(imageDataId, imageDataResponse.getId());
+        assertEquals(data, imageDataResponse.getData());
+        assertEquals(fileName, imageDataResponse.getFileName());
+        assertEquals(index, imageDataResponse.getIndex());
     }
 
+    //---------------------deleteImageDataById tests:---------------------
     @Test
-    public void getAllDocumentsByUid_InvalidUserId() {
-        assertThrows(UnauthorizedException.class, () -> imageController.getAllDocumentsByUid(invalidUid));
-    }
-
-
-//---------------------getAllPublicImages tests:---------------------
-    @Test
-    public void getAllPublicImages_Success() {
-        //act
-        ResponseEntity<List<ImageResponse>> responseEntity = imageController.getAllPublicImages();
-        List<ImageResponse> imageResponseList = responseEntity.getBody();
-        ImageResponse imageResponse = imageResponseList.get(0);
+    public void deleteImageDataById_success() {
         //assert
-        assertTrue(responseEntity.hasBody());
-        assertEquals(imageResponseList.size(), 1);
-        assertNotNull(imageResponse);
-        assertEquals(uid, imageResponse.getUid());
-        assertEquals(fileName, imageResponse.getFileName());
-        assertEquals(data, imageResponse.getData());
-        assertEquals(status, imageResponse.getStatus());
-        assertEquals(privacy,imageResponse.getPrivacy());
-        assertTrue(imageResponse.getCreatedTime().before(new Date()) || imageResponse.getCreatedTime().equals(new Date()));
-        assertTrue(imageResponse.getUpdatedTime().after(createdTime) || imageResponse.getUpdatedTime().equals(createdTime));
+        imageController.deleteImageDataById(imageDataId, uid, true);
+    }
+
+    @Test
+    public void deleteImageDataById_InvalidUid_fail() {
+        //assert
+        assertThrows(IllegalArgumentException.class, () -> imageController.deleteImageDataById(imageInfoId, null, true));
     }
 }

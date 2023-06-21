@@ -4,8 +4,8 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.manuscript.core.domain.common.enums.Status;
 import com.manuscript.infrastructure.firebase.security.Roles.RoleConstants;
 import com.manuscript.infrastructure.firebase.service.IAuthenticationService;
-import com.manuscript.rest.request.UserRequest;
-import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.forms.request.UserRequest;
+import com.manuscript.rest.forms.response.UserResponse;
 import com.manuscript.rest.service.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
 
+import static com.manuscript.rest.common.Constants.RESOURCE_ACCOUNT;
+
 @RestController
-@RequestMapping("/api/accountController")
+@RequestMapping(RESOURCE_ACCOUNT)
 @CrossOrigin()
 @AllArgsConstructor
 public class AuthenticationController {
@@ -24,10 +26,9 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserRequest user) {
-        try{
+        try {
             return ResponseEntity.ok(this.userService.getByUid(user.getUid()));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // if in firebase but not in backend
             return ResponseEntity.ok(this.userService.save(user));
         }
@@ -39,8 +40,7 @@ public class AuthenticationController {
         try {
             UserResponse userResponse = this.userService.save(user);
             return ResponseEntity.ok(userResponse);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("Error creating new user: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
         }
@@ -57,5 +57,10 @@ public class AuthenticationController {
         authenticationService.addRole(uid, RoleConstants.SUPER_USER);
         authenticationService.addRole(uid, RoleConstants.REG_USER);
         throw new NoSuchFieldException();   //todo: need to check this exception
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

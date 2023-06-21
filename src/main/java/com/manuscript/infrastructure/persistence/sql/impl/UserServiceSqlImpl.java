@@ -8,10 +8,7 @@ import com.manuscript.infrastructure.persistence.sql.repositories.IUserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -22,15 +19,33 @@ public class UserServiceSqlImpl implements IUserRepositoryService {
     @Override
     public UserModel save(UserModel model) throws IllegalArgumentException {
         final UserEntity toSave = mapper.modelToEntity(model);
-        final UserEntity result = repo.save(toSave);
-        return mapper.entityToModel(result);
+        if (toSave.getCreatedTime() == null) {
+            toSave.setCreatedTime(new Date());
+            toSave.setUpdatedTime(new Date());
+        }
+        final UserEntity userEntity = repo.save(toSave);
+        return mapper.entityToModel(userEntity);
+    }
+
+    @Override
+    public UserModel update(UserModel model) throws IllegalArgumentException {
+        Optional<UserEntity> oldUser = repo.findByUid(model.getUid());
+        if (!oldUser.isPresent())
+            throw new IllegalArgumentException("No old user found.\n" +
+                    "This should not happen, please contact an administrator.");
+        UserEntity userEntity = oldUser.get();
+        userEntity.setName(model.getName());
+        userEntity.setRole(model.getRole());
+        userEntity.setStatus(model.getStatus());
+        userEntity.setUpdatedTime(new Date());
+        return mapper.entityToModel(userEntity);
     }
 
     @Override
     public List<UserModel> getAll() {
-        List<UserModel> result = new ArrayList<>();
-        repo.findAll().forEach(videoInfoEntity -> result.add(mapper.entityToModel(videoInfoEntity)));
-        return result;
+        List<UserModel> userModels = new ArrayList<>();
+        repo.findAll().forEach(videoInfoEntity -> userModels.add(mapper.entityToModel(videoInfoEntity)));
+        return userModels;
     }
 
     @Override

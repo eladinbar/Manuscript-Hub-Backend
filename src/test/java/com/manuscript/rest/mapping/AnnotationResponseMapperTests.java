@@ -1,7 +1,8 @@
 package com.manuscript.rest.mapping;
 
 import com.manuscript.core.domain.annotation.models.AnnotationModel;
-import com.manuscript.rest.response.AnnotationResponse;
+import com.manuscript.rest.forms.response.AnnotationResponse;
+import com.manuscript.rest.mapping.response.AnnotationResponseMapperImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ public class AnnotationResponseMapperTests {
 
         // set up annotation model
         this.annotationModel = AnnotationModel.builder()
-                .id(id).uid(uid).imageId(imageId).algorithmId(manualAlgorithmId)
+                .id(id).uid(uid).imageDataId(imageId).algorithmId(manualAlgorithmId)
                 .content(content)
                 .startX(startX).startY(startY).endX(endX).endY(endY)
                 .createdTime(createdTime).updatedTime(updatedTime)
@@ -70,7 +71,7 @@ public class AnnotationResponseMapperTests {
         assertNotNull(annotationResponse);
         assertEquals(id, annotationResponse.getId());
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(content, annotationResponse.getContent());
         assertEquals(startX, annotationResponse.getStartX());
@@ -105,7 +106,7 @@ public class AnnotationResponseMapperTests {
         assertNotNull(annotationResponse);
         assertEquals(id, annotationResponse.getId());
         assertEquals(uid, annotationResponse.getUid());
-        assertEquals(imageId, annotationResponse.getImageId());
+        assertEquals(imageId, annotationResponse.getImageDataId());
         assertEquals(manualAlgorithmId, annotationResponse.getAlgorithmId());
         assertEquals(startX, annotationResponse.getStartX());
         assertEquals(startY, annotationResponse.getStartY());
@@ -128,7 +129,7 @@ public class AnnotationResponseMapperTests {
         assertNotNull(annotationModel);
         assertEquals(id, annotationModel.getId());
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(manualAlgorithmId, annotationModel.getAlgorithmId());
         assertEquals(content, annotationModel.getContent());
         assertEquals(startX, annotationModel.getStartX());
@@ -153,7 +154,7 @@ public class AnnotationResponseMapperTests {
         assertNotNull(annotationModel);
         assertEquals(id, annotationModel.getId());
         assertEquals(uid, annotationModel.getUid());
-        assertEquals(imageId, annotationModel.getImageId());
+        assertEquals(imageId, annotationModel.getImageDataId());
         assertEquals(manualAlgorithmId, annotationModel.getAlgorithmId());
         assertEquals(startX, annotationModel.getStartX());
         assertEquals(startY, annotationModel.getStartY());

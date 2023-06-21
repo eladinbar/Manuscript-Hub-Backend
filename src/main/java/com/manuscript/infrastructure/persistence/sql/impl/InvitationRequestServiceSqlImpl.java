@@ -41,13 +41,12 @@ public class InvitationRequestServiceSqlImpl implements IInvitationRequestReposi
 
     @Override
     public void deleteById(UUID id) {
-        //todo : need to implement
+        repo.deleteById(id);
     }
 
     @Override
     public void deleteAll() {
         //todo : need to implement
-
     }
 
     @Override
@@ -70,6 +69,5 @@ public class InvitationRequestServiceSqlImpl implements IInvitationRequestReposi
         Optional<InvitationRequestEntity> byEmail = repo.findByEmail(email);
         return byEmail.map(mapper::entityToModel);
     }
-
 }
 

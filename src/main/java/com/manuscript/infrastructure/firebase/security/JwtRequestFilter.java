@@ -24,10 +24,8 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
     @Autowired
     AuthenticationService authService;
 
@@ -37,17 +35,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         logger.info("Request received - path: " + request.getRequestURI() + ", host: " + request.getLocalAddr() + ", " + request.getRemoteAddr());
         String uri = request.getRequestURI();
         if (uri.startsWith("/api")) {
-
-            if(uri.contains("register") || uri.contains("createInvitation") ){
-                try{
-
+            if (uri.contains("register") || uri.contains("createInvitation")) {
+                try {
                     chain.doFilter(request, response);
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-
-            }
-            else{
+            } else {
                 final String requestTokenHeader = request.getHeader("Authorization");
                 if (requestTokenHeader != null) {
                     String Bearer = requestTokenHeader.substring(0, 7);
@@ -65,7 +59,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                                 SecurityContextHolder.getContext().setAuthentication(new UserAuthModel(uid, authorities));
                                 chain.doFilter(request, response);
-
                             }
                         } catch (FirebaseAuthException e) {
                             logger.warn("FirebaseException: " + e + "id token: " + idToken);
@@ -76,18 +69,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                             response.setContentType(APPLICATION_JSON_VALUE);
                             new ObjectMapper().writeValue(response.getOutputStream(), error);
                         }
-
-
                     } else {
                         logger.warn("Auth token doesn't start with bearer");
                     }
                 } else {
-
                     logger.warn("Auth header cannot be empty");
                 }
             }
         }
     }
-
-
 }

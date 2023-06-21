@@ -1,8 +1,10 @@
 package com.manuscript.rest.api;
 
-import com.manuscript.rest.request.InvitationRequestRequest;
-import com.manuscript.rest.response.InvitationRequestResponse;
+import com.manuscript.rest.forms.request.InvitationRequestRequest;
+import com.manuscript.rest.forms.response.InvitationRequestResponse;
 import com.manuscript.rest.service.IInvitationRequestService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,32 +21,34 @@ public class InvitationRequestController {
         this.requestService = requestService;
     }
 
+    @PostMapping("/createInvitation")
+    public ResponseEntity<List<InvitationRequestResponse>> createInvitation(@RequestBody InvitationRequestRequest invitationRequestRequest) {
+        return ResponseEntity.ok(requestService.save(invitationRequestRequest));
+    }
+
+    @GetMapping("/approveInvitationRequest/{email}")
+    public ResponseEntity<List<InvitationRequestResponse>> approveInvitationRequest(@PathVariable String email) {
+        if (email.isEmpty()) {
+            return ResponseEntity.ok(requestService.getAll());
+        }
+        return ResponseEntity.ok(requestService.approve(email));
+    }
+
+    @GetMapping("/denyInvitationRequest/{email}")
+    public ResponseEntity<List<InvitationRequestResponse>> denyInvitationRequest(@PathVariable String email) {
+        if (email.isEmpty()) {
+            return ResponseEntity.ok(requestService.getAll());
+        }
+        return ResponseEntity.ok(requestService.deny(email));
+    }
 
     @GetMapping("/getAllInvitations")
-    public List<InvitationRequestResponse> getAllInvitations() {
-        return requestService.getAllInvitations();
+    public ResponseEntity<List<InvitationRequestResponse>> getAllInvitations() {
+        return ResponseEntity.ok(requestService.getAll());
     }
 
-    @PostMapping("/createInvitation")
-    public List<InvitationRequestResponse> createInvitation(@RequestBody InvitationRequestRequest invitationRequestRequest) {
-        return requestService.save(invitationRequestRequest);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
-
-    @GetMapping("/acceptRequest/{email}")
-    public List<InvitationRequestResponse> acceptRequest(@PathVariable String email) {
-        if (email.isEmpty()) {
-            requestService.getAllInvitations();
-        }
-        return requestService.acceptRequest(email);
-    }
-
-    @GetMapping("/denyRequest/{email}")
-    public List<InvitationRequestResponse> denyRequest(@PathVariable String email) {
-        if (email.isEmpty()) {
-            requestService.getAllInvitations();
-        }
-        return requestService.denyRequest(email);
-    }
-
-
 }

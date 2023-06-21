@@ -10,11 +10,8 @@ services:
     ports:
       - "3306:3306"
 
-  mongodb:
+  mongodb-3:
     image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: ADMIN
     restart: always
     ports:
       - "27017:27017"

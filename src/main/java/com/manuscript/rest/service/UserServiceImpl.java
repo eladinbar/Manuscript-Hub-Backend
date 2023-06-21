@@ -5,8 +5,8 @@ import com.manuscript.core.exceptions.NoUserFoundException;
 import com.manuscript.core.exceptions.UserAlreadyExistException;
 import com.manuscript.core.usecase.custom.user.*;
 import com.manuscript.rest.mapping.IRestMapper;
-import com.manuscript.rest.request.UserRequest;
-import com.manuscript.rest.response.UserResponse;
+import com.manuscript.rest.forms.request.UserRequest;
+import com.manuscript.rest.forms.response.UserResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,23 @@ public class UserServiceImpl implements IUserService {
     private final IDeleteUserById deleteUserById;
     private final IGetByEmailUser getByEmailUseCase;
 
+    @Override
+    public UserResponse save(UserRequest userRequest) throws UserAlreadyExistException {
+        Optional<UserModel> userModelByUid = getByUidUserUseCase.getByUid(userRequest.getUid());
+        Optional<UserModel> userModelByEmail = getByEmailUseCase.getByEmail(userRequest.getEmail());
+        if (userModelByUid.isPresent() || userModelByEmail.isPresent()) {
+            throw new UserAlreadyExistException();
+        }
+        UserModel userModel = userRequestMapper.restToModel(userRequest);
+        return userResponseMapper.modelToRest(createUserUseCase.create(userModel));
+    }
+
+    @Override
+    public UserResponse update(UserRequest userRequest) {
+        //TODO Role? check
+        UserModel userModel = userRequestMapper.restToModel(userRequest);
+        return userResponseMapper.modelToRest(updateUserUseCase.update(userModel));
+    }
 
     @Override
     public UserResponse getById(UUID id) throws NoUserFoundException {
@@ -33,7 +50,7 @@ public class UserServiceImpl implements IUserService {
             UserModel userModel = userByIdOpt.get();
             return userResponseMapper.modelToRest(userModel);
         }
-        throw new NoUserFoundException();
+        throw new NoUserFoundException("No user was found with the given user ID.");
     }
 
     @Override
@@ -43,7 +60,7 @@ public class UserServiceImpl implements IUserService {
             UserModel userModel = userByUidOpt.get();
             return userResponseMapper.modelToRest(userModel);
         }
-        throw new NoUserFoundException();
+        throw new NoUserFoundException("No user was found with the given user ID.");
     }
 
     @Override
@@ -53,34 +70,15 @@ public class UserServiceImpl implements IUserService {
             UserModel userModel = userModelOptional.get();
             return userResponseMapper.modelToRest(userModel);
         }
-        throw new NoUserFoundException();
+        throw new NoUserFoundException("No user was found with the given email.");
     }
 
     @Override
-    public UserResponse updateUser(UserRequest userRequest) {
-        //TODO Role? check
-        UserModel userModel = userRequestMapper.restToModel(userRequest);
-        return userResponseMapper.modelToRest(createUserUseCase.create(userModel));
-    }
-
-    @Override
-    public void deleteUser(UUID id) throws NoUserFoundException {
+    public void delete(UUID id) throws NoUserFoundException {
         Optional<UserModel> userToDelete = getByIdUserUseCase.getById(id);
         if (userToDelete.isPresent()) {
             deleteUserById.deleteById(userToDelete.get().getId());
-        }
-        else {throw new NoUserFoundException();}
-    }
-
-    @Override
-    public UserResponse save(UserRequest userRequest) throws UserAlreadyExistException {
-        Optional<UserModel> userModelByUid = getByUidUserUseCase.getByUid(userRequest.getUid());
-        Optional<UserModel> userModelByEmail = getByEmailUseCase.getByEmail(userRequest.getEmail());
-        if (userModelByUid.isPresent() || userModelByEmail.isPresent()){
-            throw new UserAlreadyExistException();
-        }
-        UserModel userModel =
-                userRequestMapper.restToModel(userRequest);
-        return userResponseMapper.modelToRest(createUserUseCase.create(userModel));
+        } else
+            throw new NoUserFoundException("No user was found with the given user ID.");
     }
 }

@@ -17,7 +17,6 @@ public class GetByEmailInvitationRequestImpl implements IGetByEmailInvitationReq
 
     @Override
     public Optional<InvitationRequestModel> getByEmail(String email) {
-        Optional<InvitationRequestModel> userByEmail = invitationRequestRepositoryService.getByEmail(email);
-        return userByEmail;
+        return invitationRequestRepositoryService.getByEmail(email);
     }
 }
